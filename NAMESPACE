@@ -1,0 +1,36 @@
+
+
+useDynLib(BIFIEsurvey)
+
+export(   
+	BIFIE.data ,
+	BIFIE.univar ,
+    BIFIE.freq ,
+    BIFIE.correl ,
+    BIFIE.linreg ,
+    BIFIE.waldtest ,
+    BIFIE.univar.test ,
+    BIFIE.data.jack ,
+    BIFIE.crosstab
+)    
+    
+    
+
+
+
+
+S3method(summary,BIFIE.univar)
+S3method(summary,BIFIE.freq)
+S3method(summary,BIFIE.correl)
+S3method(summary,BIFIE.linreg)
+S3method(summary,BIFIE.waldtest)
+S3method(summary,BIFIE.univar.test)
+S3method(summary,BIFIEdata)
+S3method(summary,BIFIE.crosstab)
+
+# imports Depends packages
+# import(qgraph)
+importFrom(Rcpp,evalCpp)
+# importFrom(inline,getDynLib)
+import(miceadds)
+importFrom(utils,packageDescription)

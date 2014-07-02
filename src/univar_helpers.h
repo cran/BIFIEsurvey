@@ -793,7 +793,7 @@ Rcpp::List bifiehelpers_crosstab( Rcpp::NumericMatrix dat1 , Rcpp::NumericMatrix
 					} // end vv2
 	     } // end vv1
 	w_es(gg,ww) = sqrt( w_es(gg,ww) ) ;  // effect size w
-	w_es(GG+gg,ww ) = w_es(gg,ww) / sqrt( VV3 - 1 ) ; // Cramer's V
+	w_es(GG+gg,ww ) = w_es(gg,ww) / sqrt( VV3 - 1.0 ) ; // Cramer's V
 	} // end gg
 	} // end ww
 	

@@ -8,7 +8,7 @@ Frequency Statistics
 }
 
 \description{
-Computes some absolute and relative frequencies.
+Computes absolute and relative frequencies.
 }
 
 \usage{

@@ -45,11 +45,11 @@ CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ---
-Versions 0.1 -- 2014-06-30  --  CRAN BIFIEsurvey 0.1-57
+Versions 0.1 -- 2014-07-01  --  CRAN BIFIEsurvey 0.1-61
 ---
 x included functions: BIFIE.data, BIFIE.univar, BIFIE.freq,
   BIFIE.correl, BIFIE.linreg, BIFIE.waldtest, BIFIE.univar.test,
-  BIFIE.data.jack, BIFIE.crosstab
+  BIFIE.data.jack, BIFIE.crosstab, BIFIE.by
 
 * included/modified datasets: ---
 * included/modified examples: ---

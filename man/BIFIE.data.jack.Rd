@@ -94,5 +94,5 @@ summary(bdat2)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{BIFIE data}
+\keyword{BIFIEdata}
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

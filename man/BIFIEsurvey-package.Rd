@@ -26,7 +26,7 @@ License: \tab GPL (>=2)\cr
 
 This package include basic descriptive functions for large scale assessment data 
 to complement the more comprehensive \pkg{survey} package. The few
-functions in this packages were written in \pkg{Rcpp}.
+functions in this package were written in \pkg{Rcpp}.
 
 The features of \pkg{BIFIEsurvey} include for designs with replicate weights:
 
@@ -102,9 +102,10 @@ packages.
 
 }
 \section{\R Function Versions }{
+\emph{BIFIE.by__0.02.R}, 
 \emph{BIFIE.correl__0.04.R}, 
-\emph{BIFIE.crosstab__0.05.R}, 
-\emph{BIFIE.data.jack__1.04.R}, \cr
+\emph{BIFIE.crosstab__0.05.R}, \cr
+\emph{BIFIE.data.jack__1.04.R}, 
 \emph{BIFIE.data__1.06.R}, 
 \emph{BIFIE.freq__0.08.R}, 
 \emph{BIFIE.linreg__0.12.R}, \cr
@@ -118,19 +119,20 @@ packages.
 }
 \section{\emph{Rcpp} Function Versions }{
 \emph{jack_dataprep__0.02.cpp}, 
-\emph{univar__3.22.cpp}, 
-\emph{univar_helpers__2.69.h}, 
+\emph{univar__3.23.cpp}, 
+\emph{univar_helpers__2.70.h}, 
 }
 \section{\emph{Rd} Documentation Versions }{
+\emph{BIFIE.by__0.06.Rd}, 
 \emph{BIFIE.correl__0.09.Rd}, 
-\emph{BIFIE.crosstab__0.04.Rd}, 
-\emph{BIFIE.data.jack__0.08.Rd}, \cr
+\emph{BIFIE.crosstab__0.04.Rd}, \cr
+\emph{BIFIE.data.jack__0.09.Rd}, 
 \emph{BIFIE.data__0.09.Rd}, 
-\emph{BIFIE.freq__0.05.Rd}, 
-\emph{BIFIE.linreg__0.12.Rd}, \cr
+\emph{BIFIE.freq__0.06.Rd}, \cr
+\emph{BIFIE.linreg__0.12.Rd}, 
 \emph{BIFIE.univar.test__0.05.Rd}, 
-\emph{BIFIE.univar__0.18.Rd}, 
-\emph{BIFIE.waldtest__0.14.Rd}, \cr
-\emph{BIFIEsurvey-package__0.24.Rd}, 
+\emph{BIFIE.univar__0.18.Rd}, \cr
+\emph{BIFIE.waldtest__0.16.Rd}, 
+\emph{BIFIEsurvey-package__0.25.Rd}, 
 \emph{data.timss1__0.08.Rd}, 
 }

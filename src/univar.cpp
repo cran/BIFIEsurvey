@@ -1096,5 +1096,161 @@ BEGIN_RCPP
 END_RCPP
 }
 
+//************************ syvby
+
+
+// declarations
+extern "C" {
+SEXP bifie_by( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP userfct_) ;
+}
+
+// definition
+
+SEXP bifie_by( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP userfct_ ){
+BEGIN_RCPP
+          
+     Rcpp::NumericMatrix datalist(datalist_);          
+     Rcpp::NumericMatrix wgt1(wgt_) ;  
+     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
+     Rcpp::NumericVector vars_index(vars_index_);  
+     Rcpp::NumericVector fayfac(fayfac_) ;  
+     Rcpp::NumericVector NI(Nimp_);  
+     Rcpp::NumericVector group_index1(group_index_) ;  
+     Rcpp::NumericVector group_values(group_values_) ;  
+       
+     Rcpp::Function userfct(userfct_);  
+       
+       
+     int Nimp = NI[0] ;  
+     // int RR = wgtrep.ncol() ;   
+       
+     int N = wgt1.nrow() ;  
+     int VV = vars_index.size() ;  
+     int NV = datalist.ncol();  
+     int group_index = group_index1[0] ;  
+     int GG=group_values.size() ;  
+       
+     Rcpp::NumericMatrix dat1(N,NV) ;  
+       
+       
+     int WW = wgtrep.ncol() ;  
+       
+       
+     // start with a calculation to compute the number of parameters  
+     Rcpp::NumericVector w = wgt1(_,0) ;    
+     int ii=0;  
+     dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;   
+     Rcpp::NumericMatrix X(N,VV) ;  
+     for (int vv=0;vv<VV;vv++){  
+         X(_,vv) = dat1(_, vars_index[vv] ) ;	  
+     }  
+     Rcpp::NumericVector pars= userfct(X,w);  
+     int NP = pars.size() ;  
+       
+       
+     Rcpp::NumericMatrix ncasesM(GG,Nimp) ;  
+     Rcpp::NumericMatrix sumwgtM(GG,Nimp) ;  
+       
+     Rcpp::NumericMatrix parsM(NP*GG,Nimp) ;  
+     Rcpp::NumericMatrix pars_varM(NP*GG,Nimp) ;  
+     Rcpp::NumericVector pars1(NP*GG) ;  
+     Rcpp::NumericMatrix pars1rep(NP*GG,WW) ;  
+     Rcpp::NumericMatrix pars1repM(NP*GG,WW*Nimp) ;  
+     Rcpp::NumericVector pars1_var(NP*GG) ;  
+       
+     Rcpp::Rcout << "|"  ;  
+       
+     // dataset ii  
+     for (ii=0;ii<Nimp;ii++){  // beg ii  
+     	dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;  
+     	  
+     	//-- compute dimensions  
+     	for (int nn=0;nn<N;nn++){ // beg nn  
+     	for (int gg =0;gg<GG;gg++){  // beg gg  
+     	if ( dat1(nn,group_index) == group_values[gg] ){  
+     		ncasesM(gg,ii) ++ ;  
+     		sumwgtM(gg,ii) += wgt1(nn,0) ;  
+     		break;  
+     				}  
+     			}  // end gg  
+     		} // end nn  
+     	  
+     	int hh=0;  
+     	  
+     	for ( int gg=0; gg <GG ; gg++){  // beg gg  
+     	   //-- evaluate function	for original dataset ii	  
+     		Rcpp::NumericMatrix X1( ncasesM(gg,ii) ,VV) ;  
+     		Rcpp::NumericVector w1( ncasesM(gg,ii) ) ;  
+     		hh=0;  
+     		for (int nn=0;nn<N;nn++){  // beg nn  
+     		if ( dat1(nn, group_index ) == group_values[gg] ){ // beg group val  
+     			for (int vv=0;vv<VV;vv++){  
+     			    X1(hh,vv) = dat1( nn , vars_index[vv] ) ;	  
+     				}  
+     			w1[hh] = wgt1(nn,0) ;  
+     			hh++ ;		  
+     			}  // end if group val  
+     		}  // end nn  
+     		  
+     		Rcpp::NumericVector pars_res = userfct( X1 , w1 ) ;  
+     		for (int pp=0;pp<NP;pp++){  // beg pp  
+     			parsM( pp + gg*NP , ii ) = pars_res[pp] ;  
+     			pars1[ pp + gg*NP ] = pars_res[pp] ;	  
+     					}  // end pp  
+     	    //*** evaluate user function for replicated datasets	  
+     		for (int ww=0;ww<WW;ww++){  // beg ww	  
+     			Rcpp::NumericVector w2( ncasesM(gg,ii) ) ;  
+     			hh=0;  
+     			for (int nn=0;nn<N;nn++){  // beg nn  
+     			 if ( dat1(nn, group_index ) == group_values[gg] ){  
+     				w2[hh] = wgtrep(nn,ww) ;  
+     				hh++ ;		  
+     				}  
+     			}  // end nn  
+     			Rcpp::NumericVector pars_res2 = userfct( X1 , w2 ) ;  
+     			for (int pp=0;pp<NP;pp++){  // beg pp  
+     				pars1repM( pp + gg*NP , ww + ii*WW ) = pars_res2[pp] ;  
+     				pars1rep( pp + gg*NP , ww ) = pars_res2[pp] ;	  
+     						}  // end pp			  
+     				} // end ww  
+     		}  // end gg  
+     	  
+     	// compute standard errors  
+     	pars1_var = varjack_helper( pars1 , pars1rep , fayfac ) ;  
+     	pars_varM(_,ii) = pars1_var ;  
+     Rcpp::Rcout << "-" <<  std::flush ;            		  
+          		  
+          }  // end ii ;  end multiple imputations  
+       
+     Rcpp::Rcout << "|" << std::endl ;    
+       
+     ///*** Rubin inference  
+     Rcpp::List parsL = rubin_rules_univ( parsM , pars_varM ) ;  
+       
+     	  
+     	  
+     //*************************************************      
+     // OUTPUT              
+       
+                
+     return Rcpp::List::create(   
+         _["WW"] = WW ,  
+         _["N"] = N ,  
+         _["NP"] = NP ,      
+         _["userfct"] = userfct ,  
+         _["sumwgtM"] = sumwgtM ,   
+         _["parsrepM"] = pars1repM ,   
+         _["parsM"] = parsM ,  
+         _["pars_varM"] = pars_varM ,  
+         _["ncasesM"] = ncasesM  ,  
+         _["parsL"] = parsL  
+         ) ;    
+     // maximal list length is 20!  
+ 
+END_RCPP
+}
+
 
 

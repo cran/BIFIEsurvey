@@ -11,7 +11,8 @@ export(
     BIFIE.waldtest ,
     BIFIE.univar.test ,
     BIFIE.data.jack ,
-    BIFIE.crosstab
+    BIFIE.crosstab ,
+    BIFIE.by
 )    
     
     
@@ -27,6 +28,7 @@ S3method(summary,BIFIE.waldtest)
 S3method(summary,BIFIE.univar.test)
 S3method(summary,BIFIEdata)
 S3method(summary,BIFIE.crosstab)
+S3method(summary,BIFIE.by)
 
 # imports Depends packages
 # import(qgraph)

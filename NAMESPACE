@@ -12,7 +12,10 @@ export(
     BIFIE.univar.test ,
     BIFIE.data.jack ,
     BIFIE.crosstab ,
-    BIFIE.by
+    BIFIE.by , 
+    BIFIE.hist  ,
+    BIFIE.data.transform ,
+    BIFIE.ecdf
 )    
     
     
@@ -29,6 +32,10 @@ S3method(summary,BIFIE.univar.test)
 S3method(summary,BIFIEdata)
 S3method(summary,BIFIE.crosstab)
 S3method(summary,BIFIE.by)
+S3method(summary,BIFIE.hist)
+S3method(plot,BIFIE.hist)
+S3method(summary,BIFIE.ecdf)
+
 
 # imports Depends packages
 # import(qgraph)

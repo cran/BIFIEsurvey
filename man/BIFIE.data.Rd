@@ -52,9 +52,13 @@ Object of class \code{BIFIEdata}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-% \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-% }
+\seealso{
+See \code{\link{BIFIE.data.transform}} for data transformations on
+\code{BIFIEdata} objects.
+
+See \code{\link{data.pisaNLD}} for converting a PISA dataset into an
+object of class \code{BIFIEdata}.
+}
 
 \examples{
 #############################################################################

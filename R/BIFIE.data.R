@@ -26,10 +26,10 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1){
 	wgt <- as.numeric( wgt )
 	if ( is.null(wgtrep) ){ wgtrep <- matrix( wgt , nrow=N , ncol=1 ) }
 	wgtrep <- as.matrix( wgtrep )
-    for (ff in 1:FF){
+    for (ff in 1:FF){  # imputed dataset ff
         dat1 <- data.list[[ff]] 
-        for (vv in notnum){ 
-			dat1[,vv] <- as.numeric(paste( dat1[,notnum] ) ) 			
+        for (vv in notnum){ 		
+			dat1[,vv] <- as.numeric(paste( dat1[,vv] ) ) 			
 		}
 		dat1$one <- 1		
         dat1 <- as.matrix( dat1) 

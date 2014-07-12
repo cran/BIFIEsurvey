@@ -17,9 +17,9 @@ Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
 }
 \details{
 \tabular{ll}{
-Package: \tab BIFIEsurvey\cr
+Package: \tab \pkg{BIFIEsurvey} \cr
 Type: \tab Package\cr
-Version: \tab 0.1\cr
+Version: \tab 0.2\cr
 Date: \tab 2014 \cr
 License: \tab GPL (>=2)\cr
 }
@@ -61,7 +61,7 @@ Maintainer: Alexander Robitzsch <a.robitzsch@bifie.at>
 \keyword{package}
 \seealso{
 See also the \pkg{survey}, \pkg{intsvy}, \pkg{svyPVpack},
-\pkg{lavaan.survey} and 
+\pkg{lavaan.survey}, \pkg{EVER} and 
 the \pkg{eatRep} (\url{https://r-forge.r-project.org/R/?group_id=1326})
 packages.
 }
@@ -102,12 +102,15 @@ packages.
 
 }
 \section{\R Function Versions }{
-\emph{BIFIE.by__0.02.R}, 
+\emph{BIFIE.by__1.02.R}, 
 \emph{BIFIE.correl__0.04.R}, 
 \emph{BIFIE.crosstab__0.05.R}, \cr
-\emph{BIFIE.data.jack__1.04.R}, 
-\emph{BIFIE.data__1.06.R}, 
-\emph{BIFIE.freq__0.08.R}, 
+\emph{BIFIE.data.jack__1.10.R}, 
+\emph{BIFIE.data.transform__0.02.R}, 
+\emph{BIFIE.data__1.08.R}, \cr
+\emph{BIFIE.ecdf__0.09.R}, 
+\emph{BIFIE.freq__0.10.R}, 
+\emph{BIFIE.hist__0.06.R}, 
 \emph{BIFIE.linreg__0.12.R}, \cr
 \emph{BIFIE.progressbar__0.02.R}, 
 \emph{BIFIE.summary__0.03.R}, 
@@ -119,20 +122,25 @@ packages.
 }
 \section{\emph{Rcpp} Function Versions }{
 \emph{jack_dataprep__0.02.cpp}, 
-\emph{univar__3.23.cpp}, 
-\emph{univar_helpers__2.70.h}, 
+\emph{univar__3.56.cpp}, 
+\emph{univar_helpers__3.28.h}, 
 }
 \section{\emph{Rd} Documentation Versions }{
-\emph{BIFIE.by__0.06.Rd}, 
-\emph{BIFIE.correl__0.09.Rd}, 
+\emph{BIFIE.by__0.07.Rd}, 
+\emph{BIFIE.correl__0.10.Rd}, 
 \emph{BIFIE.crosstab__0.04.Rd}, \cr
-\emph{BIFIE.data.jack__0.09.Rd}, 
-\emph{BIFIE.data__0.09.Rd}, 
-\emph{BIFIE.freq__0.06.Rd}, \cr
-\emph{BIFIE.linreg__0.12.Rd}, 
-\emph{BIFIE.univar.test__0.05.Rd}, 
-\emph{BIFIE.univar__0.18.Rd}, \cr
-\emph{BIFIE.waldtest__0.16.Rd}, 
-\emph{BIFIEsurvey-package__0.25.Rd}, 
-\emph{data.timss1__0.08.Rd}, 
+\emph{BIFIE.data.jack__0.14.Rd}, 
+\emph{BIFIE.data.transform__0.04.Rd}, 
+\emph{BIFIE.data__0.12.Rd}, \cr
+\emph{BIFIE.ecdf__0.11.Rd}, 
+\emph{BIFIE.freq__0.07.Rd}, 
+\emph{BIFIE.hist__0.13.Rd}, 
+\emph{BIFIE.linreg__0.13.Rd}, \cr
+\emph{BIFIE.univar.test__0.06.Rd}, 
+\emph{BIFIE.univar__0.18.Rd}, 
+\emph{BIFIE.waldtest__0.16.Rd}, \cr
+\emph{BIFIEsurvey-package__0.27.Rd}, 
+\emph{data.pisaNLD__0.06.Rd}, 
+\emph{data.test1__0.02.Rd}, \cr
+\emph{data.timss1__0.10.Rd}, 
 }

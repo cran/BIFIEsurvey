@@ -3,8 +3,9 @@
 
 // includes from the plugin
 
-// #include <Rcpp.h>
+
 #include <RcppArmadillo.h>
+#include <Rcpp.h>
 
 #ifndef BEGIN_RCPP
 #define BEGIN_RCPP
@@ -833,7 +834,7 @@ END_RCPP
 
 
 //*************************************************
-// means and standard deviations
+// statistical test means
 
 
 // declarations
@@ -869,7 +870,7 @@ BEGIN_RCPP
      Rcpp::NumericMatrix dstat_varM(VV*GG2,Nimp) ;  
      Rcpp::NumericMatrix eta2M(VV,Nimp) ;  
      Rcpp::NumericMatrix eta2_varM(VV,Nimp) ;  
-       
+     Rcpp::NumericVector eta2V(1) ;  
        
      // matrix of group values  
      Rcpp::NumericMatrix group_values_matrix(GG2,2);  
@@ -880,7 +881,9 @@ BEGIN_RCPP
      	group_values_matrix(ii,1) = group_values[gg2] ;	  
      		   ii++ ;  
      			}  
-     		}                              
+     		}  
+       
+       
        
      int RR = sd1repM.ncol() / Nimp ;  
        
@@ -891,19 +894,28 @@ BEGIN_RCPP
      for ( int ii=0; ii < Nimp ; ii++){  
        
      for (int vv=0; vv < VV ; vv++){  
-              
+       
+       
      // dataset ii  
-     Rcpp::NumericMatrix mean1M_ii = mean1M( Range(vv,vv*GG+GG-1) , Range(ii,ii) ) ;  
-     Rcpp::NumericMatrix sd1M_ii = sd1M( Range(vv,vv*GG+GG-1) , Range(ii,ii) ) ;  
-     Rcpp::NumericMatrix sumweightM_ii = sumweightM( Range(vv,vv*GG+GG-1) , Range(ii,ii) ) ;  
+     Rcpp::NumericMatrix mean1M_ii = mean1M( Range(vv*GG,vv*GG+GG-1) , Range(ii,ii) ) ;  
+     Rcpp::NumericMatrix sd1M_ii = sd1M( Range(vv*GG,vv*GG+GG-1) , Range(ii,ii) ) ;  
+     Rcpp::NumericMatrix sumweightM_ii = sumweightM( Range(0,GG-1) , Range(ii,ii) ) ;  
+       
+       
      Rcpp::List res = bifiehelpers_etasquared( mean1M_ii , sd1M_ii , sumweightM_ii ,  GG ) ;  
-     Rcpp::NumericVector eta2V = matr2vec( res["eta2"] ) ;  
+     eta2V = matr2vec( res["eta2"] ) ;  
      Rcpp::NumericVector dstatV = matr2vec( res["dstat"] ) ;  
        
+       
+     // Rcpp::NumericMatrix eta2_temp = res["eta2"]  ;  
+     // Rcpp::Rcout << "res['eta2']" << eta2_temp(0,0) << std::flush << std::endl ;  
+       
+       
+       
      // analysis replicate weights  
-     Rcpp::NumericMatrix mean1M_rr = mean1repM( Range(vv,vv*GG+GG-1) , Range(ii*RR,ii*RR + RR-1) ) ;  
-     Rcpp::NumericMatrix sd1M_rr = sd1repM( Range(vv,vv*GG+GG-1) , Range(ii*RR,ii*RR + RR-1)  ) ;  
-     Rcpp::NumericMatrix sumweightM_rr = sumweightrepM( Range(vv,vv*GG+GG-1) , Range(ii*RR,ii*RR + RR-1)  ) ;  
+     Rcpp::NumericMatrix mean1M_rr = mean1repM( Range(vv*GG,vv*GG+GG-1) , Range(ii*RR,ii*RR + RR-1) ) ;  
+     Rcpp::NumericMatrix sd1M_rr = sd1repM( Range(vv*GG,vv*GG+GG-1) , Range(ii*RR,ii*RR + RR-1)  ) ;  
+     Rcpp::NumericMatrix sumweightM_rr = sumweightrepM( Range(0,GG-1) , Range(ii*RR,ii*RR + RR-1)  ) ;  
      Rcpp::List res1 = bifiehelpers_etasquared( mean1M_rr , sd1M_rr , sumweightM_rr ,  GG ) ;  
      Rcpp::NumericMatrix eta2repM = res1["eta2"] ;  
      Rcpp::NumericMatrix dstatrepM = res1["dstat"] ;  
@@ -926,6 +938,9 @@ BEGIN_RCPP
      	dstatM(zz+vv*GG2,ii) = dstatV[zz] ;  
      	dstat_varM(zz+vv*GG2,ii) = dstat_var[zz] ;  
      			}  
+     			  
+     			  
+     			  
      		} // end vv			  
      Rcpp::Rcout << "-" <<  std::flush ;            		  
           		  
@@ -950,13 +965,21 @@ BEGIN_RCPP
          _["dstat_varM"] = dstat_varM    ,  
          _["group_values_matrix"] = group_values_matrix  
          ) ;    
-     // maximal list length is 20!       
+     // maximal list length is 20!  
        
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;                
+       
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
+       
+       
      
 END_RCPP
 }
 
+
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// bifie_crosstab
 
 // declarations
 extern "C" {
@@ -1096,7 +1119,9 @@ BEGIN_RCPP
 END_RCPP
 }
 
-//************************ syvby
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//* syvby
 
 
 // declarations
@@ -1253,4 +1278,242 @@ END_RCPP
 }
 
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// histogram
+
+
+// declarations
+extern "C" {
+SEXP bifie_hist( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP breaks_) ;
+}
+
+// definition
+
+SEXP bifie_hist( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP breaks_ ){
+BEGIN_RCPP
+   
+       
+     Rcpp::NumericMatrix datalist(datalist_);          
+     Rcpp::NumericMatrix wgt1(wgt_) ;  
+     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
+     Rcpp::NumericVector vars_index(vars_index_);  
+     Rcpp::NumericVector fayfac(fayfac_) ;  
+     Rcpp::NumericVector NI(Nimp_);  
+     Rcpp::NumericVector group_index1(group_index_) ;  
+     Rcpp::NumericVector group_values(group_values_) ;  
+     Rcpp::NumericVector breaks(breaks_) ;  
+       
+     int Nimp = NI[0] ;  
+     // int RR = wgtrep.ncol() ;   
+       
+     int N = wgt1.nrow() ;  
+     // int VV = vars_index.size() ;  
+     int NV = datalist.ncol();  
+     int group_index = group_index1[0] ;  
+     int GG=group_values.size() ;  
+     int BB=breaks.size() - 1 ;  
+       
+     Rcpp::NumericMatrix dat1(N,NV) ;  
+       
+       
+     Rcpp::NumericMatrix countsM(BB*GG,Nimp) ;  
+     Rcpp::NumericMatrix sumwgtM(BB*GG,Nimp) ;  
+     Rcpp::NumericMatrix ncasesM(GG,Nimp) ;  
+     Rcpp::NumericMatrix sumwgt_ggM(GG,Nimp) ;  
+     Rcpp::NumericVector counts(BB*GG) ;  
+     Rcpp::NumericVector sumwgt(BB*GG) ;  
+     Rcpp::NumericVector sumwgt_gg(GG) ;  
+       
+     int bb=0;  
+       
+     Rcpp::Rcout << "|"  ;  
+       
+     for ( int ii=0; ii < Nimp ; ii++ ){  
+       
+     dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;  
+       
+     for (int nn=0; nn<N;nn++){ // beg nn  
+     for (int gg=0; gg<GG;gg++){ // beg gg  
+     if ( dat1(nn , group_index ) == group_values[gg] ){  // beg if group val  
+        if ( ! R_IsNA( dat1( nn , vars_index[0] ) ) ){  // beg non NA  
+     	ncasesM(gg,ii) ++ ;  
+     	sumwgt_ggM(gg,ii) += wgt1(nn,0) ;  
+     	bb = 0;  
+             while (bb < BB ){  // beg while bb  
+          	    if ( dat1( nn , vars_index[0] ) < breaks[bb+1] ){ // beg if larger     
+          	    	    countsM( bb + gg*BB , ii ) ++ ;  
+          	    	    sumwgtM( bb + gg*BB , ii ) += wgt1(nn,0) ;  
+          	    	    bb = BB ;  
+          	    	    		} // end if larger  
+          	     bb ++ ;  
+         			} // end while bb  
+         	break ;  
+        	} // if non NA  
+     }  // end if group val  
+     } // end if gg  
+     } // end nn  
+       
+     for (int hh=0; hh < BB*GG ; hh++){  
+     	counts[hh] += countsM(hh,ii) ;   
+     	sumwgt[hh] += sumwgtM(hh,ii) ;  
+     				}  
+     for (int hh=0; hh < GG ; hh++){  
+     	sumwgt_gg[hh] += sumwgt_ggM(hh,ii) ;  
+     				}  
+     				  
+     Rcpp::Rcout << "-" <<  std::flush ;             
+       
+     } // end ii  
+       
+     Rcpp::Rcout << "|" << std::endl ;    
+       
+       
+     //*********************************  
+     // compute statistics  
+       
+     for (int hh=0; hh < BB*GG ; hh++){  
+     	counts[hh] = counts[hh] / Nimp ;   
+     	sumwgt[hh] = sumwgt[hh] / Nimp ;  
+     				}  
+     for (int hh=0; hh < GG ; hh++){  
+     	sumwgt_gg[hh] = sumwgt_gg[hh] / Nimp ;  
+     				}  
+     				  
+     // mid points  
+     Rcpp::NumericVector mids(BB-1);  
+     for (int bb=0;bb<BB-1;bb++){  
+     	mids[bb] = ( breaks[bb] + breaks[bb+1] ) / 2.0 ;  
+     			}  
+       
+     // density  
+     Rcpp::NumericVector density_vec(BB*GG) ;  
+     Rcpp::NumericVector relfreq(BB*GG) ;  
+       
+     for (int gg=0;gg<GG; gg++){  
+     for (int bb=0;bb<BB;bb++){  
+           relfreq[bb+gg*BB] = sumwgt[bb+gg*BB] / sumwgt_gg[gg] ;  
+           density_vec[bb+gg*BB] = relfreq[bb+gg*BB] / ( breaks[bb+1] - breaks[bb] ) ;  
+           			}  
+           		}  
+     			  
+          		  
+     //*************************************************      
+     // OUTPUT                                     
+     return Rcpp::List::create(   
+     	_["BB"] = BB , _["breaks"] = breaks , _["mids"] = mids , 	  
+         _["sumwgtM"] = sumwgtM ,  
+         _["countsM"] = countsM ,  
+         _["ncasesM"] = ncasesM ,  
+         _["counts"] = counts ,  
+         _["sumwgt"] = sumwgt ,  
+         _["sumwgt_ggM"] = sumwgt_ggM ,  
+         _["sumwgt_gg"] = sumwgt_gg    ,  
+         _["relfreq"] = relfreq ,  
+         _["density_vec"] = density_vec  
+         ) ;    
+     // maximal list length is 20!  
+       
+       
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
+       
+       
+     
+END_RCPP
+}
+
+
+//*+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// empirical distribution function
+
+
+// declarations
+extern "C" {
+SEXP bifie_ecdf( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, 
+	SEXP breaks_, SEXP quanttype_, SEXP maxval_) ;
+}
+
+// definition
+
+SEXP bifie_ecdf( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, 
+	SEXP breaks_, SEXP quanttype_, SEXP maxval_ ){
+BEGIN_RCPP
+          
+     Rcpp::NumericMatrix datalist(datalist_);          
+     Rcpp::NumericMatrix wgt1(wgt_) ;  
+     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
+     Rcpp::NumericVector vars_index(vars_index_);  
+     Rcpp::NumericVector fayfac(fayfac_) ;  
+     Rcpp::NumericVector NI(Nimp_);  
+     Rcpp::NumericVector group_index1(group_index_) ;  
+     Rcpp::NumericVector group_values(group_values_) ;  
+     Rcpp::NumericVector breaks(breaks_) ;  
+     int quanttype = as<int>(quanttype_) ;  
+     int maxval = as<int>(maxval_) ;  
+       
+       
+     int Nimp = NI[0] ;  
+     // int RR = wgtrep.ncol() ;   
+       
+     int N = wgt1.nrow() ;  
+     int VV = vars_index.size() ;  
+     int NV = datalist.ncol();  
+     // int group_index = group_index1[0] ;  
+     int GG=group_values.size() ;  
+     int BB=breaks.size() ;  
+       
+     int ZZ=VV*GG*BB ;  
+     Rcpp::NumericMatrix ecdfM(ZZ,Nimp) ;  
+     Rcpp::NumericVector ecdfMtemp(ZZ) ;  
+     Rcpp::NumericMatrix ncasesM(VV*GG,Nimp) ;  
+     Rcpp::NumericMatrix sumwgtM(VV*GG,Nimp) ;  
+     Rcpp::NumericMatrix dat1(N,NV) ;  
+       
+       
+       
+     for (int ii=0;ii<Nimp;ii++){ // beg dataset ii  
+       
+     // int ii=0;  
+     	dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;  
+     	  
+     	ecdfMtemp = bifie_helper_ecdf( dat1 , wgt1 , breaks ,  
+     		 group_values , group_index1 ,vars_index , ii ,  
+     		 ncasesM ,  sumwgtM , maxval , quanttype ) ;  
+       
+     	for (int zz=0;zz<ZZ;zz++){  
+     		ecdfM(zz,ii) = ecdfMtemp[zz] ;  
+     				}  
+     // Rcpp::Rcout << "ii= " <<  ii <<  std::flush << std::endl ;  
+     	} // end dataset ii  
+       
+     //********************************	       	  
+     // average ecdf  
+       
+     // Rcpp::Rcout << "before average ecdf" << std::flush << std::endl ;  
+     Rcpp::NumericVector ecdf(ZZ);  
+     for (int zz=0;zz<ZZ;zz++){  
+       for (int ii=0;ii<Nimp;ii++){  
+     	ecdf[zz] += ecdfM(zz,ii) ;  
+     			}  
+     	ecdf[zz] = ecdf[zz] / Nimp ;  
+         }  
+     // Rcpp::Rcout << "after average ecdf" << std::flush << std::endl ;     	  
+       
+     //*************************************************      
+     // OUTPUT                                     
+     return Rcpp::List::create(   
+     	_["BB"] = BB ,   
+     	_["yval"] = breaks ,  
+     	_["sumwgtM"] = sumwgtM ,   
+     	_["ncasesM"] = ncasesM ,   
+     	_["ecdfM"] = ecdfM  ,  
+     	_["ecdf"] = ecdf   
+     	) ;  
+             
+     
+END_RCPP
+}
 

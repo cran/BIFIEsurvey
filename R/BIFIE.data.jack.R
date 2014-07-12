@@ -1,18 +1,63 @@
 ###########################################################
 # BIFIE.data objects for designs with jackknife zones
-BIFIE.data.jack <- function( data , wgt=NULL , pv_vars = NULL ,
-	jkzone=NULL , jkrep=NULL , jktype="JK_TIMSS" ,
-	jkfac=NULL , fayfac = 1
-		){
+BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NULL ,
+	jkzone=NULL , jkrep=NULL  ,	jkfac=NULL , fayfac = 1 , ngr = 100 , seed = .Random.seed
+		){	
+	#*** list of multiply imputed datasets
+	if ( ( is.list(data) ) & ( ! is.data.frame(data) ) ){
+		dataL <- data
+		data <- dataL[[1]]
+				}  else {
+		dataL <- data
+				}					
+    data <- as.data.frame( data )		
+	#*********************************************************
+	# using fixed jackknife zones
+	if (jktype == "JK_GROUP"){
+		N <- nrow(data)
+		if ( is.null(wgt) ){
+			data$wgt <- rep(1,N)
+			wgt <- "wgt"
+				}
+		data$jkrep <- rep(0,N)
+		jkrep <- "jkrep"
+		fayfac <- ngr / ( ngr - 1 )
+        jkfac <- 0	 						
+							}
 	
-    data <- as.data.frame( data )
-	
+	#**********************************************************	
+	#*** defaults for jackknife creation: random groups
+	if (jktype == "JK_RANDOM"){	
+		N <- nrow(data)
+		if ( is.null(wgt) ){
+			data$wgt <- rep(1,N)
+			wgt <- "wgt"
+				}
+		if ( ! is.null(seed) ){
+			set.seed( seed )
+			indzone <- sample(1:N) 
+					} else {
+			indzone <- 1:N
+				}
+		jkzone <- 1:N
+		N1 <- N / ngr
+		jkzone <- floor( jkzone / ( N1 + .00001  ) ) + 1
+		jkzone <- jkzone[indzone]
+		jkrep <- rep(0,N)
+		data$jkzone <- jkzone
+		jkzone <- "jkzone"
+		data$jkrep <- jkrep
+		jkrep <- "jkrep"
+		fayfac <- ngr / ( ngr - 1 )
+        jkfac <- 0	     
+				}
+	#**********************************************************
 	#**** defaults for TIMSS	
 	if (jktype == "JK_TIMSS"){
           jkrep <- "JKREP"
           jkzone <- "JKZONE"
 		  wgt <- "TOTWGT"
-          jkfac <- 2
+		  jkfac <- 2
 				}
 				
 	#******** generate replicate weights
@@ -33,6 +78,8 @@ BIFIE.data.jack <- function( data , wgt=NULL , pv_vars = NULL ,
 #		colnames(datarep)[rr] <- vv
 #		if ( prbar[rr] == 1 ){ cat("-" ) ; flush.console() }
 #				}
+    data[ , jkzone ] <- match( data[ , jkzone ] , unique( data[ , jkzone] ) )
+
 
 	datarep <- .Call( "bifie_jack_timss" , wgt_= data[,wgt] , data[,jkzone]-1 , data[,jkrep] , RR , jkfac ,
 					prbar , PACKAGE="BIFIEsurvey" )
@@ -41,7 +88,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , pv_vars = NULL ,
 	
 	cat("|\n")
 	#******** generate replicated datasets for datasets
-	if ( is.null( pv_vars) ){ datalist <- data  }
+	if ( is.null( pv_vars) ){ datalist <- dataL  }
 	if ( ! is.null( pv_vars )){
 		dfr <- NULL
 		VV <- length(pv_vars)
@@ -63,7 +110,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , pv_vars = NULL ,
 			colnames(dat1)[ newvars ] <- pv_vars
 			datalist[[ii]] <- dat1 
 						}
-					}
+					}			
 	#*** create BIFIE.data object
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgt ] , wgtrep = datarep , fayfac = fayfac )
 	return(bifiedat)

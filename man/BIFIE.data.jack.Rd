@@ -11,8 +11,9 @@ especially for TIMSS/PIRLS studies.
 }
 
 \usage{
-BIFIE.data.jack(data, wgt = NULL, pv_vars = NULL, jkzone = NULL, jkrep = NULL, 
-     jktype = "JK_TIMSS", jkfac = NULL, fayfac = 1)
+BIFIE.data.jack(data, wgt = NULL, jktype = "JK_TIMSS", pv_vars = NULL, 
+     jkzone = NULL, jkrep = NULL, jkfac = NULL, fayfac = 1 , ngr=100 ,
+     seed = .Random.seed )
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -21,30 +22,37 @@ BIFIE.data.jack(data, wgt = NULL, pv_vars = NULL, jkzone = NULL, jkrep = NULL,
 Data frame: Can be a single or a list of multiply imputed datasets
 }
   \item{wgt}{
-Case weight. If \code{jktype='JK_TIMSS'}, then \code{wgt='TOTWGT'}.
+Case weight. If \code{jktype="JK_TIMSS"}, then \code{wgt="TOTWGT"}.
 }
   \item{pv_vars}{
-An optional vector of plausivle values which define multiply
+An optional vector of plausible values which define multiply
 imputed datasets.
 }
+  \item{jktype}{
+Type of jackknife procedure for creating the \code{BIFIE.data} object.
+\code{jktype="JK_TIMSS"} refers to TIMSS/PIRLS datasets. The type
+\code{"JK_GROUP"} creates jackknife weights based on a user defined
+grouping, the type \code{"JK_RANDOM"} creates random groups. The number
+of random groups can be defined in \code{ngr}.
+}
   \item{jkzone}{
-Jackknife zones. If \code{jktype='JK_TIMSS'}, then \code{jkzone='JKZONE'}.
+Jackknife zones. If \code{jktype="JK_TIMSS"}, then \code{jkzone="JKZONE"}.
 }
   \item{jkrep}{
-Jackknife replicate factors. If \code{jktype='JK_TIMSS'}, then \code{jkrep='JKREP'}.
-}
-  \item{jktype}{
-Type of jackknife procdure for creating the \code{BIFIE.data} object.
-\code{jktype='JK_TIMSS'} refers to TIMSS/PIRLS datasets.
+Jackknife replicate factors. If \code{jktype="JK_TIMSS"}, then \code{jkrep="JKREP"}.
 }
   \item{jkfac}{
 Factor for multiplying jackknife replicate weights. 
-If \code{jktype='JK_TIMSS'}, then \code{jkfac=2}.
+If \code{jktype="JK_TIMSS"}, then \code{jkfac=2}.
 }
-
   \item{fayfac}{
 Fay factor for statistical inference. The default is set to 1.
 }
+\item{ngr}{Number of randomly created groups in \code{"JK_RANDOM"}.}
+\item{seed}{The simulation seed if \code{"JK_RANDOM"} is chosen.
+	If \code{seed=NULL}, then the grouping is done according the
+order in the dataset.}
+
 }
 
 %\details{
@@ -91,6 +99,38 @@ summary(bdat1)
 # create BIFIE.data objects -> all PVs are included in one dataset
 bdat2 <- BIFIE.data.jack( data=data.timss3  ,  jktype="JK_TIMSS"  )
 summary(bdat2)
+
+#############################################################################
+# EXAMPLE 2: Creation of Jackknife zones and replicate weights for data.test1
+#############################################################################
+
+data(data.test1)
+
+# create jackknife zones based on random group creation
+bdat1 <- BIFIE.data.jack( data = data.test1 ,  jktype="JK_RANDOM" , ngr = 50  )
+summary(bdat1)
+stat1 <- BIFIE.univar( bdat1 , vars ="math" ,  group="stratum" )
+summary(stat1)
+
+# random creation of groups and inclusion of weights
+bdat2 <- BIFIE.data.jack( data = data.test1 ,  jktype="JK_RANDOM" , ngr = 75 , seed=987 ,
+                wgt="wgtstud")
+summary(bdat2)
+stat2 <- BIFIE.univar( bdat2 , vars ="math" ,  group="stratum" )
+summary(stat2)
+
+# using idclass as jackknife zones
+bdat3 <- BIFIE.data.jack( data = data.test1 ,  jktype="JK_GROUP" , jkzone="idclass" , 
+                wgt="wgtstud")
+summary(bdat3)
+stat3 <- BIFIE.univar( bdat3 , vars ="math" ,  group="stratum" )
+summary(stat3)
+
+# create BIFIEdata object with a list of imputed datasets
+dataList <- list( data.test1 , data.test1 , data.test1 )
+bdat4 <- BIFIE.data.jack( data = dataList ,  jktype="JK_GROUP" , jkzone="idclass" , 
+                wgt="wgtstud")
+summary(bdat4)                
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

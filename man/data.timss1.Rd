@@ -47,6 +47,7 @@ student covariates and all 5 plausible values contained in one file.
 \dontrun{	
 library(survey)
 library(intsvy)
+library(mitools)
     
 #############################################################################
 # EXAMPLE 1: TIMSS dataset data.timss3 (one dataset including all PVs)
@@ -76,7 +77,7 @@ bdat4 <- BIFIE.data.jack(data.timss3 , pv_vars = c("ASMMAT","ASSSCI") ,
                jktype="JK_TIMSS")
 summary(bdat4)              
 
-#--- create object in survey library
+#--- create object in survey package
 dat3a <- as.data.frame( cbind( data.timss2[[1]] , data.timssrep ) )
 RR <- ncol(data.timssrep) - 1       # number of jackknife zones
 svydes3 <- survey::svrepdesign(data=dat3a,weights=~TOTWGT ,type='JKn',
@@ -91,7 +92,7 @@ for (ii in 1:5){
     dat1 <- cbind(  dat1 , data.timssrep[,-1] ) 
     datL[[ii]] <- dat1 
                 }
-datL <- imputationList(list( datL[[1]],datL[[2]],datL[[3]],datL[[4]],datL[[5]]) )
+datL <- mitools::imputationList(list( datL[[1]],datL[[2]],datL[[3]],datL[[4]],datL[[5]]) )
 svydes4 <- survey::svrepdesign(data=datL,weights=~TOTWGT ,type='JKn',
                   repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
 summary(svydes4)

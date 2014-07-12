@@ -28,8 +28,8 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	VV <- length(vars)
 	vars_info <- list(1:VV)
 	for (vv in 1:VV){
-	   t1 <- table( dat1[,vars[vv]] )
-	   vars_info[[vv]] <- sort( as.numeric( paste0(names( t1) )))	   
+	   t1 <- table( dat1[,vars_index[vv] ] )
+	   vars_info[[vv]] <- sort( as.numeric( paste0(names(t1) )))	   
 		    }
 	vars_values_numb <- unlist( lapply( vars_info , FUN = function(uu){ length(uu) } )	) 
 	vars_values <- matrix(NA, nrow=max(vars_values_numb) , ncol=VV)

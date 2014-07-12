@@ -41,7 +41,7 @@ values will be determined automatically.
 }
 \item{se}{Optional logical indicating whether statistical inference
 based on replication should be employed.}
-\item{object}{Object of class \code{BIFIE.univar}}
+\item{object}{Object of class \code{BIFIE.by}}
 \item{digits}{Number of digits for rounding output}
 \item{\dots}{Further arguments to be passed}
 }

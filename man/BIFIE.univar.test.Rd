@@ -23,7 +23,7 @@ BIFIE.univar.test(BIFIE.method)
   \item{BIFIE.method}{
 Object of class \code{BIFIE.univar}
 }
-\item{object}{Object of class \code{BIFIE.univar}}
+\item{object}{Object of class \code{BIFIE.univar.test}}
 \item{digits}{Number of digits for rounding output}
 \item{\dots}{Further arguments to be passed}
 }

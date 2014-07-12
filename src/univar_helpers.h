@@ -3,9 +3,9 @@
 
 // includes from the plugin
 
-// #include <Rcpp.h>
-#include <RcppArmadillo.h>
 
+#include <RcppArmadillo.h>
+#include <Rcpp.h>
 
 #ifndef BEGIN_RCPP
 #define BEGIN_RCPP
@@ -633,15 +633,15 @@ Rcpp::List bifiehelpers_etasquared( Rcpp::NumericMatrix mean1M ,
 	int GG2 = GG * (GG - 1 ) / 2 ;
 	Rcpp::NumericMatrix dstat(GG2 , WW ) ;
 	
-//Rcpp::Rcout << "WW " <<  WW <<  std::flush << std::endl ;
-	
-	
+
 	for ( int ww=0; ww < WW ; ww++){ // beg ww
 		for (int gg=0;gg<GG; gg++){ // beg gg
 		  sumwgt[ww] += sumweightM(gg,ww) ;
-		  totmean[ww] += sumweightM(gg,ww) * mean1M(gg,ww) ;
+		  totmean[ww] += sumweightM(gg,ww) * mean1M(gg,ww) ;	  
+// Rcpp::Rcout << "mean1M(gg,0)=" << mean1M(gg,ww) << std::flush << std::endl ;
+
 			}  // end gg
-		totmean[ww] = totmean[ww] / sumwgt[ww] ;      
+		totmean[ww] = totmean[ww] / sumwgt[ww] ;  
 		for (int gg=0;gg<GG; gg++){  // beg gg
 		  expl_var[ww] += sumweightM(gg,ww)*pow( mean1M(gg,ww) - totmean[ww] , 2.0 ) ;
 		  resid_var[ww] += (sumweightM(gg,ww)-1)*pow( sd1M(gg,ww) , 2.0 ) ; 
@@ -659,7 +659,8 @@ Rcpp::List bifiehelpers_etasquared( Rcpp::NumericMatrix mean1M ,
 				}
 			}
 	 }  // end ww
-				
+
+
 	return Rcpp::List::create( 
 	    _["eta2"] = eta2 ,
 	    _["dstat"] = dstat
@@ -1016,3 +1017,154 @@ Rcpp::List bifiehelpers_crosstab( Rcpp::NumericMatrix dat1 , Rcpp::NumericMatrix
 	    _["crosstab_pars"] = v10 
 	    ) ;  
     }
+    
+/////////////////////////////////////////////////////    
+// bifie_helper_ecdf
+Rcpp::NumericVector bifie_helper_ecdf( Rcpp::NumericMatrix dat1 , 
+	Rcpp::NumericVector wgt , Rcpp::NumericVector breaks ,
+	Rcpp::NumericVector group_values , Rcpp::NumericVector group_index1 ,
+	Rcpp::NumericVector vars_index , int ii ,
+	Rcpp::NumericMatrix ncasesM , Rcpp::NumericMatrix sumwgtM ,
+	int maxval , int quanttype ){
+		
+	int N=dat1.nrow();	
+	int GG=group_values.size() ;
+	int BB=breaks.size() ;
+	int VV=vars_index.size();
+	Rcpp::NumericVector ecdf_temp(BB);
+	arma::colvec vals_temp(N) ;
+	arma::colvec wgt_temp(N) ;
+	arma::colvec group_temp(N) ;
+	arma::uvec indvv(N);
+	arma::colvec wgt_tempsort(N);
+	arma::colvec vals_tempsort(N);
+	arma::colvec group_tempsort(N);
+	arma::colvec wgt_tempsort_gg(N);
+	arma::colvec vals_tempsort_gg(N);
+	int group_index = group_index1[0] ;
+	int ZZ=VV*BB*GG;
+	Rcpp::NumericVector ecdfMtemp(ZZ);
+	
+	Rcpp::NumericMatrix a1(N,4) ;
+	double eps = 1e-20 ;
+	double maxval2 = maxval ;
+	
+	int uu=0;
+	int ngg=0;
+	int hh=0;
+	int MM=0;
+	
+	//*** count observed responses
+	for (int nn=0;nn<N;nn++){ // beg nn
+	for (int gg=0;gg<GG;gg++){ // beg gg
+	if ( dat1(nn,group_index ) == group_values[gg] ){ // beg val gg
+	for (int vv=0;vv<VV;vv++){ // beg vv
+	    if ( ! R_IsNA( dat1(nn,vars_index[vv] ) ) ){	
+		ncasesM(gg + vv*GG , ii ) ++ ;
+		sumwgtM(gg+vv*GG,ii) += wgt(nn,0) ;
+					}
+				}  // end vv
+		}  // enf if val gg
+	} // end gg
+	} // end nn
+
+
+	int bb=0;
+	
+	for (int vv=0;vv<VV;vv++){
+	
+	for (int nn=0;nn<N;nn++){ // beg nn
+	   group_temp(nn,0) = -1 ;
+	   wgt_temp(nn,0) = 0 ;
+	   vals_temp(nn,0) = maxval2 ;
+	   for (int gg=0;gg<GG;gg++){
+	   if ( dat1(nn,group_index ) == group_values[gg] ){ // beg val gg
+	      if ( ! R_IsNA( dat1(nn,vars_index[vv] ) ) ){ // beg non NA
+			   vals_temp(nn,0) = dat1(nn,vars_index[vv] ) ;
+			   wgt_temp(nn,0) = wgt(nn,0 ) ; 
+			   group_temp(nn,0) = gg ;
+				} // end non NA
+	     } // end val gg
+	   } // end gg
+	} // end nn 
+		
+		
+	
+	// sort values
+	indvv = arma::sort_index( vals_temp ) ;
+	vals_tempsort =vals_temp.rows( indvv ) ;
+	wgt_tempsort =wgt_temp.rows( indvv ) ;
+	group_tempsort =group_temp.rows( indvv ) ;
+	
+	
+	for ( int gg=0;gg<GG;gg++){
+	ngg = ncasesM( gg + vv*GG , ii ) ;
+	uu=0;
+	for (int nn=0;nn<N;nn++){ // beg nn
+	   if ( group_tempsort(nn,0) == gg ){	// beg group = gg
+	     vals_tempsort_gg(uu,0) = vals_tempsort(nn,0) ;
+	     wgt_tempsort_gg(uu,0) = wgt_tempsort(nn,0) / sumwgtM( gg+vv*GG, ii) ;
+	     uu ++ ;
+	      } // end if group = gg
+	}  // end nn
+	
+	
+	if (ngg<N){    	// beg if ngg < N
+	    for (int uu=ngg; uu<N;uu++){  // beg uu
+		 vals_tempsort_gg(uu,0) = 0 ;
+		 wgt_tempsort_gg(uu,0) = 0 ;
+			} // end uu
+		} // end if ngg < N
+		
+	// define ECDF	
+	a1(0,0)=0;
+	a1(0,1)=wgt_tempsort_gg(0,0);
+	a1(0,2)=vals_tempsort_gg(0,0);
+	a1(0,3)=vals_tempsort_gg(0,0);
+	
+	for (int uuu=1;uuu<ngg;uuu++){
+		a1(uuu,0) = a1(uuu-1,1) ;
+		a1(uuu,1) = a1(uuu-1,1) + wgt_tempsort_gg(uuu,0) ;
+		a1(uuu,2) = a1(uuu-1,3);
+		a1(uuu,3) = vals_tempsort_gg(uuu,0) ;
+			}
+	
+			
+	uu=0;		
+	bb=0;
+	MM=0;
+	while ( ( bb < BB ) & ( ! ( uu >= ngg ) ) ){
+		if ( a1(uu,1) > breaks[bb] ){
+		   if (quanttype==1){	
+			ecdf_temp[bb] = a1(uu,2) + ( a1(uu,3) - a1(uu,2) ) * 
+						( breaks[bb] - a1(uu,0)  ) / ( a1(uu,1) - a1(uu,0) + eps) ;
+			MM=bb;
+					}		
+		   if (quanttype==2){	
+			ecdf_temp[bb] = a1(uu,2) ;
+			MM=bb;
+					}				
+			bb ++ ;
+					}  else {
+			uu ++ ;
+					}
+			} // end while
+	// Rcpp::Rcout << "MM= " <<  MM <<  std::flush << std::endl ;		
+	   if ( MM < BB  ){
+		  hh=MM+1 ;
+		  while (hh < BB ){   	  	  
+		   ecdf_temp[bb] = a1(ngg-1,3) ;
+		   hh ++ ;
+			}
+		   }
+	
+		for (int bb=0;bb<BB;bb++){
+				ecdfMtemp[ bb + gg*BB + vv*GG*BB ] = ecdf_temp[bb] ;    	
+			}  // end bb
+			
+	}  // end gg
+	
+	} // end vv
+	
+	return ( wrap( ecdfMtemp) ) ;
+	}

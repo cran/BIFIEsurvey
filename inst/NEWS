@@ -44,6 +44,20 @@ a.robitzsch/-\bifie.at
 CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+
+---
+Versions 0.2 -- 2014-07-12  --  CRAN BIFIEsurvey 0.2-37
+---
+x included histogram 'BIFIE.hist'
+x included empirical distribution function 'BIFIE.ecdf'
+x included data transformation function 'BIFIE.data.transform'
+x extended creation of jackknife grouping designs in 'BIFIE.data.jack'
+
+* included/modified datasets: data.test1, data.pisaNLD
+* included/modified examples: BIFIE.ecdf (1), BIFIE.data.transform (1),
+  BIFIE.data.jack (2), data.pisa (1)
+
 ---
 Versions 0.1 -- 2014-07-01  --  CRAN BIFIEsurvey 0.1-61
 ---

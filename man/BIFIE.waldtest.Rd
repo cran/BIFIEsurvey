@@ -10,7 +10,7 @@ Wald Tests for BIFIE Methods
 \description{
 This function performs a Wald test for objects of classes
 \code{\link{BIFIE.correl}}, \code{\link{BIFIE.crosstab}}, \code{\link{BIFIE.freq}}, 
-\code{\link{BIFIE.linreg}} and \code{\link{BIFIE.univar}}.
+\code{\link{BIFIE.linreg}}, \code{\link{BIFIE.logistreg}} and \code{\link{BIFIE.univar}}.
 }
 
 \usage{
@@ -22,7 +22,8 @@ BIFIE.waldtest(BIFIE.method, Cdes , rdes )
 \arguments{
   \item{BIFIE.method}{
 Object of classes \code{\link{BIFIE.correl}}, \code{\link{BIFIE.crosstab}}, 
-\code{\link{BIFIE.freq}},  \code{\link{BIFIE.linreg}} or \code{\link{BIFIE.univar}}
+\code{\link{BIFIE.freq}},  \code{\link{BIFIE.linreg}},
+\code{\link{BIFIE.logistreg}} or \code{\link{BIFIE.univar}}
 (see \code{parnames} in the Output of these methods for saved parameters)
 }
 \item{Cdes}{Design matrix \eqn{C} (see Details)}

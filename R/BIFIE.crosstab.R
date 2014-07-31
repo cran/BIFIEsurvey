@@ -8,6 +8,13 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	#****
 	s1 <- Sys.time()
 	bifieobj <- BIFIEobj
+	vars1 <- vars1[1]
+	vars2 <- vars2[1]	
+	if (bifieobj$cdata){
+		varnames <- unique( c( vars1 , vars2 , group , "one") )
+		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
+						}		
+	
 	FF <- Nimp <- bifieobj$Nimp
 	N <- bifieobj$N
 	dat1 <- bifieobj$dat1
@@ -17,9 +24,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	RR <- bifieobj$RR
 	datalistM <- bifieobj$datalistM
     fayfac <- bifieobj$fayfac	
-	vars1 <- vars1[1]
-	vars2 <- vars2[1]
-	
+
 	
 	if (RR==1){ RR <- 0 }
 	if ( ! se ){ 
@@ -135,8 +140,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	parnames3 <- paste0( dfr3$parm , "_" ,
 				 dfr3$group , dfr3$groupval )
 	parnames <- c( parnames , parnames3 )
-	
-	if (RR==0){				
+	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr1$SE <- dfr1$fmi <- dfr1$VarMI <- dfr1$VarRep <- NULL
 		dfr2$SE <- dfr2$fmi <- dfr2$VarMI <- dfr2$VarRep <- NULL		
 		dfr3$SE <- dfr3$fmi <- dfr3$VarMI <- dfr3$VarRep <- NULL				

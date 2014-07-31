@@ -45,28 +45,65 @@ CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+---
+Versions 0.3 -- 2014-07-31  --  CRAN BIFIEsurvey 0.3-47
+---
+NOTE  * changed handling of factors in conversion into a BIFIEdata object
+ADDED * included generation of bootstrap designs ('BIFIE.data.boot')
+ADDED * included logistic regression 'BIFIE.logistreg'
+ADDED * included function 'save.BIFIEdata' and 'load.BIFIEdata' for 
+        saving and loading BIFIEdata objects
+ADDED * included option for saving, loading and holding BIFIE datasets
+        in a compact format ('cdata') which avoids memory overflow in
+        some applications
+NOTE  * enabled all methods to work for BIFIEdata obejcts which are saved 
+        as 'cdata'
+ADDED * included BIFIEdata conversion and selection functions 'BIFIE.dataselect',
+        'BIFIE.BIFIEdata2BIFIEcdata', 'BIFIE.BIFIEcdata2BIFIEdata'
+FIXED * fixed a bug in linear regression with formula specification and
+        some missing values
+FIXED * fixed a bug in BIFIE.data.transform  
+ADDED * included a function 'write.BIFIEdata' for writing separate imputed 
+        datasets from BIFIEdata objects permitting the formats csv, csv2, table
+        and Rdata
+FIXED * corrected output of standard errors in cases in which no replicate 
+        weights were specified
+NOTE  * introduced the role of function maintainers which maintains only some
+        functions (e.g. 'BIFIE.logistreg'). The package maintainer maintains
+        the rest of the functions in BIFIEsurvey.
+NOTE  * included an option for conversion of PISA data in 'BIFIE.data.jack'
+ADDED * included function 'load.BIFIEdata' for efficient loading of files
+        and creation of BIFIEdata objects
+FIXED * applied data transformation separately for every imputed dataset     
+ADDED * included function 'BIFIE.mva' for conducting missing value analyses
+x ---
+
+DATA  * included/modified datasets: data.timss1.ind
+EXAMP * included/modified examples: BIFIE.data.boot (1), BIFIE.logistreg (1,2),
+        save.BIFIEdata (1,2)
+
 
 ---
 Versions 0.2 -- 2014-07-12  --  CRAN BIFIEsurvey 0.2-37
 ---
-x included histogram 'BIFIE.hist'
-x included empirical distribution function 'BIFIE.ecdf'
-x included data transformation function 'BIFIE.data.transform'
-x extended creation of jackknife grouping designs in 'BIFIE.data.jack'
+ADDED * included histogram 'BIFIE.hist'
+ADDED * included empirical distribution function 'BIFIE.ecdf'
+ADDED * included data transformation function 'BIFIE.data.transform'
+NOTE  * extended creation of jackknife grouping designs in 'BIFIE.data.jack'
 
-* included/modified datasets: data.test1, data.pisaNLD
-* included/modified examples: BIFIE.ecdf (1), BIFIE.data.transform (1),
-  BIFIE.data.jack (2), data.pisa (1)
+DATA  * included/modified datasets: data.test1, data.pisaNLD
+EXAMP * included/modified examples: BIFIE.ecdf (1), BIFIE.data.transform (1),
+        BIFIE.data.jack (2), data.pisa (1)
 
 ---
 Versions 0.1 -- 2014-07-01  --  CRAN BIFIEsurvey 0.1-61
 ---
-x included functions: BIFIE.data, BIFIE.univar, BIFIE.freq,
-  BIFIE.correl, BIFIE.linreg, BIFIE.waldtest, BIFIE.univar.test,
-  BIFIE.data.jack, BIFIE.crosstab, BIFIE.by
+ADDED * included functions: BIFIE.data, BIFIE.univar, BIFIE.freq,
+        BIFIE.correl, BIFIE.linreg, BIFIE.waldtest, BIFIE.univar.test,
+        BIFIE.data.jack, BIFIE.crosstab, BIFIE.by
 
-* included/modified datasets: ---
-* included/modified examples: ---
+DATA  * included/modified datasets: ---
+EXAMP * included/modified examples: ---
 
 
 

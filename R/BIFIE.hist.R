@@ -7,6 +7,10 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 	#****
 	s1 <- Sys.time()
 	bifieobj <- BIFIEobj
+	if (bifieobj$cdata){
+		varnames <- unique( c( vars , group , "one") )
+		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
+						}							
 	FF <- Nimp <- bifieobj$Nimp
 	N <- bifieobj$N
 	dat1 <- bifieobj$dat1

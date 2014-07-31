@@ -38,7 +38,12 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes ){
 		parsM <- res1$output$ctparsM
 		parsrepM <- res1$output$ctparsrepM
 				}
-
+	#************************************
+	#**** logistreg
+	if ( class( BIFIE.method) == "BIFIE.logistreg"){ 	
+		parsM <- res1$output$regrcoefM
+		parsrepM <- res1$output$regrcoefrepM
+				}
 				
 	fayfac <- res1$fayfac
 	

@@ -15,7 +15,17 @@ export(
     BIFIE.by , 
     BIFIE.hist  ,
     BIFIE.data.transform ,
-    BIFIE.ecdf
+    BIFIE.ecdf ,
+    BIFIE.data.boot ,
+    save.BIFIEdata ,
+    load.BIFIEdata ,
+    BIFIE.logistreg ,
+    BIFIEdata.select ,
+    BIFIE.BIFIEdata2BIFIEcdata  ,
+    BIFIE.BIFIEcdata2BIFIEdata   ,
+    write.BIFIEdata   ,
+    load.BIFIEdata.files    ,
+    BIFIE.mva
 )    
     
     
@@ -35,6 +45,7 @@ S3method(summary,BIFIE.by)
 S3method(summary,BIFIE.hist)
 S3method(plot,BIFIE.hist)
 S3method(summary,BIFIE.ecdf)
+S3method(summary,BIFIE.mva)
 
 
 # imports Depends packages

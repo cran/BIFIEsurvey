@@ -2,13 +2,12 @@
 
 #######################################################################
 # Linear regression
-BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  , 
+BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  , 
             formula=NULL ,   
-			group=NULL , group_values=NULL , se=TRUE ){
+			group=NULL , group_values=NULL , se=TRUE , eps = 1E-8 , maxiter=100){
 	#****
 	s1 <- Sys.time()
 	bifieobj <- BIFIEobj
-
 	if (bifieobj$cdata){
 	    fomula_vars <- NULL
 		if (! is.null(formula) ){
@@ -16,8 +15,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 							}
 		varnames <- unique( c( dep , pre , group , "one" , formula_vars ) )
 		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
-						}				
-			
+						}					
 	FF <- Nimp <- bifieobj$Nimp
 	N <- bifieobj$N
 	dat1 <- bifieobj$dat1
@@ -27,7 +25,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	RR <- bifieobj$RR
 	datalistM <- bifieobj$datalistM
     fayfac <- bifieobj$fayfac	
-	
+
 	#*** look for formula objects
 	if ( ! is.null( formula) ){
 	    cat("|*** Data Preparation ") ; flush.console()
@@ -41,7 +39,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 		m1 <- matrix( NA , nrow=nrow(bifieobj2) , ncol=ncol(m0) )
 		m1[ match( rownames(m0),rownames(bifieobj2) ) , ] <- m0
 		colnames(m1) <- colnames(m0)
-		#****				
+		#****
 		dep <- rownames( attr( terms(formula) ,"factors") )[1]
 		pre <- colnames( m1 )
 		datalistM <- as.matrix( cbind( bifieobj2[ , dep  ] , m1 , bifieobj2[,group] ) )
@@ -73,17 +71,20 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 		t1 <- table( dat1[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+
 				
 	#**************************************************************************#
 	# Rcpp call
-	res <- .Call ( "bifie_linreg" , datalistM , wgt_ , as.matrix(wgtrep) , dep_index -1 , 
-            pre_index - 1 ,  fayfac ,    Nimp ,  group_index -  1, group_values ,
-			PACKAGE="BIFIEsurvey" )	
+	res <- .Call("bifie_logistreg" ,  datalistM , wgt_ , as.matrix(wgtrep) , dep_index -1 , 
+				pre_index - 1 ,  fayfac ,    Nimp ,  group_index -  1, group_values ,
+				eps , maxiter , PACKAGE="BIFIEsurvey" )
+
+		
 	GG <- length(group_values)
 #	ZZ <- nrow(itempair_index )	
-    ZZ <- 2*VV+2
-	p1 <- c( rep("b",VV) , c("sigma" , "R^2") , rep("beta",VV) )
-    p2 <- c( pre , c(NA,NA) , pre )
+    ZZ <- VV
+	p1 <- c( rep("b",VV) )
+    p2 <- c( pre )
 	dfr <- data.frame( "parameter" = rep(p1,GG)	)
 	dfr$var <- rep(p2,GG)
 	if (! nogroup){
@@ -101,7 +102,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	dfr$fmi <- res$regrcoefL$pars_fmi
 	dfr$VarMI <- res$regrcoefL$pars_varBetween
 	dfr$VarRep <- res$regrcoefL$pars_varWithin
-	if ( ( ! se ) &  ( RR==0 ) ){				
+	if ( ( ! se ) &  ( RR==0 ) ){					
 		dfr$t <- dfr$p <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
 				}				
 
@@ -119,16 +120,16 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
 			"GG"=GG , "parnames" = parnames)
-	class(res1) <- "BIFIE.linreg"
+	class(res1) <- "BIFIE.logistreg"
 	return(res1)
 		}
 ###################################################################################
 
 ####################################################################################
 # summary for BIFIE.linreg function
-summary.BIFIE.linreg <- function( object , digits=4 , ... ){
+summary.BIFIE.logistreg <- function( object , digits=4 , ... ){
     BIFIE.summary(object)
-	cat("Statistical Inference for Linear Regression \n")	
+	cat("Statistical Inference for Logistic Regression \n")	
 	obji <- object$stat
 	print.object.summary( obji , digits=digits )
 			}

@@ -7,13 +7,14 @@ Create \code{BIFIE.data} Object with Jackknife Zones
 
 \description{
 Creates a \code{BIFIE.data} objects for designs with jackknife zones,
-especially for TIMSS/PIRLS studies.
+especially for TIMSS/PIRLS and PISA studies.
 }
 
 \usage{
 BIFIE.data.jack(data, wgt = NULL, jktype = "JK_TIMSS", pv_vars = NULL, 
-     jkzone = NULL, jkrep = NULL, jkfac = NULL, fayfac = 1 , ngr=100 ,
-     seed = .Random.seed )
+     jkzone = NULL, jkrep = NULL, jkfac = NULL, fayfac = 1 , 
+     wgtrep = "W_FSTR" , pvpre = paste0("PV",1:5) , ngr=100 ,
+     seed = .Random.seed , cdata=FALSE)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -22,7 +23,8 @@ BIFIE.data.jack(data, wgt = NULL, jktype = "JK_TIMSS", pv_vars = NULL,
 Data frame: Can be a single or a list of multiply imputed datasets
 }
   \item{wgt}{
-Case weight. If \code{jktype="JK_TIMSS"}, then \code{wgt="TOTWGT"}.
+A string indicating the label of case weight.
+If \code{jktype="JK_TIMSS"}, then \code{wgt="TOTWGT"}.
 }
   \item{pv_vars}{
 An optional vector of plausible values which define multiply
@@ -33,7 +35,8 @@ Type of jackknife procedure for creating the \code{BIFIE.data} object.
 \code{jktype="JK_TIMSS"} refers to TIMSS/PIRLS datasets. The type
 \code{"JK_GROUP"} creates jackknife weights based on a user defined
 grouping, the type \code{"JK_RANDOM"} creates random groups. The number
-of random groups can be defined in \code{ngr}.
+of random groups can be defined in \code{ngr}. The argument \code{type="RW_PISA"}
+converts PISA datasets into objects of class \code{BIFIEdata}.
 }
   \item{jkzone}{
 Jackknife zones. If \code{jktype="JK_TIMSS"}, then \code{jkzone="JKZONE"}.
@@ -48,11 +51,19 @@ If \code{jktype="JK_TIMSS"}, then \code{jkfac=2}.
   \item{fayfac}{
 Fay factor for statistical inference. The default is set to 1.
 }
+\item{wgtrep}{Variables in the dataset which refer to the replicate
+	weights. In case of \code{cdata=TRUE}, the replicate weights
+	are deleted from \code{datalistM}.
+		}
+\item{pvpre}{Only applicable for \code{jktype="RW_PISA"}. The vector contains
+	the prefixes of the variables containing plausible values.	
+}
 \item{ngr}{Number of randomly created groups in \code{"JK_RANDOM"}.}
 \item{seed}{The simulation seed if \code{"JK_RANDOM"} is chosen.
 	If \code{seed=NULL}, then the grouping is done according the
 order in the dataset.}
-
+\item{cdata}{An optional logical indicating whether the \code{BIFIEdata}
+object should be compactly saved. The default is \code{FALSE}.}
 }
 
 %\details{
@@ -77,7 +88,7 @@ Object of class \code{BIFIEdata}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{BIFIE.data}}
+\code{\link{BIFIE.data}}, \code{\link{BIFIE.data.boot}}
 }
 
 
@@ -131,6 +142,21 @@ dataList <- list( data.test1 , data.test1 , data.test1 )
 bdat4 <- BIFIE.data.jack( data = dataList ,  jktype="JK_GROUP" , jkzone="idclass" , 
                 wgt="wgtstud")
 summary(bdat4)                
+
+\dontrun{
+#############################################################################
+# EXAMPLE 3: Converting a PISA dataset into a BIFIEdata object
+#############################################################################
+
+data(data.pisaNLD)
+
+# BIFIEdata with cdata=FALSE
+bifieobj <- BIFIE.data.jack( data.pisaNLD , jktype = "RW_PISA" , cdata=FALSE )
+summary(bifieobj)
+# BIFIEdata with cdata=TRUE
+bifieobj1 <- BIFIE.data.jack( data.pisaNLD , jktype = "RW_PISA" , cdata=TRUE )
+summary(bifieobj1)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

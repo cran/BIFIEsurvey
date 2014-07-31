@@ -6,7 +6,11 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 		group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
-	bifieobj <- BIFIEobj
+	bifieobj <- BIFIEobj	
+	if (bifieobj$cdata){
+		varnames <- unique( c( vars , group , "one") )
+		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
+						}				
 	FF <- Nimp <- bifieobj$Nimp
 	N <- bifieobj$N
 	dat1 <- bifieobj$dat1
@@ -69,7 +73,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	dfr$fmi <- res$parsL$pars_fmi
 	dfr$VarMI <- res$parsL$pars_varBetween
 	dfr$VarRep <- res$parsL$pars_varWithin
-	if (RR==0){				
+	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
 				}				
 

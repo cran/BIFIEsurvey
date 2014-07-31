@@ -6,6 +6,10 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	#****
 	s1 <- Sys.time()
 	bifieobj <- BIFIEobj
+	if (bifieobj$cdata){
+		varnames <- unique( c( vars , group , "one") )
+		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
+						}				
 	FF <- Nimp <- bifieobj$Nimp
 	N <- bifieobj$N
 	dat1 <- bifieobj$dat1
@@ -80,7 +84,7 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	dfr$perc_VarRep <- res$perc2$pars_varWithin
 			
 
-	if (RR==0){				
+	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$perc_SE <- dfr$perc_fmi <- dfr$perc_VarMI <- dfr$perc_VarRep <- NULL
 				}				
 	

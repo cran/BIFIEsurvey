@@ -5,7 +5,12 @@
 BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
-	bifieobj <- BIFIEobj
+	bifieobj <- BIFIEobj	
+	if (bifieobj$cdata){
+		varnames <- unique( c( vars , group , "one") )
+		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
+						}	
+												
 	FF <- Nimp <- bifieobj$Nimp
 	N <- bifieobj$N
 	dat1 <- bifieobj$dat1
@@ -65,7 +70,10 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	dfr$cor_VarRep <- res$cor1$pars_varWithin
 	if (RR==0){				
 		dfr$cor_SE <- dfr$cor_fmi <- dfr$cor_VarMI <- dfr$cor_VarRep <- NULL
-				}				
+				}
+	#	i1 <- match( dfr$var1 , vars )
+	#	i2 <- match( dfr$var2 , vars )	
+	dfr <- dfr[ dfr$var1 != dfr$var2 , ]	
 	dfr.cor <- dfr			
 				
 
@@ -83,7 +91,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	dfr$cov_fmi <- res$cov1$pars_fmi
 	dfr$cov_VarMI <- res$cov1$pars_varBetween
 	dfr$cov_VarRep <- res$cov1$pars_varWithin
-	if (RR==0){				
+	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$cov_SE <- dfr$cov_fmi <- dfr$cov_VarMI <- dfr$cov_VarRep <- NULL
 				}				
 	dfr.cov <- dfr							
@@ -100,7 +108,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		colnames(ml0[[gg]]) <- rownames(ml0[[gg]]) <- vars 
 					}		
 	cor_matrix <- ml0
-	#*** covaraince matrix
+	#*** covariance matrix
 	ml0 <- ml
 	cl <- res$cov1_matrix
 	for (gg in 1:GG){
@@ -133,7 +141,6 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 
 ####################################################################################
 # summary for BIFIE.correl function
-
 summary.BIFIE.correl <- function( object , digits=4 , ... ){
     BIFIE.summary(object)
 	cat("Statistical Inference for Correlations \n")	

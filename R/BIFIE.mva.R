@@ -1,0 +1,139 @@
+
+
+#######################################################################
+# Missing value analysis
+BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
+	#****
+	s1 <- Sys.time()
+	bifieobj <- BIFIEobj	
+#	if (bifieobj$cdata){
+#		varnames <- unique( c( vars , group , "one") )
+#		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
+#						}	
+	# 
+	if ( ! bifieobj$cdata ){
+		varnames <- unique( c(missvars , covariates ) )
+		bifieobj <- BIFIE.BIFIEdata2BIFIEcdata( bifieobj , varnames )
+						}
+	
+	
+	# if covariates = NULL, then create a garbage variable
+	if ( is.null(covariates) ){ 
+		N <- bifieobj$N
+		transform.formula <-  paste0( "~ 0 + I ( runif( " , N , " , 0 , 1E-10) ) " )
+		bifieobj <- BIFIE.data.transform( bifieobj , transform.formula ,  "_null" )  
+		covariates <- bifieobj$varnames.added
+		se <- FALSE
+					}
+												
+	FF <- Nimp <- bifieobj$Nimp
+	N <- bifieobj$N
+	dat1 <- bifieobj$dat1
+	wgt <- bifieobj$wgt
+	wgtrep <- bifieobj$wgtrep
+	varnames <- bifieobj$varnames
+	RR <- bifieobj$RR
+	datalistM <- bifieobj$datalistM
+    fayfac <- bifieobj$fayfac													
+												
+	# start with a compact BIFIEdata object
+	varnames <- unique( c(missvars , covariates ) )
+#	varnames <- setdiff( varnames , "one" )
+
+	# assume that bifieobj is already in cdata format
+	
+	# define selected response indicators
+	datalistM_ind_sel <- bifieobj$datalistM_ind[ , missvars ]											
+
+	respvars <- paste0("resp_" , missvars )
+	colnames(datalistM_ind_sel) <- respvars
+	VVadd <- length(respvars )
+
+	varnames1 <- c( varnames , respvars )
+
+	bifieobj$datalistM_ind <- cbind( bifieobj$datalistM_ind , datalistM_ind_sel )
+	bifieobj$dat1 <- cbind( bifieobj$dat1 , datalistM_ind_sel )
+	bifieobj$Nvars <- bifieobj$Nvars + VVadd
+	bifieobj$varnames <- c( bifieobj$varnames , respvars )
+
+
+	# select dataset
+	bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames = varnames1 )
+	
+	if (RR==1){ RR <- 0 }
+	if ( ! se ){ 
+		N11 <- length(wgt)
+		wgtrep <- matrix( NA , nrow=N11 , ncol=2 )
+		wgtrep[,1] <-wgt
+		eps <- 1E-8
+		wgtrep[,2] <- wgt + runif(N11, -eps,eps)
+		RR <- 0
+		bifieobj$wgtrep <- wgtrep
+		bifieobj$RR <- ncol(wgtrep)
+				}	
+		
+	#*****
+	# collect results
+	VV <- length(respvars)
+	CVV <- length(covariates)
+	res_list <- list( 1:VV)
+	dfr <- NULL
+	
+	for (vv in 1:VV){
+		# vv <- 1
+		rvv <- respvars[vv]
+		res.vv <- as.list(1:2)
+		names(res.vv) <- c("stat" , "dstat")	
+		
+		res <- BIFIE.univar( bifieobj , vars = covariates , group= rvv, 
+					group_values = 0:1 )
+		res.vv$stat <- res$stat
+		res1 <- BIFIE.univar.test( res )
+		res.vv$dstat <- res1$stat.dstat
+		res_list[[vv]] <- res.vv
+		# collect results
+		dfr.vv <- data.frame( "respvar"= rep(rvv,CVV) )		
+		dfr.vv$missprop <- res$stat$Nweight[1] / ( res$stat$Nweight[1] + res$stat$Nweight[2] )
+		dfr.vv$covariate <- covariates
+		dfr.vv$d <- res1$stat.dstat$d
+		dfr.vv$d_SE <- res1$stat.dstat$d_SE
+		dfr.vv$t <- res1$stat.dstat$t
+		dfr.vv$p <- res1$stat.dstat$p
+		dfr.vv$M_resp <- res$stat$M[ seq(2,2*CVV , 2 ) ]
+		dfr.vv$M_miss <- res$stat$M[ seq(1,2*CVV , 2 ) ]
+		dfr.vv$SD_resp <- res$stat$SD[ seq(2,2*CVV , 2 ) ]
+		dfr.vv$SD_miss <- res$stat$SD[ seq(1,2*CVV , 2 ) ]
+		dfr <- rbind( dfr , dfr.vv )
+				}
+	if ( covariates[1] == "_null" ){ se <- FALSE }
+	if ( ( ! se ) &  ( RR==0 ) ){				
+		dfr$t <- dfr$p <- dfr$d_SE <-  NULL
+				}						
+	
+	if ( covariates[1] == "_null" ){			
+			dfr$covariate <- dfr$d <- dfr$M_resp  <- NULL
+			dfr$M_miss <- dfr$SD_resp <- dfr$SD_miss <- NULL						
+			}
+	
+	#*************************** OUTPUT ***************************************
+	s2 <- Sys.time()
+	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
+	res1 <- list( "stat.mva" = dfr , "res_list" = res_list , 
+			"timediff" = timediff ,
+			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac 
+			# "itempair_index" = itempair_index , "GG"=GG ,
+			# "parnames" = parnames
+				)
+	class(res1) <- "BIFIE.mva"
+	return(res1)
+		}
+###################################################################################
+
+####################################################################################
+# summary for BIFIE.mva function
+summary.BIFIE.mva <- function( object , digits=4 , ... ){
+    BIFIE.summary(object)
+	cat("Missing Value Analysis \n")	
+	obji <- object$stat.mva
+	print.object.summary( obji , digits=digits )			
+			}

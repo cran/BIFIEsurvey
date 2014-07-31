@@ -1517,3 +1517,196 @@ BEGIN_RCPP
 END_RCPP
 }
 
+//**************************************************************
+// logistic regression
+
+
+// declarations
+extern "C" {
+SEXP bifie_logistreg( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP dep_index_, 
+	SEXP pre_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, 
+	SEXP group_values_, SEXP eps_, SEXP maxiter_) ;
+}
+
+// definition
+SEXP bifie_logistreg( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP dep_index_, 
+	SEXP pre_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, 
+	SEXP group_values_, SEXP eps_, SEXP maxiter_ ){
+BEGIN_RCPP
+   
+       
+     Rcpp::NumericMatrix datalist(datalist_);          
+     Rcpp::NumericMatrix wgt1(wgt_) ;  
+     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
+     Rcpp::NumericVector dep_index(dep_index_);  
+     Rcpp::NumericVector pre_index(pre_index_);  
+     Rcpp::NumericVector fayfac(fayfac_) ;  
+     Rcpp::NumericVector NI(Nimp_);  
+     Rcpp::NumericVector group_index1(group_index_) ;  
+     Rcpp::NumericVector group_values(group_values_) ;  
+     double eps=as<double>(eps_) ;  
+     int maxiter=as<int>(maxiter_);  
+       
+     int Nimp = NI[0] ;  
+     int RR = wgtrep.ncol() ;  
+       
+     int N = wgt1.nrow() ;  
+     int VV = pre_index.size() ;  
+     int NV = datalist.ncol();  
+     int group_index = group_index1[0] ;  
+     int GG=group_values.size() ;  
+       
+     Rcpp::NumericMatrix dat1(N,NV) ;  
+     Rcpp::NumericVector tempvec(N);  
+     int uu=0;  
+       
+     int VV2=VV*GG;  
+     Rcpp::NumericMatrix ncasesM(GG,Nimp) ;  
+     Rcpp::NumericMatrix sumwgtM(GG,Nimp) ;  
+     Rcpp::NumericMatrix regrcoefM(VV2,Nimp) ;  
+     Rcpp::NumericMatrix regrcoef_varM(VV2,Nimp) ;  
+     int WW = wgtrep.ncol() ;  
+     Rcpp::NumericMatrix regrcoefrepM(VV2,Nimp*WW) ;  
+     Rcpp::NumericMatrix tempcoefrepM(VV2,WW) ;  
+     Rcpp::NumericVector regrcoef0(VV2) ;  
+       
+     Rcpp::NumericVector beta0(VV);  
+       
+     Rcpp::Rcout << "|"  ;  
+       
+       
+     // loop over imputed datasets  
+     for ( int ii=0; ii < Nimp ; ii ++ ){  
+       
+       
+     // extract dataset  
+     dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;   
+       
+     // loop over group values gg  
+     int ind=1;  
+       
+       
+     for (int gg=0; gg < GG ; gg ++ ){  
+     uu=0;  
+     for (int nn=0;nn<N;nn++){  
+     ind = 1 ;  
+     if ( dat1(nn,group_index) == group_values[gg] ){  
+       
+         if ( R_IsNA( dat1(nn,dep_index[0] ) ) ){  
+         	    ind = 0 ;  
+         	    	}  // end NA dep  
+         for (int vv=0;vv<VV;vv++){  
+            if ( R_IsNA( dat1(nn,pre_index[vv] ) ) ){  
+         	    ind = 0 ;  
+         	    	}  // end NA dep  
+         }	    	  
+         if ( ind > 0 ){	  
+     	ncasesM(gg,ii) ++ ;  
+     	sumwgtM(gg,ii) += wgt1[nn] ;  
+     	tempvec[uu] = nn ;  
+     	uu ++ ;  
+     		}  
+     			} // end group_val == gg  
+          }  
+       
+     // create datasets for logistic regression  
+     int ngg=ncasesM(gg,ii) ;  
+     Rcpp::NumericMatrix Xt(ngg,VV);  
+     Rcpp::NumericVector yt(ngg);  
+     Rcpp::NumericVector wgtt(ngg);  
+     Rcpp::NumericMatrix wgtrept(ngg,RR);  
+     Rcpp::NumericVector wgttemp(ngg);  
+       
+     for (int tt=0;tt<ngg;tt++){  
+     	yt[tt] = dat1( tempvec[tt] , dep_index[0] ) ;  
+     	wgtt[tt] = wgt1[ tempvec[tt] ] ;  
+     	for (int rr=0;rr<RR;rr++){  
+     		wgtrept(tt,rr) = wgtrep( tempvec[tt],rr) ;  
+     				}  
+     	for (int vv=0;vv<VV;vv++){  
+     		Xt(tt,vv)=dat1( tempvec[tt] , pre_index[vv] ) ;  
+     				}  
+     			} // end cases tt  
+       
+     			  
+     // logistic regression original dataset  
+     Rcpp::List res1 = bifie_estlogistic_helper(  yt ,  
+     	Xt , wgtt , beta0 , eps , maxiter ) ;  
+       
+     Rcpp::NumericVector tempcoef=res1["beta"] ;  
+     for (int vv=0;vv<VV;vv++){       
+     	regrcoefM(vv+gg*VV,ii) = tempcoef[vv] ;  
+     		}  
+       
+     Rcpp::List res2 ;  
+     // replicated datasets  
+     // tempcoefrepM  
+     for (int rr=0;rr<RR;rr++){		  
+     for (int tt=0;tt<ngg;tt++){  
+     	wgttemp[tt] = wgtrept(tt,rr) ;  
+     			}  
+     res2 = bifie_estlogistic_helper(  yt ,	Xt ,   
+     	wgttemp , tempcoef , eps , maxiter ) ;  
+     Rcpp::NumericVector tempcoef2=res2["beta"] ;  
+     for (int vv=0;vv<VV;vv++){       
+     	tempcoefrepM(vv+gg*VV,rr) = tempcoef2[vv] ;  
+     		}  
+     } // end rr  
+     } // end gg  
+       
+     for (int zz=0;zz<VV2;zz++){  
+        regrcoef0[zz] = regrcoefM(zz,ii);  
+        	}  
+        	  
+     // compute standard errors  
+     Rcpp::NumericVector regrcoef_var = varjack_helper(   
+     		regrcoef0 , tempcoefrepM , fayfac ) ;  
+       
+     for (int zz=0;zz<VV2; zz++){  
+     //	regrcoefM(zz,ii) = regrcoef0[zz] ;	  
+     	regrcoef_varM(zz,ii) = regrcoef_var[zz] ;  
+         for (int ww=0;ww<WW;ww++){  
+         	   regrcoefrepM(zz, ww + ii*WW ) = tempcoefrepM(zz,ww) ;  
+         	   		}  
+     }  
+       
+       
+     Rcpp::Rcout << "-" <<  std::flush ;            		  
+          		  
+          }  // end ii ;  end multiple imputations  
+       
+       
+       
+     Rcpp::Rcout << "|" << std::endl ;  	       
+       
+       
+     ///*** Rubin inference  
+     Rcpp::List regrcoefL = rubin_rules_univ( regrcoefM , regrcoef_varM ) ;       
+            
+       
+       
+     //*************************************************      
+     // OUTPUT              
+               
+     return Rcpp::List::create(   
+         _["ncasesM"] = ncasesM ,  
+         _["sumwgtM"] = sumwgtM ,  
+         _["regrcoefrepM"] = regrcoefrepM ,  
+         _["regrcoefL"] = regrcoefL ,  
+         _["regrcoefM"] = regrcoefM ,      
+         _["regrcoef_varM"] = regrcoef_varM       
+         ) ;    
+       
+     // maximal list length is 20!  
+       
+       
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
+       
+       
+     
+END_RCPP
+}
+
+
+
+

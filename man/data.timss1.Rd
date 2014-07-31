@@ -3,6 +3,7 @@
 \alias{data.timss2}
 \alias{data.timssrep}
 \alias{data.timss3}
+\alias{data.timss1.ind}
 
 \docType{data}
 \title{
@@ -15,6 +16,7 @@ Example dataset TIMSS 2011
 
 \usage{
 data(data.timss1)
+data(data.timss1.ind)
 data(data.timss2)
 data(data.timssrep)
 data(data.timss3)
@@ -23,6 +25,8 @@ data(data.timss3)
 
 \format{
 The dataset \code{data.timss1} is a list containing 5 imputed datasets. 
+The dataset \code{data.timss1.ind} contains response indicators of these
+5 imputed datatsets in \code{data.timss1}.
 
 The dataset \code{data.timss2} is a list containing 5 datasets in which
 only plausible values are imputed, but student covariates are missing.
@@ -80,8 +84,8 @@ summary(bdat4)
 #--- create object in survey package
 dat3a <- as.data.frame( cbind( data.timss2[[1]] , data.timssrep ) )
 RR <- ncol(data.timssrep) - 1       # number of jackknife zones
-svydes3 <- survey::svrepdesign(data=dat3a,weights=~TOTWGT ,type='JKn',
-                  repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
+svydes3 <- survey::svrepdesign(data=dat3a,weights=~TOTWGT ,type="JKn",
+                 repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
 summary(svydes3)
 
 #--- create object with imputed datasets in survey
@@ -93,8 +97,8 @@ for (ii in 1:5){
     datL[[ii]] <- dat1 
                 }
 datL <- mitools::imputationList(list( datL[[1]],datL[[2]],datL[[3]],datL[[4]],datL[[5]]) )
-svydes4 <- survey::svrepdesign(data=datL,weights=~TOTWGT ,type='JKn',
-                  repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
+svydes4 <- survey::svrepdesign(data=datL,weights=~TOTWGT ,type="JKn",
+                   repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
 summary(svydes4)
 
 #--- reconstruct data.timss3 for intsvy package. Plausible values must be labeled
@@ -142,7 +146,7 @@ summary(mod2c)
 library(mitools)
 
 # linear regression in survey
-mod3a <- with(svydes4,  svyglm( ASMMAT ~ migrant + books , design = svydes4 ) )
+mod3a <- with(svydes4,  survey::svyglm( ASMMAT ~ migrant + books , design = svydes4 ) )
 res3a <- mitools::MIcombine(mod3a)
 summary(res3a)
 

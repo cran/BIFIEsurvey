@@ -600,6 +600,15 @@ Rcpp::List bifiehelpers_waldtest( int VV , Rcpp::NumericVector Ccols ,
 	//***  compute chi squared Wald test statistic
 	// compute covariance matrix of hypothesis
 	arma::mat var_hyp = arma::mat( ACdes * var_w * trans( ACdes) ) ;
+	
+	//@@@@@ ARb 2014-07-31
+//	int XX= arma::mat( var_hyp.n_rows ) ;
+//	double eps2 = 1e-15;
+//	for (int xx=0;xx<XX;xx++){
+//		var_hyp(xx,xx) = var_hyp(xx,xx) + eps2 ;
+//				}	
+	//@@@@@
+	
 	// compute inverse of variance matrix of hypothesis
 	arma::mat var_hypinv = arma::inv( var_hyp ) ;
 	// parameter vector
@@ -1168,3 +1177,100 @@ Rcpp::NumericVector bifie_helper_ecdf( Rcpp::NumericMatrix dat1 ,
 	
 	return ( wrap( ecdfMtemp) ) ;
 	}
+	
+	
+//**************************************	
+//**** logistic regression	
+Rcpp::List bifie_estlogistic_helper( Rcpp::NumericVector y ,
+	Rcpp::NumericMatrix X, Rcpp::NumericVector wgt ,
+	Rcpp::NumericVector beta0 , double eps , int maxiter ){
+
+int N=X.nrow();
+int P=X.ncol();
+double t1=0;
+
+//*** create matrices in Armadillo
+// design matrix X
+arma::mat Xa0(N,P);
+arma::mat Xa(N,P);
+for (int nn=0;nn<N;nn++){
+   for (int pp=0;pp<P;pp++){
+	Xa0(nn,pp) = X(nn,pp) ;
+			}
+		 }
+// outcome matrix y
+arma::colvec ya(N) ;
+for (int nn=0;nn<N;nn++){
+	ya(nn,0) = y[nn] ;
+		 }
+// regression coefficients
+arma::colvec beta_old(P);
+arma::colvec beta_new(P);
+for (int pp=0;pp<P;pp++){
+	beta_old(pp,0) = beta0[pp] ;
+			}
+
+// temporary values in iterations
+arma::colvec pred_logit(N);
+arma::colvec ypred(N);
+arma::colvec z(N);
+arma::colvec AM(N);
+arma::colvec wgta(N);
+double pardiff=100;
+
+int ii=0;
+
+while( ( pardiff > eps ) & ( ii < maxiter ) ){
+
+// within an iteration
+
+// calculate predicted logit value and probability
+for( int nn=0; nn <N; nn++){
+pred_logit(nn,0)=0;
+for ( int pp=0; pp <P; pp++){
+	pred_logit(nn,0) += Xa0(nn,pp) * beta_old(pp,0) ;
+		}
+if ( pred_logit(nn,0) < - 15 ){
+	pred_logit(nn,0) = - 15 ;
+				}	
+ypred(nn,0) = 1 / ( 1 + exp( - pred_logit(nn,0) ) ) ;
+}
+// calculate entries for A matrix and outcome z
+for (int nn=0;nn<N;nn++){
+	AM(nn,0) = ypred(nn,0) * ( 1 - ypred(nn,0) ) ;
+	wgta(nn,0) = sqrt( AM(nn,0) * wgt[nn] ) ;
+	z(nn,0) = pred_logit(nn,0) + ( ya(nn,0) - ypred(nn,0) )/AM(nn,0) ;
+	z(nn,0) = wgta(nn,0) * z(nn,0) ;
+		}
+for (int nn=0;nn<N;nn++){
+   for (int pp=0;pp<P;pp++){
+   	   Xa(nn,pp)=Xa0(nn,pp)*wgta(nn,0);
+   	   		}
+   	   	}
+// coefficient
+beta_new = arma::solve(Xa, z);      // fit model y ~ X
+// parameter difference
+pardiff=0;
+for (int pp=0;pp<P;pp++){
+	t1 = beta_old(pp,0) - beta_new(pp,0) ;
+	if (t1 < 0 ){ t1 = -t1 ; }
+	if (t1 > pardiff){ pardiff = t1 ; }
+		}
+for (int pp=0;pp<P; pp++){
+	beta_old(pp,0) = beta_new(pp,0);
+		}
+ii ++ ;		
+	}
+	
+//*****************    
+// OUTPUT            
+        
+return Rcpp::List::create( 
+    _["pardiff"] = pardiff ,
+    _["beta"] = beta_new ,
+    _["iter"] = ii
+    ) ;  
+// maximal list length is 20!
+
+	}
+//*****************************************************

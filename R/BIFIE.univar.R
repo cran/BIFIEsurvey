@@ -5,6 +5,10 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#****
 	s1 <- Sys.time()
 	bifieobj <- BIFIEobj
+	if (bifieobj$cdata){
+		varnames <- unique( c( vars , group , "one") )
+		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )			
+						}						
 	FF <- Nimp <- bifieobj$Nimp
 	N <- bifieobj$N
 	dat1 <- bifieobj$dat1
@@ -14,7 +18,8 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	RR <- bifieobj$RR
 	datalistM <- bifieobj$datalistM
     fayfac <- bifieobj$fayfac	
-	
+
+
 	if (RR==1){ RR <- 0 }
 	if ( ! se ){ 
 		wgtrep <- matrix( wgt , ncol=1 )
@@ -24,7 +29,12 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	vars_index <- unlist( sapply( vars , FUN = function(vv){ 
 						which( varnames == vv ) } ) )		
 	wgt_ <- matrix( wgt , ncol=1 )
-	if ( is.null( group) ){ nogroup <- TRUE } else { nogroup <- FALSE }
+	if ( is.null( group) ){ 
+			nogroup <- TRUE } else { 
+			nogroup <- FALSE 
+#			if (group=="one"){ nogroup <- TRUE }
+					}	
+					
 	cat(paste0( "|" , paste0( rep("*" , FF) , collapse="") , "|\n" ))
 	if (nogroup){
 	    group <- "one"
@@ -35,6 +45,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		t1 <- table( dat1[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+				
 	#**************************************************************************#
 	#****************** no grouping variable **********************************#
 	if ( nogroup ){
@@ -42,6 +53,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 #				PACKAGE="BIFIEsurvey" ) 
 #		GG <- 1
 #		VV <- length(vars)
+
 		res <- .Call( "univar_multiple_V2group" , datalistM , wgt_ , wgtrep , vars_index - 1 , fayfac , Nimp ,
 				group_index - 1, group_values , PACKAGE="BIFIEsurvey" )								
 		GG <- length(group_values)
@@ -58,8 +70,9 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#**************************************************************************#
 	#****************** with grouping variable ********************************#		
 	if ( ! nogroup ){
+
 		res <- .Call( "univar_multiple_V2group" , datalistM , wgt_ , wgtrep , vars_index - 1 , fayfac , Nimp ,
-				group_index - 1, group_values , PACKAGE="BIFIEsurvey" )								
+				group_index - 1, group_values , PACKAGE="BIFIEsurvey" )	
 		GG <- length(group_values)
 		VV <- length(vars)
 		dfr <- data.frame( "var" = rep(vars,each=GG) , 
@@ -74,7 +87,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 					 )
 	         	}
 
-	if (RR==0){				
+	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$M_SE <- dfr$M_fmi <- dfr$M_VarMI <- dfr$M_VarRep <- NULL
 		dfr$SD_SE <- dfr$SD_fmi <- dfr$SD_VarMI <- dfr$SD_VarRep <- NULL		
 				}				

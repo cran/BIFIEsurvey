@@ -87,9 +87,9 @@ summary(bifieobj)
 
 #--- Create object in survey package
 datL <- mitools::imputationList(list( datalist[[1]],datalist[[2]],
-             datalist[[3]],datalist[[4]],datalist[[5]]) )
-pisades <- svrepdesign(ids = ~1, weights = ~W_FSTUWT, data = datL ,
-                repweights = "W_FSTR[0-9]+", type = "Fay", rho = 0.5)
+                  datalist[[3]],datalist[[4]],datalist[[5]]) )
+pisades <- survey::svrepdesign(ids = ~1, weights = ~W_FSTUWT, data = datL ,
+                    repweights = "W_FSTR[0-9]+", type = "Fay", rho = 0.5)
 pisades
 
 #++++++++++++++ some comparisons with other packages +++++++++++++++++++++++++++++++
@@ -104,7 +104,7 @@ mod1b <- intsvy::pisa.mean.pv(pvlabel = "MATH", data = data.pisaNLD )
 mod1b
 
 # survey package
-mod1c <- with( pisades , svymean(PVMATH~1, design=pisades) )
+mod1c <- with( pisades , survey::svymean(PVMATH~1, design=pisades) )
 res1c <- mitools::MIcombine(mod1c)
 summary(res1c)
 
@@ -118,7 +118,7 @@ mod2b <- intsvy::pisa.reg.pv(pvlabel="MATH", x= c("ANXMAT","HISEI") , data=data.
 mod2b
 
 # survey package
-mod2c <- with( pisades , svyglm(PVMATH~ANXMAT+HISEI, design=pisades) )
+mod2c <- with( pisades , survey::svyglm(PVMATH~ANXMAT+HISEI, design=pisades) )
 res2c <- mitools::MIcombine(mod2c)
 summary(res2c)
 }

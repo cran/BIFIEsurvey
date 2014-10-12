@@ -3,6 +3,9 @@
 # Convert a list of multiply imputed datasets into an object
 #      of class BIFIEdata
 BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FALSE){
+	
+	cl <- match.call()
+
 	if ( ( is.list( data.list ) ) & ( is.data.frame( data.list) ) ){ 
 	    h1 <- data.list
 		data.list <- list( 1 )
@@ -10,9 +13,18 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
 				}
     FF <- length( data.list)
     Nimp <- FF
+	if ( sum( colnames(data.list[[1]]) %in% "one" ) > 0 ){	
+			cat("Variable 'one' in datasets is replaced by a constant variable")
+			cat(" containing only ones!\n" )
+			for (ii in 1:Nimp){
+			     data.list[[ii]][ , "one"] <- NULL 
+							}
+							
+			}	
     N <- nrow( data.list[[1]] )
-    V <- ncol( data.list[[1]] )
+    V <- ncol( data.list[[1]] )	
     dat1 <- data.list[[1]]
+	
 	cn <- c( colnames(dat1) , "one" )
     N <- nrow(dat1)    
     p1 <- sapply( 1:V , FUN = function(vv){ is.numeric( dat1[,vv] ) } )
@@ -44,7 +56,7 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
 	cat("|\n")	
     res <- list( "datalistM" = datalistM , "wgt" = wgt , "wgtrep" = wgtrep ,
         "Nimp" = Nimp , "N"= N , "dat1" = dat1  , "varnames" = cn , "fayfac"= fayfac ,
-		"RR"= ncol(wgtrep) , "time" = Sys.time() )
+		"RR"= ncol(wgtrep) , "time" = Sys.time() , "CALL"= cl )
 	res$cdata <- FALSE	
     class(res) <- "BIFIEdata"	
 	#***** variable names and transformations

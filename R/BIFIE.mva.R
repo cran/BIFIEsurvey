@@ -5,7 +5,8 @@
 BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
-	bifieobj <- BIFIEobj	
+	bifieobj <- BIFIEobj
+	cl <- match.call()		
 #	if (bifieobj$cdata){
 #		varnames <- unique( c( vars , group , "one") )
 #		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
@@ -120,7 +121,8 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
 	res1 <- list( "stat.mva" = dfr , "res_list" = res_list , 
 			"timediff" = timediff ,
-			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac 
+			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"CALL"= cl
 			# "itempair_index" = itempair_index , "GG"=GG ,
 			# "parnames" = parnames
 				)

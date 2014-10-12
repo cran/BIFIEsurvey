@@ -1,6 +1,7 @@
 \name{BIFIE.BIFIEdata2BIFIEcdata}
 \alias{BIFIE.BIFIEdata2BIFIEcdata}
 \alias{BIFIE.BIFIEcdata2BIFIEdata}
+\alias{BIFIE.BIFIEdata2datalist}
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -13,12 +14,18 @@ The function \code{BIFIE.BIFIEdata2BIFIEcdata} converts the \code{BIFIEdata}
 objects in a non-compact form (\code{cdata=FALSE}) into an object of
 class \code{BIFIEdata} in a compact form (\code{cdata=TRUE}).
 The function \code{BIFIE.BIFIE2data2BIFIEdata} takes the reverse operation.
+
+The function \code{BIFIE.BIFIEdata2datalist} converts a (part) of the
+object of class \code{BIFIEdata} into a list of multiply imputed 
+datasets.
 }
 
 \usage{
 BIFIE.BIFIEdata2BIFIEcdata(bifieobj, varnames = NULL, impdata.index = NULL)
 
 BIFIE.BIFIEcdata2BIFIEdata(bifieobj, varnames = NULL, impdata.index = NULL)
+
+BIFIE.BIFIEdata2datalist(bifieobj, varnames = NULL, impdata.index = NULL)
 }
 
 
@@ -85,6 +92,40 @@ bdat3 <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj=bdat2 , impdata.index=1:3 )
 summary(bdat1)
 summary(bdat2)
 summary(bdat3)		
+
+\dontrun{
+#############################################################################
+# EXAMPLE 2: Extract unique elements in BIFIEdata object
+#############################################################################
+
+data(data.timss1)
+data(data.timssrep)
+
+# create BIFIEdata object
+bifieobj <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+            wgtrep=data.timssrep[, -1 ])
+summary(bifieobj)
+
+# define variables for which unique values should be extracted
+vars <- c( "female" , "books" ,"ASMMAT" )
+# convert these variables from BIFIEdata object into a list of datasets
+bdatlist <- BIFIE.BIFIEdata2datalist( bifieobj , varnames = vars )
+# look for unique values in first dataset for variables
+values <- lapply( bdatlist[[1]] , FUN = function(vv){
+                sort( unique( vv ) ) } )
+# number of unique values in first dataset
+Nvalues <- lapply( bdatlist[[1]] , FUN = function(vv){
+                length( unique( vv ) ) } )
+# number of unique values in all datasets
+Nvalues2 <- lapply( vars , FUN = function(vv){
+    #vv <- vars[1]
+    unlist( lapply( bdatlist , FUN = function(dd){
+                length( unique( dd[,vv]  ) )
+                        }    )     )
+                    } )
+# --> for extracting the number of unique values using BIFIE.by and a user
+#     defined function see Example 1, Model 3 in "BIFIE.by" 
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

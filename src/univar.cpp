@@ -1708,5 +1708,118 @@ END_RCPP
 }
 
 
+//***********************************************************
+// fasttable function
 
+
+// declarations
+extern "C" {
+SEXP bifie_fasttable( SEXP datavec_) ;
+}
+
+// definition
+SEXP bifie_fasttable( SEXP datavec_ ){
+BEGIN_RCPP   
+       
+     Rcpp::NumericMatrix datavec(datavec_);          
+       
+     int N = datavec.nrow() ;  
+       
+       
+     arma::colvec vals_temp(N) ;  
+     int ii=0;  
+     for (int nn=0;nn<N;nn++){  
+     	if ( ! R_IsNA( datavec(nn,0) ) ){  
+     		vals_temp(ii,0) = datavec(nn,0) ;  
+     		ii ++ ;  
+     					}  
+     				}  
+       
+     int N1 = ii-1 ;				  
+     				  
+     // arma::mat vec_unique = unique(vals_temp);  
+     arma::mat vec_sort = arma::sort( vals_temp( arma::span(0,N1) , arma::span(0,0) ) );  
+       
+     // create result table  
+     Rcpp::NumericMatrix tableM(N1,2);  
+     ii = 0 ;  
+     tableM(ii,0) = vec_sort(0,0);  
+     tableM(ii,1) = 1 ;  
+       
+     for (int nn=1;nn<N1+1;nn++){  
+     	if (vec_sort(nn,0) == tableM(ii,0) ){  
+     		tableM(ii,1) ++ ;  
+     			} else {  
+     		ii ++ ;  
+     	        tableM(ii,0) = vec_sort(nn,0) ;  
+     	        tableM(ii,1) = 1 ;  
+     	        	}  
+     	        }  
+       
+       
+     //*************************************************      
+     // OUTPUT              
+               
+     return Rcpp::List::create(  
+         _["vec_sort"] = vec_sort ,   
+         _["tableM"] = tableM ,  
+         _["N_unique"] = ii+1  
+         ) ;    
+       
+     // maximal list length is 20!                
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;       
+       
+     
+END_RCPP
+}
+
+
+//***********************
+// table function for characters
+
+// declarations
+extern "C" {
+SEXP bifie_table1_character( SEXP datavec_) ;
+}
+
+// definition
+
+SEXP bifie_table1_character( SEXP datavec_ ){
+BEGIN_RCPP
+   
+       
+     Rcpp::CharacterVector datavec(datavec_);                 
+     int N = datavec.size() ;  
+       
+     			  
+     Rcpp::CharacterVector uii = Rcpp::unique( datavec ) ; 			  
+     Rcpp::IntegerVector indii = Rcpp::match( datavec , uii ) ;  
+       
+     int Nval = uii.size() ;  
+       
+     Rcpp::NumericVector tableM(Nval);  
+       
+     for (int nn=0;nn<N;nn++){  
+     	tableM[ indii[nn] - 1 ] ++ ; 	  
+     }  
+       
+       
+     //*************************************************      
+     // OUTPUT              
+               
+     return Rcpp::List::create(   
+         _["table_names"] = uii ,  
+         _["tableM"] = tableM  
+         ) ;    
+
+END_RCPP
+}
+
+
+
+
+
+     // maximal list length is 20!                
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;                
+     // Rcpp::Rcout << "datavec[nn] " <<  datavec[nn] <<  std::flush << std::endl ;  
 

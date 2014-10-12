@@ -7,6 +7,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 			group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()	
 	bifieobj <- BIFIEobj
 	vars1 <- vars1[1]
 	vars2 <- vars2[1]	
@@ -37,11 +38,13 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	vars_index2 <- which( varnames == vars2 )
     # vars values
 	if ( is.null(vars_values1 ) ){ 
-		t1 <- table( dat1[ , vars_index1 ] )				  
+		# t1 <- table( dat1[ , vars_index1 ] )	
+		t1 <- fasttable( datalistM[ , vars_index1 ] )		
 	    vars_values1 <- sort( as.numeric( paste( names(t1) ) ))
 				}
 	if ( is.null(vars_values2 ) ){ 
-		t1 <- table( dat1[ , vars_index2 ] )				  
+		# t1 <- table( dat1[ , vars_index2 ] )				  
+		t1 <- fasttable( datalistM[ , vars_index2 ] )		
 	    vars_values2 <- sort( as.numeric( paste( names(t1) ) ))
 				}
 	
@@ -54,7 +57,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 	GG <- length(group_values)
@@ -145,7 +148,13 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 		dfr2$SE <- dfr2$fmi <- dfr2$VarMI <- dfr2$VarRep <- NULL		
 		dfr3$SE <- dfr3$fmi <- dfr3$VarMI <- dfr3$VarRep <- NULL				
 				}				
-	
+
+	if ( Nimp == 1 ){				
+		dfr1$fmi <- dfr1$VarMI <-NULL
+		dfr2$fmi <- dfr2$VarMI <-  NULL		
+		dfr3$fmi <- dfr3$VarMI <-  NULL				
+				}				
+				
 	# create vector of parameter names
 #	nogroupL <- rep( nogroup , nrow(dfr) )
 #	parnames <- paste0( dfr$var   , "_" , dfr$varval , 
@@ -175,7 +184,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 			"stat.es" = dfr3 , "chisq.test" = dfr4 ,
 			"output" = res , "timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
-			"parnames" = parnames )
+			"parnames" = parnames , "CALL"= cl )
 	class(res1) <- "BIFIE.crosstab"
 	return(res1)
 		}

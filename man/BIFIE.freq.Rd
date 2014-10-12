@@ -1,6 +1,9 @@
 \name{BIFIE.freq}
 \alias{BIFIE.freq}
 \alias{summary.BIFIE.freq}
+\alias{coef.BIFIE.freq}
+\alias{vcov.BIFIE.freq}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -15,6 +18,10 @@ Computes absolute and relative frequencies.
 BIFIE.freq(BIFIEobj, vars, group = NULL, group_values = NULL, se=TRUE)
 
 \method{summary}{BIFIE.freq}(object,digits=3,...)
+
+\method{coef}{BIFIE.freq}(object,...)
+
+\method{vcov}{BIFIE.freq}(object,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -97,3 +104,6 @@ summary(res2)
 % R documentation directory.
 \keyword{Descriptive statistics}
 \keyword{summary}
+\keyword{coef}
+\keyword{vcov}
+

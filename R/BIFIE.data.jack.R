@@ -6,6 +6,8 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	seed = .Random.seed ,
 	cdata=FALSE
 		){	
+	cl <- match.call()	
+		
 	#*** list of multiply imputed datasets
 	if ( ( is.list(data) ) & ( ! is.data.frame(data) ) ){
 		dataL <- data
@@ -136,6 +138,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	#*** create BIFIE.data object
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgt ] , wgtrep = datarep , fayfac = fayfac ,
 	                   cdata=cdata)
+	bifiedat$CALL <- cl
 	return(bifiedat)
 }
 ###############################################################################

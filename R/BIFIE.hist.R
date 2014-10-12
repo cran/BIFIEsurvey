@@ -6,6 +6,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 		group=NULL , group_values=NULL  ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()		
 	bifieobj <- BIFIEobj
 	if (bifieobj$cdata){
 		varnames <- unique( c( vars , group , "one") )
@@ -48,7 +49,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 				
@@ -84,7 +85,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 			"output" = res ,
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
-			"GG"=GG )
+			"GG"=GG , "CALL"= cl)
 	class(res1) <- "BIFIE.hist"
 	return(res1)
 		}

@@ -2,49 +2,17 @@
 
 #######################################################################
 # BIFIE Wald test
-BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes ){
+BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes , type=NULL ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()
 	res1 <- BIFIE.method
-	#************************************
-	#**** linear regression
-	if ( class( BIFIE.method) == "BIFIE.linreg"){ 	
-		# parameters in every imputed dataset
-		parsM <- res1$output$regrcoefM
-		# replicated parameters
-		parsrepM <- res1$output$regrcoefrepM
-				}
-	#************************************
-	#**** correlation
-	if ( class( BIFIE.method) == "BIFIE.correl"){ 	
-		parsM <- res1$output$cor1M
-		parsrepM <- res1$output$cor1repM
-				}				
-	#************************************
-	#**** frequencies
-	if ( class( BIFIE.method) == "BIFIE.freq"){ 	
-		parsM <- res1$output$perc2M
-		parsrepM <- res1$output$perc2repM
-				}		
-	#************************************
-	#**** univar
-	if ( class( BIFIE.method) == "BIFIE.univar"){ 	
-		parsM <- res1$output$mean1M
-		parsrepM <- res1$output$mean1repM
-				}		
-	#************************************
-	#**** crosstab
-	if ( class( BIFIE.method) == "BIFIE.crosstab"){ 	
-		parsM <- res1$output$ctparsM
-		parsrepM <- res1$output$ctparsrepM
-				}
-	#************************************
-	#**** logistreg
-	if ( class( BIFIE.method) == "BIFIE.logistreg"){ 	
-		parsM <- res1$output$regrcoefM
-		parsrepM <- res1$output$regrcoefrepM
-				}
-				
+
+	# extract replicated parameters
+	parsres <- extract.replicated.pars( BIFIE.method = res1 , type=type)	
+	parsM <- parsres$parsM	
+	parsrepM <- parsres$parsrepM	
+	
 	fayfac <- res1$fayfac
 	
 	#****************************************			
@@ -54,14 +22,11 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes ){
 	# apply Rcpp Wald test function
 	if (TRUE){
 	   res <- .Call("bifie_waldtest" ,  parsM , parsrepM , Cdes , rdes , Ccols - 1 , fayfac ,
-			           PACKAGE="BIFIEsurvey")
+			           PACKAGE="BIFIEsurvey")					   
 				}
-    if (FALSE){
-	  res <- bifie_waldtest(  parsM , parsrepM , Cdes , rdes , Ccols - 1 , fayfac )				
-	          }
-	# ariv <- sum( diag( res$var_b %*% solve( res$var_w ) ) )
-	# ariv <- ariv * ( 1 + 1/res$Nimp ) / res$df
-	# var_t <- ( 1 + ariv) * res$var_w
+#    if (FALSE){
+#	  res <- bifie_waldtest(  parsM , parsrepM , Cdes , rdes , Ccols - 1 , fayfac )				
+#	          }
 	RR <- res$RR
     Nimp <- res$Nimp
 	fayfac <- res$fayfac
@@ -78,7 +43,7 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes ){
 	res1 <- list( "stat.D" = dfr ,
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
-			"class.BIFIE.method" = class(BIFIE.method) )
+			"class.BIFIE.method" = class(BIFIE.method) , "CALL"= cl )
 	class(res1) <- "BIFIE.waldtest"
 	return(res1)
 		}

@@ -1,6 +1,9 @@
 \name{BIFIE.linreg}
 \alias{BIFIE.linreg}
 \alias{summary.BIFIE.linreg}
+\alias{coef.BIFIE.linreg}
+\alias{vcov.BIFIE.linreg}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -16,6 +19,10 @@ BIFIE.linreg(BIFIEobj, dep=NULL , pre=NULL, formula=NULL ,
     group = NULL, group_values = NULL, se=TRUE)
 
 \method{summary}{BIFIE.linreg}(object,digits=4,...)
+
+\method{coef}{BIFIE.linreg}(object,...)
+
+\method{vcov}{BIFIE.linreg}(object,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -118,3 +125,6 @@ summary(mod2)
 % R documentation directory.
 \keyword{Linear regression}
 \keyword{summary}
+\keyword{coef}
+\keyword{vcov}
+

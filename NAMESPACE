@@ -25,7 +25,10 @@ export(
     BIFIE.BIFIEcdata2BIFIEdata   ,
     write.BIFIEdata   ,
     load.BIFIEdata.files    ,
-    BIFIE.mva
+    BIFIE.mva ,
+    BIFIE.BIFIEdata2datalist    ,
+    BIFIE.derivedParameters ,
+    bifietable
 )    
     
     
@@ -46,6 +49,27 @@ S3method(summary,BIFIE.hist)
 S3method(plot,BIFIE.hist)
 S3method(summary,BIFIE.ecdf)
 S3method(summary,BIFIE.mva)
+S3method(summary, BIFIE.derivedParameters)
+
+
+S3method(coef, BIFIE.by)
+S3method(coef, BIFIE.correl)
+S3method(coef, BIFIE.crosstab)
+S3method(coef, BIFIE.derivedParameters)
+S3method(coef, BIFIE.freq)
+S3method(coef, BIFIE.linreg)
+S3method(coef, BIFIE.logistreg)
+S3method(coef, BIFIE.univar)
+
+
+S3method(vcov, BIFIE.by)
+S3method(vcov, BIFIE.correl)
+S3method(vcov, BIFIE.crosstab)
+S3method(vcov, BIFIE.derivedParameters)
+S3method(vcov, BIFIE.freq)
+S3method(vcov, BIFIE.linreg)
+S3method(vcov, BIFIE.logistreg)
+S3method(vcov, BIFIE.univar)
 
 
 # imports Depends packages

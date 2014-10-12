@@ -6,6 +6,7 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 	group=NULL , group_values=NULL  ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()	
 	bifieobj <- BIFIEobj
 	if (bifieobj$cdata){
 		varnames <- unique( c( vars , group , "one") )
@@ -42,7 +43,7 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( dat1[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 	
@@ -78,7 +79,8 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 	s2 <- Sys.time()
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
 	res1 <- list( "ecdf" = dfr , "output" = res , "timediff" = timediff ,
-			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac" = fayfac)
+			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac" = fayfac ,
+			"CALL"= cl )
 	class(res1) <- "BIFIE.ecdf"
 	return(res1)
 		}

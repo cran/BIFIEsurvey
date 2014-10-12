@@ -1,6 +1,10 @@
 \name{BIFIE.correl}
 \alias{BIFIE.correl}
 \alias{summary.BIFIE.correl}
+\alias{coef.BIFIE.correl}
+\alias{vcov.BIFIE.correl}
+
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -14,7 +18,11 @@ Computes correlations and covariances
 \usage{
 BIFIE.correl(BIFIEobj, vars, group = NULL, group_values = NULL, se=TRUE)
 
-\method{summary}{BIFIE.correl}(object,digits=4,...)
+\method{summary}{BIFIE.correl}(object,digits=4, ...)
+
+\method{coef}{BIFIE.correl}(object,type=NULL, ...)
+
+\method{vcov}{BIFIE.correl}(object,type=NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,6 +43,8 @@ values will be determined automatically.
 based on replication should be employed.}
 \item{object}{Object of class \code{BIFIE.correl}}
 \item{digits}{Number of digits for rounding output}
+\item{type}{If \code{type="cov"}, then covariances instead of
+correlations are extracted.}
 \item{\dots}{Further arguments to be passed}
 }
 
@@ -103,3 +113,5 @@ summary(res1a)
 % R documentation directory.
 \keyword{Descriptive statistics}
 \keyword{summary}
+\keyword{coef}
+\keyword{vcov}

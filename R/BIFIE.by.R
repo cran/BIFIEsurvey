@@ -6,6 +6,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 		group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()
 	bifieobj <- BIFIEobj	
 	if (bifieobj$cdata){
 		varnames <- unique( c( vars , group , "one") )
@@ -41,7 +42,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 				
@@ -50,6 +51,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 
 	res <- .Call("bifie_by" , datalistM , wgt_ , wgtrep ,	vars_index - 1,    fayfac ,
 				Nimp , group_index - 1 , group_values , userfct , PACKAGE="BIFIEsurvey")
+							
 	NP <- res$NP
 	GG <- length(group_values)
 	ZZ <- NP
@@ -76,10 +78,12 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
 				}				
-
+	if ( Nimp==1 ){				
+		dfr$fmi <- dfr$VarMI  <- NULL
+				}	
 
 	# create vector of parameter names
-	parnames <- paste0( dfr$parm   , "_" , dfr$group , dfr$groupval )
+	parnames <- paste0( dfr$parm   , "_" , dfr$groupvar , dfr$groupval )
 
 	
 	
@@ -89,7 +93,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	res1 <- list( "stat" = dfr , 
 			"output" = res , 	"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac , "GG"=GG ,
-			"parnames" = parnames)
+			"parnames" = parnames , "CALL"= cl)
 	class(res1) <- "BIFIE.by"
 	return(res1)
 		}

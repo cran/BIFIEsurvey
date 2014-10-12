@@ -1,6 +1,9 @@
 \name{BIFIE.univar}
 \alias{BIFIE.univar}
 \alias{summary.BIFIE.univar}
+\alias{coef.BIFIE.univar}
+\alias{vcov.BIFIE.univar}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -16,6 +19,10 @@ Computes some univariate descriptive statistics
 BIFIE.univar(BIFIEobj, vars, group = NULL, group_values = NULL, se=TRUE)
 
 \method{summary}{BIFIE.univar}(object,digits=3,...)
+
+\method{coef}{BIFIE.univar}(object,...)
+
+\method{vcov}{BIFIE.univar}(object,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -133,3 +140,6 @@ summary(res2)
 % R documentation directory.
 \keyword{Descriptive statistics}
 \keyword{summary}
+\keyword{coef}
+\keyword{vcov}
+

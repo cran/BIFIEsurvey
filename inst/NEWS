@@ -44,6 +44,35 @@ a.robitzsch/-\bifie.at
 CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+---
+Versions 1.0 -- 2014-10-12  --  CRAN BIFIEsurvey 1.0
+---
+
+NOTE  * changed output for non-imputed datasets    
+FIXED * fixed a bug in data handling for linear and logistic
+        regression
+ADDED * included function 'BIFIE.BIFIEdata2datalist' for conversion
+        from BIFIEdata objects into a list of imputed datasets 
+FIXED * fixed a bug when converting datasets containing a one
+        into BIFIEdata objects
+EXAMP * added example for extracting number of unique values using
+        the BIFIE.by function (Example 1, Model 3)
+EXAMP * added an example for inclusing fitted values from lm and
+        a scores from principal component analysis in 
+        BIFIE.data.transformat
+FIXED * fixed a bug in calculating the variance between imputations        
+ADDED * included function 'BIFIE.derivedParameters' for statistical 
+        inference of derived parameters
+ADDED * included coef and vcov S3 methods for all descriptive functions
+        and statistical models
+NOTE  * fixed a bug in extracting values of grouping variables        
+ADDED * included an Rcpp based equivalent to the table function in R:
+        'bifietable'
+
+DATA  * ---
+EXAMP * BIFIE.BIFIEdata2datalist (2), BIFIE.by (1), 
+        BIFIE.data.transform (8,9), BIFIE.derivedParameters (1),
+        BIFIE.by (1)
 
 ---
 Versions 0.3 -- 2014-07-31  --  CRAN BIFIEsurvey 0.3-47
@@ -68,20 +97,15 @@ ADDED * included a function 'write.BIFIEdata' for writing separate imputed
         and Rdata
 FIXED * corrected output of standard errors in cases in which no replicate 
         weights were specified
-NOTE  * introduced the role of function maintainers which maintains only some
-        functions (e.g. 'BIFIE.logistreg'). The package maintainer maintains
-        the rest of the functions in BIFIEsurvey.
 NOTE  * included an option for conversion of PISA data in 'BIFIE.data.jack'
 ADDED * included function 'load.BIFIEdata' for efficient loading of files
         and creation of BIFIEdata objects
 FIXED * applied data transformation separately for every imputed dataset     
 ADDED * included function 'BIFIE.mva' for conducting missing value analyses
-x ---
 
 DATA  * included/modified datasets: data.timss1.ind
 EXAMP * included/modified examples: BIFIE.data.boot (1), BIFIE.logistreg (1,2),
         save.BIFIEdata (1,2)
-
 
 ---
 Versions 0.2 -- 2014-07-12  --  CRAN BIFIEsurvey 0.2-37

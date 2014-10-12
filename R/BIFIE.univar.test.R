@@ -5,6 +5,7 @@
 BIFIE.univar.test <- function( BIFIE.method ){
 	#****
 	s1 <- Sys.time()	
+	cl <- match.call()		
 	res5 <- BIFIE.method	
 	if (res5$group == "one"){ stop("This function can only be applied with a grouping variable.\n")}
 		
@@ -112,7 +113,7 @@ BIFIE.univar.test <- function( BIFIE.method ){
 	res1 <- list( "stat.F"= stat.F , "stat.eta" = stat.eta2 , "stat.dstat" = stat.dstat , 
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
-			"GG"=GG , "parnames" = parnames)
+			"GG"=GG , "parnames" = parnames , "CALL"=cl)
 	class(res1) <- "BIFIE.univar.test"
 	return(res1)
 		}

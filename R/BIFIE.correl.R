@@ -5,6 +5,7 @@
 BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
+	cl19 <- match.call()
 	bifieobj <- BIFIEobj	
 	if (bifieobj$cdata){
 		varnames <- unique( c( vars , group , "one") )
@@ -41,7 +42,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 				
@@ -94,6 +95,10 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$cov_SE <- dfr$cov_fmi <- dfr$cov_VarMI <- dfr$cov_VarRep <- NULL
 				}				
+	if ( Nimp == 1){				
+		dfr$cov_fmi <- dfr$cov_VarMI <- NULL
+				}					
+				
 	dfr.cov <- dfr							
 
 	#*****
@@ -118,11 +123,11 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	cov_matrix <- ml0	
 
 	# create vector of parameter names
-	nogroupL <- rep( nogroup , nrow(dfr) )	
-	parnames <- paste0( dfr$var1   , "_" , dfr$var2 , 
-			ifelse( ! nogroupL , paste0( "_" , dfr$group , "_" ) , "" ) ,
-			ifelse( ! nogroupL , dfr$groupvar , "" ) )
-	
+	nogroupL <- rep( nogroup , nrow(dfr) )		
+	parnames <- paste0( dfr$var1   , "_" , dfr$var2 , 			
+			ifelse( ! nogroupL , paste0("_" , dfr$groupvar ) , "" ) ,
+			ifelse( ! nogroupL , paste0( "_" , dfr$groupval  ) , "" ) 
+			)
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()
@@ -133,7 +138,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
 			"itempair_index" = itempair_index , "GG"=GG ,
-			"parnames" = parnames)
+			"parnames" = parnames , "CALL"= cl19)
 	class(res1) <- "BIFIE.correl"
 	return(res1)
 		}

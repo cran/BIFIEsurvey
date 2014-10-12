@@ -3,6 +3,7 @@
 BIFIE.data.boot <- function( data , wgt=NULL ,  pv_vars = NULL ,
 	     Nboot = 500 , seed = .Random.seed , cdata=FALSE
 		){	
+	cl <- match.call()		
 	#*** list of multiply imputed datasets
 	if ( ( is.list(data) ) & ( ! is.data.frame(data) ) ){
 		dataL <- data
@@ -69,6 +70,7 @@ BIFIE.data.boot <- function( data , wgt=NULL ,  pv_vars = NULL ,
 	#*** create BIFIE.data object
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgtname ] , 
 			      wgtrep = datarep , fayfac = fayfac , cdata=FALSE)
+	bifiedat$CALL <- cl				  
 	return(bifiedat)
 }
 ###############################################################################

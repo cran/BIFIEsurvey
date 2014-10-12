@@ -85,6 +85,10 @@ bifieobj <- BIFIE.data( datalist , wgt = data[, "W_FSTUWT"] , wgtrep = datarep ,
 # For PISA: RR=80 and therefore fayfac = 1/20 = .05
 summary(bifieobj)
 
+#--- Create BIFIEdata object immediately using BIFIE.data.jack function
+bifieobj1 <- BIFIE.data.jack( data.pisaNLD , jktype = "RW_PISA" , cdata=TRUE )
+summary(bifieobj1)
+
 #--- Create object in survey package
 datL <- mitools::imputationList(list( datalist[[1]],datalist[[2]],
                   datalist[[3]],datalist[[4]],datalist[[5]]) )

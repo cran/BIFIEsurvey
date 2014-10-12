@@ -5,6 +5,7 @@
 BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()		
 	bifieobj <- BIFIEobj
 	if (bifieobj$cdata){
 		varnames <- unique( c( vars , group , "one") )
@@ -32,7 +33,8 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	VV <- length(vars)
 	vars_info <- list(1:VV)
 	for (vv in 1:VV){
-	   t1 <- table( dat1[,vars_index[vv] ] )
+	   # t1 <- table( dat1[,vars_index[vv] ] )	   
+    	t1 <- fasttable( datalistM[ , vars_index[vv] ] )
 	   vars_info[[vv]] <- sort( as.numeric( paste0(names(t1) )))	   
 		    }
 	vars_values_numb <- unlist( lapply( vars_info , FUN = function(uu){ length(uu) } )	) 
@@ -50,7 +52,7 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 				
@@ -87,7 +89,9 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$perc_SE <- dfr$perc_fmi <- dfr$perc_VarMI <- dfr$perc_VarRep <- NULL
 				}				
-	
+	if ( Nimp==1 ){				
+		dfr$perc_fmi <- dfr$perc_VarMI <- NULL
+				}		
 	# create vector of parameter names
 	nogroupL <- rep( nogroup , nrow(dfr) )
 	parnames <- paste0( dfr$var   , "_" , dfr$varval , 
@@ -100,7 +104,7 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
 	res1 <- list( "stat" = dfr , "output" = res , "timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
-			"parnames" = parnames )
+			"parnames" = parnames , "CALL"=cl )
 	class(res1) <- "BIFIE.freq"
 	return(res1)
 		}

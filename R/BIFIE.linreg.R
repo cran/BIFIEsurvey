@@ -7,10 +7,12 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 			group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()		
+	
 	bifieobj <- BIFIEobj
 
 	if (bifieobj$cdata){
-	    fomula_vars <- NULL
+	    formula_vars <- NULL
 		if (! is.null(formula) ){
 			formula_vars <- all.vars( formula )
 							}
@@ -70,7 +72,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 				
@@ -104,7 +106,9 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$t <- dfr$p <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
 				}				
-
+	if ( Nimp==1 ){				
+		dfr$fmi <- dfr$VarMI  <- NULL
+				}	
 	# create vector of parameter names
 	nogroupL <- rep( nogroup , nrow(dfr) )
 	parnames <- paste0( dfr$parameter   , "_" , dfr$var , 
@@ -118,7 +122,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 			"output" = res , 
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
-			"GG"=GG , "parnames" = parnames)
+			"GG"=GG , "parnames" = parnames , "CALL"= cl)
 	class(res1) <- "BIFIE.linreg"
 	return(res1)
 		}

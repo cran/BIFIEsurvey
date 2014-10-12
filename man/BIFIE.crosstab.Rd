@@ -1,6 +1,9 @@
 \name{BIFIE.crosstab}
 \alias{BIFIE.crosstab}
 \alias{summary.BIFIE.crosstab}
+\alias{coef.BIFIE.crosstab}
+\alias{vcov.BIFIE.crosstab}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -16,6 +19,10 @@ BIFIE.crosstab( BIFIEobj , vars1 , vars2 , vars_values1 = NULL , vars_values2 = 
      group=NULL , group_values=NULL , se=TRUE )
 
 \method{summary}{BIFIE.crosstab}(object,digits=3,...)
+
+\method{coef}{BIFIE.crosstab}(object,...)
+
+\method{vcov}{BIFIE.crosstab}(object,...)
 }
 
 
@@ -107,3 +114,6 @@ summary(res1)
 % R documentation directory.
 \keyword{Descriptive statistics}
 \keyword{summary}
+\keyword{coef}
+\keyword{vcov}
+

@@ -197,19 +197,19 @@ summary(bifieobj1)
 
 #***--- read csv2 format
 files.imp <- miceadds::grep.vec( c("timss2_save1__IMP" , ".csv" ) ,
-				list.files(getwd()) )$x
+                        list.files(getwd()) )$x
 file.wgtrep <- miceadds::grep.vec( c("timss2_save1__WGTREP" , ".csv" ) , 
-			list.files(getwd()) )$x
+                        list.files(getwd()) )$x
 bifieobj2 <- load.BIFIEdata.files( files.imp, wgt="TOTWGT", file.wgtrep , type="csv2" )
 summary(bifieobj2)
 
 #***--- read sav format
 files.imp <- miceadds::grep.vec( c("timss2_save5__IMP" , ".sav" ) , 
-			list.files(getwd()) )$x
+                        list.files(getwd()) )$x
 file.wgtrep <- miceadds::grep.vec( c("timss2_save5__WGTREP" , ".sav" ) , 
-			list.files(getwd()) )$x
+                        list.files(getwd()) )$x
 bifieobj3 <- load.BIFIEdata.files( files.imp , wgt="TOTWGT" , file.wgtrep , type="sav" ,
-                    to.data.frame=TRUE , use.value.labels=FALSE )
+                       to.data.frame=TRUE , use.value.labels=FALSE )
 summary(bifieobj3)
 
 #############################################################################

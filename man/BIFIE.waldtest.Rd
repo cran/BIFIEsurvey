@@ -9,27 +9,31 @@ Wald Tests for BIFIE Methods
 
 \description{
 This function performs a Wald test for objects of classes
+\code{\link{BIFIE.by}}, 
 \code{\link{BIFIE.correl}}, \code{\link{BIFIE.crosstab}}, \code{\link{BIFIE.freq}}, 
 \code{\link{BIFIE.linreg}}, \code{\link{BIFIE.logistreg}} and \code{\link{BIFIE.univar}}.
 }
 
 \usage{
-BIFIE.waldtest(BIFIE.method, Cdes , rdes )
+BIFIE.waldtest(BIFIE.method, Cdes , rdes , type=NULL)
 
 \method{summary}{BIFIE.waldtest}(object,digits=4,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{BIFIE.method}{
-Object of classes \code{\link{BIFIE.correl}}, \code{\link{BIFIE.crosstab}}, 
+Object of classes \code{\link{BIFIE.by}}, 
+\code{\link{BIFIE.correl}}, \code{\link{BIFIE.crosstab}}, 
 \code{\link{BIFIE.freq}},  \code{\link{BIFIE.linreg}},
 \code{\link{BIFIE.logistreg}} or \code{\link{BIFIE.univar}}
 (see \code{parnames} in the Output of these methods for saved parameters)
 }
 \item{Cdes}{Design matrix \eqn{C} (see Details)}
  \item{rdes}{Design vector \eqn{r} (see Details)}
+ \item{type}{Only applies to \code{BIFIE.correl}. In case of \code{type="cov"}
+ covariances instead of correlations are used for parameter tests.}
+ \item{object}{Object of class \code{BIFIE.waldtest}}
 \item{digits}{Number of digits for rounding output}
-\item{object}{Object of class \code{BIFIE.waldtest}}
 \item{\dots}{Further arguments to be passed}
 }
 
@@ -68,7 +72,8 @@ Enders, C. K. (2010). \emph{Applied missing data analysis}. Guilford Press.
 
 \seealso{
 \code{\link[survey:regTermTest]{regTermTest}} (\pkg{survey}),
-\code{\link[survey:anova.svyglm]{anova.svyglm}} (\pkg{survey})
+\code{\link[survey:anova.svyglm]{anova.svyglm}} (\pkg{survey}),
+\code{\link[car:linearHypothesis]{linearHypothesis}} (\pkg{car})
 }
 
 

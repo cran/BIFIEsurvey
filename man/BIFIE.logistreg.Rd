@@ -1,6 +1,9 @@
 \name{BIFIE.logistreg}
 \alias{BIFIE.logistreg}
 \alias{summary.BIFIE.logistreg}
+\alias{coef.BIFIE.logistreg}
+\alias{vcov.BIFIE.logistreg}
+
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -16,6 +19,10 @@ BIFIE.logistreg(BIFIEobj, dep=NULL , pre=NULL, formula=NULL ,
     group = NULL, group_values = NULL, se=TRUE, eps = 1E-8 , maxiter=100)
 
 \method{summary}{BIFIE.logistreg}(object,digits=4,...)
+
+\method{coef}{BIFIE.logistreg}(object,...)
+
+\method{vcov}{BIFIE.logistreg}(object,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -141,3 +148,6 @@ summary(mod1)   # glm
 % R documentation directory.
 \keyword{Logistic regression}
 \keyword{summary}
+\keyword{coef}
+\keyword{vcov}
+

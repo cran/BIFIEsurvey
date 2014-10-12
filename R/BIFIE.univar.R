@@ -4,6 +4,7 @@
 BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TRUE ){
 	#****
 	s1 <- Sys.time()
+	cl <- match.call()		
 	bifieobj <- BIFIEobj
 	if (bifieobj$cdata){
 		varnames <- unique( c( vars , group , "one") )
@@ -42,7 +43,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 			}
     group_index <- which( varnames %in% group )
     if ( is.null(group_values ) ){ 
-		t1 <- table( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 				
@@ -90,7 +91,12 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$M_SE <- dfr$M_fmi <- dfr$M_VarMI <- dfr$M_VarRep <- NULL
 		dfr$SD_SE <- dfr$SD_fmi <- dfr$SD_VarMI <- dfr$SD_VarRep <- NULL		
-				}				
+				}	
+	if ( Nimp == 1 ){				
+		dfr$M_fmi <- dfr$M_VarMI <- NULL
+		dfr$SD_fmi <- dfr$SD_VarMI <- NULL		
+				}		
+				
 	
 	# create vector of parameter names
 	nogroupL <- rep( nogroup , nrow(dfr) )
@@ -103,7 +109,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
 	res1 <- list( "stat" = dfr , "output" = res , "timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac , "parnames" = parnames ,
-			"GG" = GG , "VV"=VV , "vars" = vars , "group" = group )
+			"GG" = GG , "VV"=VV , "vars" = vars , "group" = group , "CALL"=cl)
 	class(res1) <- "BIFIE.univar"
 	return(res1)
 		}

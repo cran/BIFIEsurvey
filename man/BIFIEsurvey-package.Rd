@@ -19,7 +19,7 @@ Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
 \tabular{ll}{
 Package: \tab \pkg{BIFIEsurvey} \cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
+Version: \tab 1.1\cr
 Date: \tab 2014 \cr
 License: \tab GPL (>=2)\cr
 }
@@ -60,7 +60,8 @@ replicated statistics
 
 
 \author{
-BIFIE
+BIFIE [aut], Alexander Robitzsch [ctb, cre], Konrad Oberwimmer [ctb]
+
 \url{http://www.bifie.at}
 
 Maintainer: Alexander Robitzsch <a.robitzsch@bifie.at>

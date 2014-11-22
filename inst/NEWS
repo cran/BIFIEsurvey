@@ -44,6 +44,16 @@ a.robitzsch/-\bifie.at
 CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+---
+Versions 1.1 -- 2014-11-22  --  CRAN BIFIEsurvey 1.1
+---
+
+FIXED * fixed a bug in frequency tabulation for constant variables
+
+DATA  * ---
+EXAMP * ---
+
 ---
 Versions 1.0 -- 2014-10-12  --  CRAN BIFIEsurvey 1.0
 ---

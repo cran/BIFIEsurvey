@@ -1,4 +1,4 @@
-b14e1d84545c1ac13e7c75e597b9dd8b *DESCRIPTION
+12ec4148596c933e606bf768c689f992 *DESCRIPTION
 df2ff0f6fe987d16c8baef5bee2b30e5 *NAMESPACE
 0b6312f9b4d5177c053c91eaf237c880 *R/BIFIE.BIFIEdata2datalist.R
 a98334ff77db174ab199ef4cda1c3547 *R/BIFIE.bifiedata2bifiecdata.R
@@ -12,7 +12,7 @@ a98334ff77db174ab199ef4cda1c3547 *R/BIFIE.bifiedata2bifiecdata.R
 84de6feeb1e5462840bf25c81d60b256 *R/BIFIE.data.transform.R
 1a6a923305f2cd301471789e5e3aaa88 *R/BIFIE.derivedParameters.R
 02561adc73667fe5cd04bb6605034469 *R/BIFIE.ecdf.R
-b7838bbe360488b26e4fbd969b65b1a6 *R/BIFIE.freq.R
+2311f419a01dd64b8d651dc0ccde193e *R/BIFIE.freq.R
 2747c4448ff1d0413055b2bd3678eea3 *R/BIFIE.hist.R
 6e488fb115fe216286b209c1d024e9b7 *R/BIFIE.linreg.R
 59ab44d0ba0245f7410abb207a94157c *R/BIFIE.logistreg.R
@@ -22,7 +22,7 @@ bc19688d85ee18c0d3a37838bf433d57 *R/BIFIE.progressbar.R
 178eae7b10e7a2405f04b9612a533481 *R/BIFIE.univar.R
 0ba03d48ebb1ff456288c29a3459a1d7 *R/BIFIE.univar.test.R
 cb0069cd1ca77de5418a282caa637697 *R/BIFIE.waldtest.R
-b2da68a18a14c406bfd0a7aeb139de49 *R/bifietable.R
+733203de2f770160bba9820e617c8820 *R/bifietable.R
 3165c697b189596cb7115bad51a49e4b *R/cdata.wgtrep.R
 055caa6505cffedb8e1ab451d7454057 *R/coef.BIFIEsurvey.R
 aeb6bf8fe8d1e970c3fcc63b5e8a597a *R/extract.replicated.pars.R
@@ -41,7 +41,7 @@ cd95b7026c18a55e67b476ea7fa06331 *data/data.timss1.rda
 a5a2c3b18c5dda9c3ec071da1774f5c8 *data/data.timss3.rda
 3dace6a5b2f47a8407cb6a0f9ce70187 *data/data.timssrep.rda
 8043a3537adf08446b256e17e8a3ae20 *data/datalist
-2ce179d4e89b22a905950061fedf7edb *inst/NEWS
+9bb0a6a2f9f38b2891a0d8d4d1a88ac6 *inst/NEWS
 bb073030c73423b491d8ca012eb36c53 *man/BIFIE.BIFIEdata2BIFIEcdata.Rd
 bd4876ae6a615f3ddf61c6806d21d5e4 *man/BIFIE.by.Rd
 e08d7bb077b23d92884d51248dad1c27 *man/BIFIE.correl.Rd
@@ -61,7 +61,7 @@ f91c2c7bbc4601e2a35b96b62ec91750 *man/BIFIE.logistreg.Rd
 e31cb4072d373cbe3b35eeb9a845e48e *man/BIFIE.univar.Rd
 b5b18cd6bc60b75606f6481ea6f576a8 *man/BIFIE.univar.test.Rd
 6be2262aac830d27f50ea4a9dff7caac *man/BIFIE.waldtest.Rd
-ffc3a3a427982dd85da894e34a4702ce *man/BIFIEsurvey-package.Rd
+207618dd9423a6da8ef747a7c3a9ff76 *man/BIFIEsurvey-package.Rd
 915eaededc6854ca9b8477479b061eb1 *man/bifietable.Rd
 f48c135bdbb707a3522b64eace36ed0d *man/data.pisaNLD.Rd
 aad5d10dbb890eace46a47f12b342eb4 *man/data.test1.Rd

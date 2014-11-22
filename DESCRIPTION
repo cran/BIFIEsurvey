@@ -2,9 +2,10 @@ Package: BIFIEsurvey
 Type: Package
 Title: Some Tools for Survey Statistics in Educational Assessment,
         Developed by BIFIE
-Version: 1.0
-Date: 2014-10-12
-Author: BIFIE
+Version: 1.1
+Date: 2014-11-22
+Author: BIFIE [aut], Alexander Robitzsch [ctb,cre],
+      Konrad Oberwimmer [ctb]
 Maintainer: Alexander Robitzsch <a.robitzsch@bifie.at>
 Description: 
     Some Tools for Survey Statistics in Educational Assessment, 
@@ -20,7 +21,7 @@ Suggests: survey, intsvy, svyPVpack, lavaan.survey, Hmisc, car
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
 URL: http://www.bifie.at
-Packaged: 2014-10-12 15:04:30 UTC; robitzsch
+Packaged: 2014-11-22 15:27:38 UTC; robitzsch
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-10-12 18:46:03
+Date/Publication: 2014-11-22 19:06:40

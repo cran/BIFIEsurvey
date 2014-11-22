@@ -20,7 +20,7 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	RR <- bifieobj$RR
 	datalistM <- bifieobj$datalistM
     fayfac <- bifieobj$fayfac	
-	
+
 	if (RR==1){ RR <- 0 }
 	if ( ! se ){ 
 		wgtrep <- matrix( wgt , ncol=1 )
@@ -35,14 +35,14 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	for (vv in 1:VV){
 	   # t1 <- table( dat1[,vars_index[vv] ] )	   
     	t1 <- fasttable( datalistM[ , vars_index[vv] ] )
-	   vars_info[[vv]] <- sort( as.numeric( paste0(names(t1) )))	   
+	    vars_info[[vv]] <- sort( as.numeric( paste0(names(t1) )))	   
 		    }
 	vars_values_numb <- unlist( lapply( vars_info , FUN = function(uu){ length(uu) } )	) 
 	vars_values <- matrix(NA, nrow=max(vars_values_numb) , ncol=VV)
 	for (vv in 1:VV){
 	   vars_values[ seq(1,vars_values_numb[vv] ) , vv ] <- vars_info[[vv]]
 			}
-					
+			
 	wgt_ <- matrix( wgt , ncol=1 )
 	if ( is.null( group) ){ nogroup <- TRUE } else { nogroup <- FALSE }
 	cat(paste0( "|" , paste0( rep("*" , FF) , collapse="") , "|\n" ))
@@ -62,7 +62,7 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	res <-  .Call("bifie_freq"  ,datalistM , wgt_ , as.matrix(wgtrep) , vars_index -1 , fayfac , 
 				Nimp ,  group_index -  1, group_values , as.matrix(vars_values) ,
 				vars_values_numb , PACKAGE="BIFIEsurvey" )
-
+					
 	GG <- res$outlist$GG
 
 	dfr <- data.frame( "var" = rep( rep( vars , vars_values_numb ) , each=GG ) )

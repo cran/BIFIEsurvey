@@ -16,7 +16,7 @@ class \code{BIFIEdata} in a compact form (\code{cdata=TRUE}).
 The function \code{BIFIE.BIFIE2data2BIFIEdata} takes the reverse operation.
 
 The function \code{BIFIE.BIFIEdata2datalist} converts a (part) of the
-object of class \code{BIFIEdata} into a list of multiply imputed 
+object of class \code{BIFIEdata} into a list of multiply-imputed 
 datasets.
 }
 

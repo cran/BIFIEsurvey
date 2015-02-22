@@ -57,13 +57,19 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		fayfac <- ngr / ( ngr - 1 )
         jkfac <- 0	     
 				}
-								
+							
 	#**********************************************************
 	#**** defaults for TIMSS	
 	if (jktype == "JK_TIMSS"){
-          jkrep <- "JKREP"
-          jkzone <- "JKZONE"
-		  wgt <- "TOTWGT"
+	      if ( is.null( jkrep) ){
+			jkrep <- "JKREP"
+						}
+		  if ( is.null( jkzone ) ){ 
+				jkzone <- "JKZONE"
+							}
+		  if ( is.null( wgt ) ){ 							
+			wgt <- "TOTWGT"
+					}
 		  jkfac <- 2
 				}
 	#***********************************************************
@@ -83,6 +89,11 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 				}								
 	#******** generate replicate weights
 	if ( jktype != "RW_PISA") {
+	    #**** bug fix ARb 2014-12-11
+		# redefine jackknife zones
+		jkzones1 <- unique( data[,jkzone] )
+		data[,jkzone] <- match( data[,jkzone] , jkzones1)
+		#***********
 		RR <- max( data[,jkzone] )		
 		prblen <- 10
 		prbar <- BIFIE.progressbar( ops = RR , prblen = prblen )
@@ -104,9 +115,10 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
             data <- data[ , - repvars ]							
 					}
 		       }
-			   
 	#******** generate replicated datasets for datasets
-	if ( is.null( pv_vars) ){ datalist <- dataL  }
+	if ( is.null( pv_vars) ){ 
+				datalist <- dataL  
+							}						
 	if ( ! is.null( pv_vars )){
 		dfr <- NULL
 		VV <- length(pv_vars)
@@ -134,10 +146,11 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 			colnames(dat1)[ newvars ] <- pv_vars
 			datalist[[ii]] <- dat1 
 						}  # end imputations						
-					}  # end pv_vars			
+					}  # end pv_vars
+			
 	#*** create BIFIE.data object
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgt ] , wgtrep = datarep , fayfac = fayfac ,
-	                   cdata=cdata)
+							cdata=cdata)
 	bifiedat$CALL <- cl
 	return(bifiedat)
 }

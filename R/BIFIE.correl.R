@@ -66,6 +66,8 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	dfr$Nweight <- rep( rowMeans( res$sumwgt1M ) , ZZ )	
 	dfr$cor <- res$cor1$pars
 	dfr$cor_SE <- res$cor1$pars_se
+	dfr$t <- round( dfr$cor / dfr$cor_SE , 2 )
+	dfr$p <- pnorm( - abs( dfr$t ) ) * 2		
 	dfr$cor_fmi <- res$cor1$pars_fmi
 	dfr$cor_VarMI <- res$cor1$pars_varBetween
 	dfr$cor_VarRep <- res$cor1$pars_varWithin

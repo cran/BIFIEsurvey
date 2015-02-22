@@ -132,7 +132,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 # summary for BIFIE.linreg function
 summary.BIFIE.linreg <- function( object , digits=4 , ... ){
     BIFIE.summary(object)
-	cat("Statistical Inference for Linear Regression \n")	
+	cat("Statistical Inference for Linear Regression \n\n")	
 	obji <- object$stat
 	print.object.summary( obji , digits=digits )
 			}

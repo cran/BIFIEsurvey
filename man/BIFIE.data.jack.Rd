@@ -20,15 +20,14 @@ BIFIE.data.jack(data, wgt = NULL, jktype = "JK_TIMSS", pv_vars = NULL,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-Data frame: Can be a single or a list of multiply imputed datasets
+Data frame: Can be a single or a list of multiply-imputed datasets
 }
   \item{wgt}{
 A string indicating the label of case weight.
 If \code{jktype="JK_TIMSS"}, then \code{wgt="TOTWGT"}.
 }
   \item{pv_vars}{
-An optional vector of plausible values which define multiply
-imputed datasets.
+An optional vector of plausible values which define multiply-imputed datasets.
 }
   \item{jktype}{
 Type of jackknife procedure for creating the \code{BIFIE.data} object.

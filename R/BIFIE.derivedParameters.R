@@ -57,6 +57,9 @@ BIFIE.derivedParameters <- function( BIFIE.method , derived.parameters , type=NU
 				"se" = sqrt( diag( var_tot ) ) ) 
 	# pars_fmi[pp] = ( 1.0 + 1/Nimp2) * pars_varBetween[pp] / pow(pars_se[pp] + eps,2.0) ;
 	eps <- 1E-10
+	
+	stat$t <- stat$coef / stat$se
+	stat$p <- 2* pnorm( - abs( stat$t ) )
 	stat$fmi <-  ( 1+1/Nimp) * diag(var_b) / ( stat$se^2 + eps )           
 	stat$VarMI <- diag( var_b )
 	stat$VarRep <- diag( var_w )               

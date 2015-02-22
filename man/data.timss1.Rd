@@ -50,6 +50,7 @@ student covariates and all 5 plausible values contained in one file.
 \examples{
 \dontrun{	
 library(survey)
+library(lavaan.survey)
 library(intsvy)
 library(mitools)
     
@@ -110,53 +111,90 @@ colnames(data.timss3a) <- gsub( "ASSSCI" , "ASSSCI0" , colnames(data.timss3a) )
 #***************************
 # Model 1: Linear regression (no grouping variable)
 
-# linear regression in survey
+#--- linear regression in survey
 mod1a <-  survey::svyglm( scsci ~ migrant + books , design = svydes3) 
 summary(mod1a)
 
-# regression with pirls.reg (intsvy)
+#--- regression with pirls.reg (intsvy)
 mod1b <- intsvy::pirls.reg( y = "scsci" , x = c("migrant" , "books" ) , data= data.timss3)
 mod1b
 
-# regression with BIFIEsurvey
+#---- regression with BIFIEsurvey
 mod1c <- BIFIE.linreg( bdat3 , dep="scsci" , pre = c("one" , "migrant" , "books" ) )
 summary(mod1c)
+
+#--- regression with lavaan.survey package
+lavmodel <- "
+    scsci ~ migrant + books
+    scsci ~ 1
+    scsci ~~ scsci
+        "
+# fit in lavaan
+lavaan.fit <- lavaan::lavaan( lavmodel, data= data.timss3, estimator="MLM")
+summary(lavaan.fit)
+# using all replicated weights
+mod1d <- lavaan.survey::lavaan.survey(lavaan.fit=lavaan.fit, survey.design=svydes3 )
+summary(mod1d)
 
 #***************************
 # Model 2: Linear regression (grouped by female)
 
-# linear regression in survey
+#--- linear regression in survey
 mod2a <- survey::svyglm( scsci ~ 0 + as.factor(female) + as.factor(female):migrant 
                + as.factor(female):books , design = svydes3) 
 summary(mod2a)
 
-# regression with pirls.reg (intsvy)
+#--- regression with pirls.reg (intsvy)
 mod2b <- intsvy::pirls.reg( y = "scsci" , x = c("migrant" , "books" ) , 
                  by = "female" , data= data.timss3)
 mod2b[["0"]]   # regression coefficients female = 0
 mod2b[["1"]]   # regression coefficients female = 1 
 
-# regression with BIFIEsurvey
+#--- regression with BIFIEsurvey
 mod2c <- BIFIE.linreg( bdat3 , dep="scsci" , pre = c("one" , "migrant" , "books" ) , 
                  group="female")
 summary(mod2c)   
+
+#--- regression with lavaan.survey package
+lavmodel <- "
+    scsci ~ migrant + books
+    scsci ~ 1
+    scsci ~~ scsci
+        "
+# fit in lavaan
+lavaan.fit <- lavaan::lavaan( lavmodel, data= data.timss3, group="female", estimator="MLM")
+summary(lavaan.fit)
+mod2d <- lavaan.survey::lavaan.survey(lavaan.fit=lavaan.fit, survey.design=svydes3 )
+summary(mod2d)
 
 #***************************
 # Model 3: Linear regression with mathematics PVs
 library(mitools)
 
-# linear regression in survey
+#--- linear regression in survey
 mod3a <- with(svydes4,  survey::svyglm( ASMMAT ~ migrant + books , design = svydes4 ) )
 res3a <- mitools::MIcombine(mod3a)
 summary(res3a)
 
-# regression with pirls.reg.pv (intsvy)
+#--- regression with pirls.reg.pv (intsvy)
 mod3b <- intsvy::pirls.reg.pv( pvlabel = "ASMMAT" , x = c("migrant" , "books" ) , 
              data= data.timss3a)
 
-# regression with BIFIEsurvey
+#--- regression with BIFIEsurvey
 mod3c <- BIFIE.linreg( bdat4 , dep="ASMMAT" , pre = c("one" , "migrant" , "books" ) )
-summary(mod3c)   
+summary(mod3c)
+
+#--- regression with lavaan.survey package
+lavmodel <- "
+    ASMMAT ~ migrant + books
+    ASMMAT ~ 1
+    ASMMAT ~~ ASMMAT
+        "
+# fit in lavaan
+lavaan.fit <- lavaan::lavaan( lavmodel, data= data.timss3a, group="female", estimator="MLM")
+summary(lavaan.fit)
+mod3d <- lavaan.survey::lavaan.survey(lavaan.fit=lavaan.fit, survey.design=svydes4 )
+summary(mod3d)
 }
 }
 

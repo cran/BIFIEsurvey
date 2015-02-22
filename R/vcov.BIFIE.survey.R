@@ -28,7 +28,7 @@ vcov.BIFIEsurvey <- function( object, type=NULL , eps=1E-10 , avoid.singul = FAL
 	Ccols <- which( colSums( abs( Cdes) ) > 0 )
 	rdes <- c(0)
 	# compute covariance matrices
-	res0 <- .Call("bifie_waldtest" ,  parsM = parsM , parsrepM = parsrepM , 
+	res0 <- .Call("bifie_comp_vcov" ,  parsM = parsM , parsrepM = parsrepM , 
 						Cdes , rdes , Ccols - 1 , fayfac=fayfac ,
 						PACKAGE="BIFIEsurvey")
 	var_w <- res0$var_w
@@ -75,6 +75,16 @@ vcov.BIFIE.univar <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ...)
 	return(pars)
 		}
-		
-
+vcov.BIFIE.twolevelreg <- function( object , ... ){
+    if (object$se){
+		pars <- vcov.BIFIEsurvey( object=object , type= NULL , ... )
+				} else {
+		pars <- vcov( object$micombs )		
+				}
+	return(pars)
+		}		
+vcov.BIFIE.pathmodel <- function( object , ... ){
+	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ...)
+	return(pars)
+		}
 		

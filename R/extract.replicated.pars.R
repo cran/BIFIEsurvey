@@ -14,6 +14,14 @@ extract.replicated.pars <- function( BIFIE.method , type=NULL ){
 		parsrepM <- res1$output$regrcoefrepM
 				}
 	#************************************
+	#**** path model
+	if ( class( BIFIE.method) == "BIFIE.pathmodel"){ 	
+		# parameters in every imputed dataset
+		parsM <- res1$output$parsM
+		# replicated parameters
+		parsrepM <- res1$output$parsrepM
+				}				
+	#************************************
 	#**** correlation
 	if ( class( BIFIE.method) == "BIFIE.correl"){ 	
 		parsM <- res1$output$cor1M
@@ -55,6 +63,12 @@ extract.replicated.pars <- function( BIFIE.method , type=NULL ){
 		parsM <- res1$output$parsM
 		parsrepM <- res1$output$parsrepM
 				}		
+	#************************************
+	#**** BIFIE.twolevelreg
+	if ( class( BIFIE.method) == "BIFIE.twolevelreg"){ 	
+		parsM <- res1$output$parsM
+		parsrepM <- res1$output$parsrepM
+				}						
 	res <- list( "parsM" = parsM , "parsrepM" = parsrepM ,
 		"parnames"= res1$parnames )
 	return(res)

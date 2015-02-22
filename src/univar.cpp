@@ -553,8 +553,8 @@ BEGIN_RCPP
    
        
      Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
+     Rcpp::NumericMatrix wgt1(wgt_);  
+     Rcpp::NumericMatrix wgtrep(wgtrep_);  
      Rcpp::NumericVector dep_index(dep_index_);  
      Rcpp::NumericVector pre_index(pre_index_);  
      Rcpp::NumericVector fayfac(fayfac_) ;  
@@ -566,10 +566,10 @@ BEGIN_RCPP
      // int RR = wgtrep.ncol() ;   
        
      int N = wgt1.nrow() ;  
-     int VV = pre_index.size() ;  
+     int VV = pre_index.size();  
      int NV = datalist.ncol();  
      // int group_index = group_index1[0] ;  
-     int GG=group_values.size() ;  
+     int GG=group_values.size();  
        
      Rcpp::NumericMatrix dat1(N,NV) ;  
        
@@ -650,7 +650,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
-//************************************************+
+//************************************************
 // BIFIE Wald test
 
 
@@ -831,6 +831,189 @@ BEGIN_RCPP
      
 END_RCPP
 }
+
+
+//************************************************
+// BIFIE Wald test
+
+
+// declarations
+extern "C" {
+SEXP bifie_comp_vcov( SEXP parsM_, SEXP parsrepM_, SEXP Cdes_, SEXP rdes_, SEXP Ccols_, SEXP fayfac_) ;
+}
+
+// definition
+
+SEXP bifie_comp_vcov( SEXP parsM_, SEXP parsrepM_, SEXP Cdes_, SEXP rdes_, SEXP Ccols_, SEXP fayfac_ ){
+BEGIN_RCPP
+   
+     //            parsM_ = "matrix" , parsrepM_="matrix" , Cdes_="matrix" ,   
+     //			rdes_ = "vector" , Ccols_ = "vector"   
+        
+        
+     Rcpp::NumericMatrix parsM(parsM_);          
+     Rcpp::NumericMatrix parsrepM(parsrepM_) ;  
+     Rcpp::NumericMatrix Cdes(Cdes_) ;  
+     Rcpp::NumericVector rdes(rdes_);  
+     Rcpp::NumericVector Ccols(Ccols_);  
+     Rcpp::NumericVector fayfac(fayfac_) ;  
+       
+       
+     // number of involved variables in the test  
+     int VV = Ccols.size() ;  
+     int Nimp = parsM.ncol() ;  
+     double Nimp2 = Nimp ;  
+     Nimp2 = Nimp2 + 1e-10 ;  
+     int RR = parsrepM.ncol() / Nimp ;  
+     int df = Cdes.nrow() ;  
+       
+     Rcpp::NumericMatrix chi2M(Nimp,2);  
+     // Rcpp::NumericMatrix var_w(VV,VV);  
+     arma::mat var_w = arma::zeros(VV,VV);  
+     arma::mat var_b = arma::zeros(VV,VV);  
+     // Rcpp::NumericMatrix var_b(VV,VV);  
+     Rcpp::NumericVector parsM_sel(VV) ;  
+       
+     // Rcpp::NumericMatrix var_w(VV,VV);  
+       
+     // arma form of the design matrix Cdes  
+     arma::mat ACdes = arma::zeros(df,VV);  
+     for (int dd=0;dd<df;dd++){  
+         for (int vv=0;vv<VV;vv++){  
+         	    ACdes(dd,vv) = Cdes(dd , Ccols[vv] ) ;  
+         	    		}  
+         	    	}  
+        	    	    	    	  
+     // arma colvec for design vector  
+     arma::colvec Ardes = arma::zeros(df,1) ;  
+     for (int dd=0;dd<df;dd++){  
+         Ardes(dd,0) =  rdes[dd] ;  
+         			}  
+         	    	  
+     double tmp1=0;  
+     double tmp2=0;  
+       
+     for ( int ii=0 ; ii < Nimp ; ii++){  
+     	Rcpp::List res1 = bifiehelpers_waldtest_vcov(  VV ,  Ccols , parsM , parsrepM ,  
+     		 ii ,  RR , fayfac , ACdes ,  Ardes ) ; 			  
+     	  
+     	Rcpp::NumericMatrix chi2a=res1["chi2"] ;	  
+     	chi2M(ii,0) = chi2a(0,0) ;  
+     	tmp1 += chi2M(ii,0) ;	  
+     	chi2M(ii,1) = sqrt( chi2M(ii,0) ) ;  
+     	tmp2 += chi2M(ii,1) ;		  
+     	Rcpp::NumericMatrix var_w1 = res1["var_w"] ;  
+     	for (int vv1=0;vv1<VV;vv1++){  
+     	   for (int vv2=0;vv2<VV;vv2++){  
+     	         var_w(vv1,vv2) += var_w1(vv1,vv2) ;  
+     	         			}  
+     	         		}  
+     		}  
+       
+     // calculate ARIV	  
+     double eps=1e-10;  
+     double ariv = tmp1 - Nimp * pow( tmp2 / Nimp , 2.0 ) ;  
+     ariv = ariv / ( Nimp - 1 + eps ) * ( 1 + 1 / Nimp2 ) ;  
+       
+     // calculate D2 statistic  
+     double D2 = tmp1 / Nimp2 - (Nimp2+1)/(Nimp2-1+eps) * ariv ;  
+     D2 = D2 / ( 1 + ariv ) ;  
+     // calculate degrees of freedom  
+     double df2 = df ;  
+     double nu3 = 1000 ;  
+     if ( Nimp > 1 ){  
+       nu3 = pow( df2 , - 3 / Nimp2 ) * ( Nimp2 - 1 ) *  
+                 pow( 1 + 1 / ( ariv + eps ) , 2 ) ;  
+                   }  
+       
+     // double p_D2 = Rf_pf( D2 , df , nu3 , FALSE  , FALSE );                 
+       
+     // calculate covariance matrices  
+     for (int vv1=0;vv1<VV;vv1++){  
+        for (int vv2=0;vv2<VV;vv2++){  
+              var_w(vv1,vv2) = var_w(vv1,vv2) / Nimp2 ;  
+     	         		}  
+     	         	}  
+       
+     // means of all parameters	         	  
+     for (int vv=0;vv<VV;vv++){  
+        for (int ii=0;ii<Nimp;ii++){  
+     	parsM_sel[vv] += parsM( Ccols[vv] , ii ) ;  
+     				}  
+     	parsM_sel[vv] = parsM_sel[vv] / Nimp2 ;  
+     			}  
+       
+       
+     // between matrix  
+     // parsM( Ccols[vv1] , ii ) )  
+       
+     for (int vv1=0;vv1<VV;vv1++){  
+     for (int vv2=0;vv2<VV;vv2++){  
+       for ( int ii=0; ii<Nimp ; ii++){  
+           var_b(vv1,vv2) += ( parsM( Ccols[vv1] , ii ) - parsM_sel[vv1] ) *  
+          		( parsM( Ccols[vv2] , ii ) - parsM_sel[vv2] ) ;  
+         			}  
+           var_b(vv1,vv2) = 1 / ( Nimp2 - 1 ) * var_b( vv1 , vv2 ) ;  
+           		}  
+               }  
+         			  
+     arma::mat ariv_D1a = arma::mat( var_b  ) ;  
+     double ariv_D1 = 0 ;  
+     for (int vv=0;vv<VV;vv++){  
+     	ariv_D1 += ariv_D1a(vv,vv) ;  
+     			}		  
+     ariv_D1 = ariv_D1 * ( 1 + 1 / Nimp2 ) / df ;  
+     arma::mat var_t1 = arma::mat( (1+ariv_D1) * var_w ) ;  
+         			  
+     // hypothesis matrix  
+     arma::mat var_hyp = arma::mat( ACdes * var_t1 * trans( ACdes) ) ;  
+     // compute inverse of variance matrix of hypothesis  
+     arma::mat var_hypinv = arma::mat( var_hyp ) ;  
+     // parameter vector  
+     arma::colvec parm_vec= arma::zeros(VV,1);  
+     for (int vv=0;vv<VV;vv++){  
+     		parm_vec(vv,0) = parsM_sel[vv] ;  
+     				}  
+     // hypothesis statistic  
+     arma::mat hyp_stat = arma::mat( ACdes * parm_vec - Ardes ) ;  
+     arma::mat D1 = arma::mat( trans( hyp_stat ) * var_hypinv * hyp_stat ) ; 			  
+     // D1(0,0) = D1(0,0) / df ;  
+     // according to Enders (2010, p. 236), D1 must be divided by df,  
+     // but this is (could be) an error?  
+       
+     // calculate nu2  
+     double nu2 = 1 + ( 1 - 2 / ( df * Nimp2 - df ) * 1 / ariv_D1 ) ;  
+     nu2 = 4 + ( df * Nimp2 - df - 4 ) * nu2 * nu2 ;  
+
+     // double tmp11 = D1(0,0);
+     
+     // double p_D1 = Rf_pf( tmp11 , df , nu2 , FALSE  , FALSE );     
+       
+     //*************************************************      
+     // OUTPUT              
+               
+     return Rcpp::List::create(   
+         _["chi2M"] = chi2M ,  
+         _["ariv"] = ariv ,  
+         _["D2"] = D2 ,  
+         _["df"] = df , _["nu2"] = nu2 ,  
+         _["nu3"]=nu3 ,  
+         _["Nimp"] = Nimp , _["RR"] = RR ,  
+         _["fayfac"] = fayfac ,  
+         _["var_w"] = var_w , _["var_b"] = var_b ,       
+         _["D1"] = D1 ,   
+         _["Ccols"] = Ccols , _["parsM_sel"] = parsM_sel  
+         ) ;    
+     // maximal list length is 20!  
+              
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
+       
+       
+     
+END_RCPP
+}
+
+
 
 
 //*************************************************
@@ -1823,3 +2006,529 @@ END_RCPP
      // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;                
      // Rcpp::Rcout << "datavec[nn] " <<  datavec[nn] <<  std::flush << std::endl ;  
 
+
+//////////////////////////////////////////////////////////
+// multilevel regression
+     
+     
+
+// declarations
+extern "C" {
+SEXP bifie_mla2( SEXP X_list_, SEXP Z_list_, SEXP y_list_, SEXP wgttot_, SEXP wgtlev2_, 
+	SEXP wgtlev1_, SEXP globconv_, SEXP maxiter_, SEXP group_, SEXP group_values_, 
+	SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_) ;
+}
+
+// definition
+
+SEXP bifie_mla2( SEXP X_list_, SEXP Z_list_, SEXP y_list_, SEXP wgttot_, 
+	SEXP wgtlev2_, SEXP wgtlev1_, SEXP globconv_, SEXP maxiter_, SEXP group_, 
+	SEXP group_values_, SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_ ){
+BEGIN_RCPP
+   
+       
+       
+     // inputs   
+     Rcpp::NumericMatrix X_list(X_list_);          
+     Rcpp::NumericMatrix Z_list(Z_list_);  
+     Rcpp::NumericVector y_list(y_list_);  
+     Rcpp::NumericVector wgttot(wgttot_);    // length N  
+     Rcpp::NumericVector wgtlev2(wgtlev2_);  // length NC, number of clusters  
+     Rcpp::NumericVector wgtlev1(wgtlev1_); // length N  
+     double globconv = as<double>(globconv_);   
+     int maxiter = as<int>(maxiter_);  
+     Rcpp::NumericVector group(group_);   // length N  
+     Rcpp::NumericVector group_values(group_values_); // length GG  
+     Rcpp::NumericVector cluster(cluster_);  // vector of length N  
+     Rcpp::NumericMatrix wgtrep(wgtrep_);    // length N  
+     int Nimp = as<int>(Nimp_);  
+     Rcpp::NumericVector fayfac(fayfac_);   
+       
+     // new declarations  
+     int NZ = Z_list.ncol();  
+     int NX = X_list.ncol();  
+     int N = wgttot.size();  
+     int NC = wgtlev2.size();   
+     int GG = group_values.size();  
+     int RR = wgtrep.ncol();  
+       
+     double eps = 1E-8;  
+       
+     Rcpp::NumericMatrix idcluster_table2;  
+     Rcpp::NumericVector pars;  
+       
+       
+     //    Rcpp::Rcout << "a100" <<    std::flush << std::endl ;  
+       
+          
+     // estimated parameters  
+     int NP = NX + NZ*NZ + 1 + 13 ;  
+     int NPtot = NP * GG ;  
+     Rcpp::NumericMatrix parsM(NPtot , Nimp );  
+     Rcpp::NumericMatrix parsVar(NPtot , Nimp );   
+     Rcpp::NumericMatrix parsMrep(NPtot , RR*Nimp );     
+     Rcpp::NumericMatrix iterM( GG  , Nimp );  
+     Rcpp::NumericMatrix iterMrep( GG  , RR*Nimp );  
+     Rcpp::NumericMatrix fvcovM( GG*NX , NX*Nimp );  
+     Rcpp::NumericVector Npers(GG);  
+     Rcpp::NumericVector Nclusters(GG);  
+     Rcpp::NumericVector pars0(NP);  
+     Rcpp::NumericMatrix pars20(NP,RR);  
+       
+     Rcpp::NumericMatrix Sigma_W_yXM(Nimp*NX,NX);  
+     Rcpp::NumericMatrix Sigma_B_yXM(Nimp*NX,NX);  
+     Rcpp::NumericMatrix Sigma_W_yZM(Nimp*NZ,NZ);  
+     Rcpp::NumericMatrix Sigma_B_yZM(Nimp*NZ,NZ);  
+     Rcpp::NumericMatrix totmean_yXM(Nimp,NX);
+     Rcpp::NumericMatrix totmean_yZM(Nimp,NZ);
+     
+     // design matrices  
+     Rcpp::NumericVector y(N);  
+     Rcpp::NumericMatrix Z(N,NZ);  
+     Rcpp::NumericMatrix X(N,NX);  
+       
+       
+     int maxiter_rep = maxiter;  
+     if (RR==1){ maxiter_rep = 1 ; }  
+       
+     /////////////////////////////////////////////  
+     // imputations  
+     /////////////////////////////////////////////  
+       
+     for (int imp=0; imp<Nimp ; imp++){  
+     // int imp=0; // imputation imp  
+       
+     int vv=0;  
+       
+     for (int ii=0;ii<N;ii++){  
+         y[ii] = y_list[ ii + imp*N ] ;  
+         for (int jj=0;jj<NX;jj++){  
+         	    X( ii , jj ) = X_list( ii + imp* N , jj ) ;   
+         	    		   }  
+         for (int jj=0;jj<NZ;jj++){  
+         	    Z( ii , jj ) = Z_list( ii + imp* N , jj ) ;   
+         	    		   }    	    		     
+     			}  
+       
+       
+       
+       
+     //************************************  
+     // group-wise analysis and missings (first imputed dataset)  
+     Rcpp::List res41 = create_dummies_mla2( GG , group , X , Z , y ) ;  
+     Rcpp::NumericMatrix dummy_inds = res41["dummy_inds"] ;   
+     Rcpp::NumericVector N_group = res41["N_group"] ;  
+     if (imp==0){  
+     for (int gg=0;gg<GG;gg++){	  
+     	Npers[gg] = N_group[gg] ;  
+     			}  
+     		}  
+     	  
+     // collect data for group gg  
+     // X , Z , y , wgtlev1 , wgttot , wgtlev2 , cluster, group  
+       
+     //Rcpp::NumericMatrix pars2;  
+     Rcpp::NumericVector iter3;  
+     Rcpp::List res36 ;  
+       
+       
+     //--- loop group  
+     for (int gg=0 ;gg<GG;gg++){  
+       
+     Rcpp::NumericVector pars;  
+     //Rcpp::NumericMatrix fvcov;  
+     int iter2=0;  
+       
+       
+     int N__ = N_group[gg] ;   
+     Rcpp::NumericMatrix X__(N__,NX);  
+     Rcpp::NumericMatrix Z__(N__,NZ);  
+     Rcpp::NumericMatrix wgtrep__(N__,RR);  
+     Rcpp::NumericVector y__(N__);  
+     Rcpp::NumericVector wgtlev1__(N__);  
+     Rcpp::NumericVector wgttot__(N__);  
+     Rcpp::NumericVector cluster__(N__);  
+     Rcpp::NumericVector group__(N__);  
+     Rcpp::NumericVector clustertable_temp(NC);  
+       
+     int kk=0;  
+       
+     for( int nn=0; nn < N ; nn++){	  
+     	if ( dummy_inds(nn,gg) == 1){  
+     	       for (int ii=0;ii<NX;ii++){  
+     		   X__(kk,ii) = X(nn,ii) ;  
+     				}  
+     	       for (int ii=0;ii<NZ;ii++){  
+     		   Z__(kk,ii) = Z(nn,ii) ;  
+     				}  
+     	       for (int ii=0;ii<RR;ii++){  
+     		   wgtrep__(kk,ii) = wgtrep(nn,ii) ;  
+     				}     				  
+     		y__[kk] = y[nn] ;  
+     		wgtlev1__[kk] = wgtlev1[nn] ;  
+     		wgttot__[kk] = wgttot[nn] ;	  
+     		cluster__[kk] = cluster[nn] ;  
+     		group__[kk] = group[nn] ;  
+     		kk ++ ;  
+     		}  
+     	}  
+       
+     //** count clusters  
+     int NC__ = 0 ;  
+     double cl = -999 ;  
+     for ( int nn = 0 ; nn < N__ ; nn++){  
+     	if ( cluster__[nn] > cl ){  
+     		cl = cluster__[nn] ;  
+     		clustertable_temp[ NC__ ] = cl ;  
+     		NC__ ++ ;  
+     				}  
+     			}  
+       
+     Rcpp::NumericVector wgtlev2__(NC__);  
+     cl=0;  
+     for (int nn=0;nn<NC__;nn++){  
+           wgtlev2__[nn] = wgtlev2[ clustertable_temp[nn] ] ;  
+           cl += wgtlev2__[nn] ;  
+           			}  
+     	  
+     for (int nn=0;nn<NC__;nn++){  
+           wgtlev2__[nn] = wgtlev2__[nn] * NC__ / cl ;  
+           			}			  
+     for (int nn=0;nn<N__;nn++){  
+           wgttot__[nn] = wgttot__[nn] * NC__ / cl ;  
+           if (wgttot__[nn] < eps ){  
+           	      wgttot__[nn] = eps ;  
+     			}  
+           			}			  
+       
+     if (imp == 0 ){  
+     	Nclusters[gg] = NC__ ;  
+     		}  
+           			  
+     //    Rcpp::Rcout << "a150" <<    std::flush << std::endl ;  
+       
+     //***********************************  
+     // create cluster table  
+     idcluster_table2 = create_idclustertable( group__ , cluster__ ,  NC__) ;  
+     //    Rcpp::Rcout << "a200" <<    std::flush << std::endl ;  
+       
+     //**********************************  
+     // get initial values (if iter=0);  
+     // arma::mat Xa(X.begin(), N, NX, false);  
+     arma::mat Xa = rcppmat2armamat( X__ )["armamat"] ;  
+     Rcpp::List res1 = mla2_inits( Xa , X__ , Z__ , y__ , NZ , wgtlev1__ , wgttot__ ) ;  
+     arma::mat theta_init = res1["theta"];  
+     arma::mat Tmat_init = res1["Tmat"];  
+     arma::mat sig2_init = res1["sig2"];  
+     if (imp > 0 ){	  
+       vv = 0 ;	  
+       // theta inits  
+       for (int ii=0;ii<NX;ii++){	  
+     	theta_init(vv,0) = parsM( vv + gg*NP , 0 ) ;  
+     	vv ++ ;  
+     			  }  
+       // Tmat inits  
+       for (int ii=0;ii<NZ;ii++){  
+       	 for (int jj=0;jj<NZ;jj++){  
+       	 	 Tmat_init(ii,jj) = parsM(vv + gg*NP , 0 ) ;  
+       	 	 if ( jj>ii){  
+       	 	 	 Tmat_init(jj,ii) = Tmat_init(ii,jj) ;  
+       	 	 	 	}  
+       	 	 vv ++ ;  
+       	 	 		}  
+     			 }  
+        // sig2 inits  
+        sig2_init(0,0) = parsM(vv+gg*NP,0) ;  
+     	   }  
+     	  
+       
+       
+       
+     //    Rcpp::Rcout << "a300" <<    std::flush << std::endl ;  
+       
+     //-------------- DATASET ORIGINAL --------------------------  
+       
+     // print progress  
+     Rcpp::Rcout << " " << std::endl ;  
+     Rcpp::Rcout << "Imputation " <<  imp+1 <<  
+        " | Group " << gg+1 <<   " |" << std::flush  ;  
+     // Rcpp::Rcout << "-" <<  std::flush ;   
+       
+     //**********************************  
+     // rescaling weights  
+     Rcpp::NumericVector wgtlev1a = rescale_lev1weights( idcluster_table2 ,   
+     	                 wgtlev1__ );  
+       
+     //     Rcpp::Rcout << "a400" <<    std::flush << std::endl ;  
+       
+     //*********************************  
+     // estimate model (FIML)  
+     Rcpp::List res32 = bifie_mla2_estimation( theta_init , Tmat_init ,  
+     	 sig2_init, NX , NZ ,  NC__ ,  N__ , X__ ,  Z__ , y__ , wgtlev2__ ,   
+     	 wgtlev1a , wgttot__ , idcluster_table2 , globconv , maxiter ) ;  
+     pars = res32["pars_"] ; // extract estimated parameters  
+     for (int pp=0;pp<NP;pp++){  
+        parsM( pp + gg*NP , imp ) = pars[pp] ;  
+        			}  
+     Rcpp::NumericMatrix fvcov = res32["fvcov"] ;  
+     for (int ii=0;ii<NX;ii++){  
+     for (int jj=0;jj<NX;jj++){  
+          fvcovM( ii + gg*NX , jj + NX*imp ) = fvcov(ii,jj) ;  
+     			}  
+     		}  
+     // save covariance decompositions;  
+     Rcpp::List res32a = res32["postproc"];  
+     Rcpp::NumericMatrix Sigma_W_yX = res32a["Sigma_W_yX"] ;  
+     Rcpp::NumericMatrix Sigma_B_yX = res32a["Sigma_B_yX"] ;  
+     Rcpp::NumericMatrix Sigma_W_yZ = res32a["Sigma_W_yZ"] ;  
+     Rcpp::NumericMatrix Sigma_B_yZ = res32a["Sigma_B_yZ"] ;  
+     Rcpp::NumericVector totmean_yX = res32a["totmean_yX"] ;  
+     Rcpp::NumericVector totmean_yZ = res32a["totmean_yZ"] ; 
+     
+     for (int ii=0;ii<NX;ii++){  
+     for (int jj=0;jj<NX;jj++){	  
+         Sigma_W_yXM(ii+NX*imp,jj) = Sigma_W_yX(ii,jj);  
+         Sigma_B_yXM(ii+NX*imp,jj) = Sigma_B_yX(ii,jj);  
+         			} 
+         totmean_yXM(imp,ii) = totmean_yX[ii] ;
+     		   }  
+     for (int ii=0;ii<NZ;ii++){  
+     for (int jj=0;jj<NZ;jj++){	  
+         Sigma_W_yZM(ii+NZ*imp,jj) = Sigma_W_yZ(ii,jj);  
+         Sigma_B_yZM(ii+NZ*imp,jj) = Sigma_B_yZ(ii,jj);  
+         			}  
+         totmean_yZM(imp,ii) = totmean_yZ[ii] ;
+     		   }		  
+
+     		   
+     		   
+     arma::mat theta0 = res32["theta"] ;  
+     arma::mat Tmat0 = res32["Tmat"] ;  
+     arma::mat sig20 = res32["sig2"] ;  
+     iter2 = as<int>(res32["iter"]) ;  
+     iterM(gg,imp) = iter2 ;  
+       
+     // Rcpp::Rcout << "a450" <<    std::flush << std::endl ;  
+       
+     //-------------- DATASET REPLICATE WEIGHTS --------------------------  
+       
+       
+     Rcpp::List res35=bifie_mla2_estimation_replicates( N__ , NC__ ,  
+     	wgttot__ , wgtrep__ , wgtlev1__ , wgtlev2__ ,  
+     	idcluster_table2 , theta0 , Tmat0 , sig20 , NX , NZ ,  X__ ,    
+     	Z__ , y__ ,  globconv ,  maxiter_rep , NP) ;  
+       
+     Rcpp::NumericMatrix pars2 = res35["pars_temp"] ; // extract estimated parameters  
+     for (int pp=0;pp<NP;pp++){  
+     	for (int rr=0;rr<RR;rr++){  
+     	   parsMrep( pp + gg*NP , rr+RR*imp ) = pars2(pp,rr) ;  
+     	   			}  
+     			}  
+       
+     iter3 = res35["iter_temp"] ;  
+     for (int rr=0;rr<RR;rr++){  
+     	iterMrep(gg,rr+RR*imp) = iter3[rr] ;  
+     			}  
+     			  
+       
+     // compute standard errors  
+       
+     for (int pp=0;pp<NP;pp++){  
+        pars0[pp] = parsM( pp + gg*NP , imp ) ;  
+          
+        for (int rr=0;rr<RR;rr++){  
+        	   pars20(pp,rr) = parsMrep( pp + gg*NP , rr+RR*imp ) ;  
+        	   			}     
+        			}  
+       
+     Rcpp::List res41 = varjack_bias_helper( pars0 , pars20 , fayfac ) ;  
+     Rcpp::NumericVector pars_var = res41["pars_var"] ;   
+       
+     for (int pp=0;pp<NP;pp++){  
+     	parsVar( pp + gg*NP , imp ) = pars_var[ pp ] ;	  
+     		}  
+     			  
+     			  
+     } // end loop groups  
+     //----------  
+       
+       
+     }  
+     /////////////////////// end imputations  
+       
+       
+     //////////////////////////////////////////////////////  
+     //*** post-processing  
+       
+     ///*** Rubin inference    
+     Rcpp::List parsL = rubin_rules_univ( parsM , parsVar ) ;    
+       
+       
+       
+     Rcpp::Rcout << " " << std::endl ;  
+       
+     //	Rcpp::Rcout << "a700" <<  std::flush << std::endl ;  
+       
+       
+       
+       
+         		  
+     //*************************************************      
+     // OUTPUT              
+               
+     return Rcpp::List::create(  
+             _["parsM"] = parsM , _["parsrepM"] = parsMrep ,  
+             _["parsVar"] = parsVar , _["parsL"] = parsL ,   
+     	_["GG"] = GG , _["iterM"] = iterM ,  
+     	_["iterMrep"] = iterMrep , _["fvcovM"] = fvcovM ,  
+     	_["Npers"] = Npers , _["Nclusters"] = Nclusters ,  
+     	_["NP"] = NP , _["NX"] = NX , _["NZ"] = NZ ,  
+             _["Sigma_W_yXM"] = Sigma_W_yXM , _["Sigma_B_yXM"] = Sigma_B_yXM	,  
+             _["Sigma_W_yZM"] = Sigma_W_yZM , _["Sigma_B_yZM"] = Sigma_B_yZM	,
+             _["totmean_yXM"] = totmean_yXM , _["totmean_yZM"] = totmean_yZM
+              ) ;    
+       
+     // maximal list length is 20!  
+       
+       
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
+     
+END_RCPP
+}
+
+
+//*********************************************************
+// path model
+
+// declarations
+extern "C" {
+SEXP bifie_pathmodel( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP L_, 
+	SEXP L_row_index_, SEXP NL_, SEXP E_, SEXP R_, SEXP R_row_index_, 
+	SEXP coeff_index_, SEXP NP0_, SEXP unreliability_) ;
+}
+
+// definition
+
+SEXP bifie_pathmodel( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
+	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP L_, 
+	SEXP L_row_index_, SEXP NL_, SEXP E_, SEXP R_, SEXP R_row_index_, 
+	SEXP coeff_index_, SEXP NP0_, SEXP unreliability_ ){
+BEGIN_RCPP
+   
+       
+     Rcpp::NumericMatrix datalist(datalist_);          
+     Rcpp::NumericMatrix wgt1(wgt_) ;  
+     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
+     Rcpp::NumericVector vars_index(vars_index_);  
+     Rcpp::NumericVector fayfac(fayfac_) ;  
+     Rcpp::NumericVector NI(Nimp_);  
+     Rcpp::NumericVector group_index1(group_index_) ;  
+     Rcpp::NumericVector group_values(group_values_) ;  
+     Rcpp::NumericMatrix L(L_);  
+     Rcpp::NumericVector L_row_index(L_row_index_) ;  
+     int NL = as<int>(NL_);  
+     Rcpp::NumericMatrix E(E_);  
+     Rcpp::NumericMatrix R(R_);  
+     Rcpp::NumericVector R_row_index(R_row_index_) ;  
+     Rcpp::NumericMatrix coeff_index(coeff_index_);  
+     int NP0 = as<int>(NP0_);  
+     Rcpp::NumericVector unreliability(unreliability_) ;  
+       
+       
+     int Nimp = NI[0] ;  
+     int RR = wgtrep.ncol() ;   
+     int N = wgt1.nrow() ;  
+     // int VV = vars_index.size() ;  
+     int NV = datalist.ncol();  
+     int GG=group_values.size() ;  
+       
+     // parameter vector  
+     int NR = R.nrow();  
+     int NP = 2*NP0 + 2*NR ;  
+       
+     Rcpp::NumericMatrix dat1(N,NV) ;  
+       
+     Rcpp::NumericMatrix parsM( NP*GG , Nimp );  
+     Rcpp::NumericMatrix ncases( GG , 1 );  
+     Rcpp::NumericMatrix sumwgt( GG , 1 );  
+     Rcpp::NumericMatrix parsrepM( NP*GG , Nimp*RR );  
+     Rcpp::NumericMatrix parsVar( NP*GG , Nimp) ;  
+       
+     Rcpp::Rcout << "|"  ;    
+       
+     // loop imputed datasets  
+     for (int ii=0;ii<Nimp;ii++){  
+       
+     //--- extract dataset  
+     dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;   
+       
+     //--- computation complete data  
+     Rcpp::List res21 = bifie_pathmodel_helper(   dat1 ,  wgt1 ,   group_values ,  group_index1 ,     
+     	vars_index ,  R ,  NP0 ,   coeff_index ,  E ,   L ,  NL ,  L_row_index ,    
+     	R_row_index ,  unreliability ) ;  
+     Rcpp::NumericMatrix pM = res21["parsM"] ;  
+     parsM(_,ii) = pM(_,0);  
+     if (ii==0){  
+     	Rcpp::NumericVector v1 = res21["ncases"] ;  
+     	ncases(_,0) = v1 ;  
+     	Rcpp::NumericMatrix v2 = res21["sumwgt1"] ;  
+     	sumwgt(_,0) = v2(_,0) ;	  
+     	   }  
+     	     
+     //--- computation replicated data  
+     Rcpp::List res22 = bifie_pathmodel_helper(   dat1 ,  wgtrep ,   group_values ,  group_index1 ,     
+     	vars_index ,  R ,  NP0 ,   coeff_index ,  E ,   L ,  NL ,  L_row_index ,    
+     	R_row_index ,  unreliability ) ;  
+     Rcpp::NumericMatrix pM1 = res22["parsM"] ;  
+     for (int rr=0;rr<RR; rr++){  
+     	parsrepM( _ , rr + ii*RR ) = pM1( _ , rr ) ;  
+     			}  
+       
+     //--- Rubin inference			  
+     Rcpp::List res41 = varjack_bias_helper( pM , pM1 , fayfac ) ;    
+     Rcpp::NumericVector pars_var = res41["pars_var"] ;     
+     int NP1 = pars_var.size();  
+       
+       for (int pp=0;pp<NP1;pp++){    
+          	parsVar( pp  , ii ) = pars_var[ pp ] ;	    
+        		}  			  
+      Rcpp::Rcout << "-" <<  std::flush ;    			  
+     				} // end ii (imputations)  
+       
+       
+     //*** post-processing	  
+       
+          //*** Rubin inference      
+          Rcpp::List parsL = rubin_rules_univ( parsM , parsVar ) ;      
+                            
+          Rcpp::Rcout << "|" << std::endl ;  				  
+     				  
+     // Rcpp::Rcout << "var_expl " <<  var_expl(0,0) <<  std::flush << std::endl ;  
+     			     
+                
+     //*************************************************      
+     // OUTPUT              
+               
+     return Rcpp::List::create(  
+         _["parsL"] = parsL , 	  
+         _["parsM"] = parsM ,  
+         _["ncases"] = ncases ,  
+         _["sumwgt"] = sumwgt ,  
+         _["parsrepM"] = parsrepM ,  
+         _["parsVar"] = parsVar  
+         ) ;    
+       
+     // maximal list length is 20!  
+       
+       
+     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
+       
+       
+     
+END_RCPP
+}
+
+
+
+     

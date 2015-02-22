@@ -7,25 +7,29 @@
 Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
 }
 \description{
-    Some Tools for Survey Statistics in Educational Assessment, 
-    Developed by BIFIE (\url{http://www.bifie.at}).
-    Bundesinstitut fuer Bildungsforschung,
-    Entwicklung und Innovation im oesterreichischen Schulwesen;
-    Federal Institute for Educational Research, Innovation and 
-    Development of the Austrian School System;
-    Salzburg, Austria.
+    Contains tools for survey statistics (especially in educational
+    assessment) for datasets with replication designs (jackknife,
+    bootstrap, replicate weights). Descriptive statistics, linear
+    and logistic regression, path models for manifest variables
+    with measurement error correction and two-level hierarchical
+    regressions for weighted samples are included. Statistical 
+    inference can be conducted for multiply-imputed datasets.    
+    This package is developed by BIFIE (Federal Institute for 
+    Educational Research, Innovation and Development of the Austrian 
+    School System; Salzburg, Austria).      
 }
 \details{
 \tabular{ll}{
 Package: \tab \pkg{BIFIEsurvey} \cr
 Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2014 \cr
+Version: \tab 1.2\cr
+Date: \tab 2015 \cr
 License: \tab GPL (>=2)\cr
+URL: \tab \url{http://www.bifie.at} \cr
 }
 
 This package include basic descriptive functions for large scale assessment data 
-to complement the more comprehensive \pkg{survey} package. The few
+to complement the more comprehensive \pkg{survey} package. The
 functions in this package were written in \pkg{Rcpp}.
 
 The features of \pkg{BIFIEsurvey} include for designs with replicate weights 
@@ -41,22 +45,25 @@ crosstabs (\code{\link{BIFIE.crosstab}})
 
 \item Logistic regression (\code{\link{BIFIE.logistreg}})
 
+\item Path models with measurement error correction for manifest
+variables (\code{\link{BIFIE.pathmodel}})
+
+\item Two-level regression for hierarchical data (\code{\link{BIFIE.twolevelreg}};
+random slope model)
+
 \item Statistical inference for derived parameters (\code{\link{BIFIE.derivedParameters}})
 
 \item Wald tests (\code{\link{BIFIE.waldtest}}) of model parameters based on 
 replicated statistics
 
-
-%% logistic regression
-%% \item jackknife and bootstrap for non-survey data
+\item User-defined \R functions (\code{\link{BIFIE.by}})
 	
 }
 
-
-
-
 }
 
+%Statistical inference is conducted for multiply imputed datasets.
+%Inference for nested multiple imputation (Rubin, 2003) is also included.
 
 
 \author{
@@ -76,8 +83,10 @@ Maintainer: Alexander Robitzsch <a.robitzsch@bifie.at>
 %----
 
 %\references{
-%~~ Literature or other references for background information ~~
+%Rubin, D. B. (2003). Nested multiple imputation of NMES via partially 
+%incompatible MCMC. \emph{Statistica Neerlandica}, \bold{57}, 3-18.
 %}
+
 \keyword{package}
 \seealso{
 See also the \pkg{survey}, \pkg{intsvy}, \pkg{svyPVpack},

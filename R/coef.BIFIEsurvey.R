@@ -42,4 +42,16 @@ coef.BIFIE.logistreg <- function( object , ... ){
 coef.BIFIE.univar <- function( object , ... ){
 	pars <- coef.BIFIEsurvey( object=object , type= NULL )
 	return(pars)
-		}				
+		}	
+coef.BIFIE.twolevelreg <- function( object , ... ){
+    if (object$se){
+		pars <- coef.BIFIEsurvey( object=object , type= NULL )
+				} else {
+		pars <- coef(object$micombs)										
+				}
+	return(pars)
+		}		
+coef.BIFIE.pathmodel <- function( object , ... ){
+	pars <- coef.BIFIEsurvey( object=object , type= NULL )
+	return(pars)
+		}			

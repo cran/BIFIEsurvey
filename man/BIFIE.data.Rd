@@ -9,6 +9,9 @@ Creates an Object of Class \code{BIFIEdata}
 
 \description{
 This function creates an object of class \code{BIFIEdata}.
+Finite sampling correction of statistical inferences can be 
+conducted by specifying appropriate input in the \code{fayfac}
+argument.
 }
 \usage{
 BIFIE.data(data.list, wgt = NULL, wgtrep = NULL , fayfac = 1, cdata=FALSE)
@@ -18,7 +21,7 @@ BIFIE.data(data.list, wgt = NULL, wgtrep = NULL , fayfac = 1, cdata=FALSE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data.list}{
-List of multiply imputed datasets
+List of multiply-imputed datasets
 }
   \item{wgt}{
 A string indicating the label of case weight or a vector
@@ -27,7 +30,10 @@ containing all case weights.
   \item{wgtrep}{
 Optional vector of replicate weights
 }
-\item{fayfac}{Fay factor for calculating standard errors}
+\item{fayfac}{Fay factor for calculating standard errors, a numeric value. 
+	If finite sampling correction
+	is requested, an appropriate vector input can be used (see Example 3).
+}
 \item{cdata}{An optional logical indicating whether the \code{BIFIEdata}
 object should be compactly saved. The default is \code{FALSE}.}
 \item{object}{Object of class \code{BIFIEdata}}
@@ -49,7 +55,7 @@ included in the list:
 \item{N}{Number of observations in a dataset}
 \item{dat1}{Last imputed dataset}
 \item{varnames}{Vector with variable names}
-\item{fayfac}{Fay factor}
+\item{fayfac}{Fay factor.}
 \item{RR}{Number of replicate weights}
 \item{cdata}{Logical indicating whether the \code{BIFIEdata} object is in
 	compact format (\code{cdata=TRUE}) or in a non-compact format
@@ -93,7 +99,7 @@ objects see \code{\link{BIFIE.data.jack}}.
 
 \examples{
 #############################################################################
-# EXAMPLE 1: Create BIFIEdata object with multiply imputed TIMSS data
+# EXAMPLE 1: Create BIFIEdata object with multiply-imputed TIMSS data
 #############################################################################
 data(data.timss1)
 data(data.timssrep)
@@ -115,6 +121,44 @@ data(data.timss2)
 # use first dataset with missing data from data.timss2
 bdat <- BIFIE.data( data.list=data.timss2[[1]] , wgt=data.timss2[[1]]$TOTWGT )
 }
+
+#############################################################################
+# EXAMPLE 3: BIFIEdata objects with finite sampling correction
+#############################################################################
+
+data(data.timss1)
+data(data.timssrep)
+
+#-----
+# BIFIEdata object without finite sampling correction
+bdat1 <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+            wgtrep=data.timssrep[, -1 ] )
+summary(bdat1)            
+
+#-----
+# generate BIFIEdata object with finite sampling correction by adjusting 
+# the "fayfac" factor
+bdat2 <- bdat1
+#-- modify "fayfac" constant
+fayfac0 <- bdat1$fayfac
+# set fayfac = .75 for the first 50 replication zones (25% of students in the
+# population were sampled) and fayfac = .20 for replication zones 51-75
+# (meaning that 80% of students were sampled)
+fayfac <- rep( fayfac0 , bdat1$RR )
+fayfac[1:50] <- fayfac0 * .75
+fayfac[51:75] <- fayfac0 * .20
+# include this modified "fayfac" factor in bdat2
+bdat2$fayfac <- fayfac
+summary(bdat2)
+summary(bdat1)
+
+#---- compare some univariate statistics
+# no finite sampling correction
+res1 <- BIFIE.univar( bdat1 , vars="ASMMAT")
+summary(res1)
+# finite sampling correction
+res2 <- BIFIE.univar( bdat2 , vars="ASMMAT")
+summary(res2)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -34,29 +34,51 @@
 Federal Institute for Educational Research, Innovation and 
 Development of the Austrian School System (BIFIE)
 Salzburg (Austria)
-URL: 
 https://www.bifie.at/
 
 Questions or suggestions about BIFIEsurvey can be sent to
 a.robitzsch/-\bifie.at
+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
----
+
+--------------------------------------------------------------
+Versions 1.2 -- 2015-02-22  --  CRAN BIFIEsurvey 1.2-6
+--------------------------------------------------------------
+
+FIXED * fixed a bug in creation of jackknife zones when jackknife
+        zone identifier is provided (thanks to Hong Giang Pham)
+NOTE  * added lavaan.survey and lme4 to Suggests, mitools is 
+        now imported
+ADDED * included initial version of two-level regression
+ADDED * included initial version of path model estimation
+        with measurement errors in predictors
+FIXED * enabled summary.BIFIE.logistreg which was not yet working
+NOTE  * extended DESCRIPTION        
+ADDED * included option for finite sampling correction by allowing
+        vector input of 'fayfac' argument in 'BIFIE.data'
+        (see Example 3 in 'BIFIE.data')
+        
+DATA  * data.bifie01 
+EXAMP * data.timss (1,2,3), BIFIE.twolevelreg (1,2),
+        BIFIE.pathmodel (1), BIFIE.data (3) 
+
+--------------------------------------------------------------
 Versions 1.1 -- 2014-11-22  --  CRAN BIFIEsurvey 1.1
----
+--------------------------------------------------------------
 
 FIXED * fixed a bug in frequency tabulation for constant variables
 
 DATA  * ---
 EXAMP * ---
 
----
+--------------------------------------------------------------
 Versions 1.0 -- 2014-10-12  --  CRAN BIFIEsurvey 1.0
----
+--------------------------------------------------------------
 
 NOTE  * changed output for non-imputed datasets    
 FIXED * fixed a bug in data handling for linear and logistic
@@ -84,9 +106,10 @@ EXAMP * BIFIE.BIFIEdata2datalist (2), BIFIE.by (1),
         BIFIE.data.transform (8,9), BIFIE.derivedParameters (1),
         BIFIE.by (1)
 
----
+--------------------------------------------------------------
 Versions 0.3 -- 2014-07-31  --  CRAN BIFIEsurvey 0.3-47
----
+--------------------------------------------------------------
+
 NOTE  * changed handling of factors in conversion into a BIFIEdata object
 ADDED * included generation of bootstrap designs ('BIFIE.data.boot')
 ADDED * included logistic regression 'BIFIE.logistreg'
@@ -117,9 +140,10 @@ DATA  * included/modified datasets: data.timss1.ind
 EXAMP * included/modified examples: BIFIE.data.boot (1), BIFIE.logistreg (1,2),
         save.BIFIEdata (1,2)
 
----
+--------------------------------------------------------------
 Versions 0.2 -- 2014-07-12  --  CRAN BIFIEsurvey 0.2-37
----
+--------------------------------------------------------------
+
 ADDED * included histogram 'BIFIE.hist'
 ADDED * included empirical distribution function 'BIFIE.ecdf'
 ADDED * included data transformation function 'BIFIE.data.transform'
@@ -129,9 +153,10 @@ DATA  * included/modified datasets: data.test1, data.pisaNLD
 EXAMP * included/modified examples: BIFIE.ecdf (1), BIFIE.data.transform (1),
         BIFIE.data.jack (2), data.pisa (1)
 
----
+--------------------------------------------------------------
 Versions 0.1 -- 2014-07-01  --  CRAN BIFIEsurvey 0.1-61
----
+--------------------------------------------------------------
+
 ADDED * included functions: BIFIE.data, BIFIE.univar, BIFIE.freq,
         BIFIE.correl, BIFIE.linreg, BIFIE.waldtest, BIFIE.univar.test,
         BIFIE.data.jack, BIFIE.crosstab, BIFIE.by
@@ -141,5 +166,5 @@ EXAMP * included/modified examples: ---
 
 
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

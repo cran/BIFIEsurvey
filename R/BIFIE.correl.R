@@ -67,13 +67,35 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	dfr$cor <- res$cor1$pars
 	dfr$cor_SE <- res$cor1$pars_se
 	dfr$t <- round( dfr$cor / dfr$cor_SE , 2 )
-	dfr$p <- pnorm( - abs( dfr$t ) ) * 2		
+	dfr$df <- rubin_calc_df( res$cor1 , Nimp )
+	# dfr$p <- pnorm( - abs( dfr$t ) ) * 2		
+	dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
 	dfr$cor_fmi <- res$cor1$pars_fmi
 	dfr$cor_VarMI <- res$cor1$pars_varBetween
-	dfr$cor_VarRep <- res$cor1$pars_varWithin
-	if (RR==0){				
-		dfr$cor_SE <- dfr$cor_fmi <- dfr$cor_VarMI <- dfr$cor_VarRep <- NULL
-				}
+	dfr$cor_VarRep <- res$cor1$pars_varWithin	
+
+	#******************
+	# NMI	
+	if ( BIFIEobj$NMI ){
+		res1a <- res1 <- BIFIE_NMI_inference_parameters( parsM=res$cor1M , parsrepM= res$cor1repM , 
+					fayfac=fayfac , RR=RR , Nimp=Nimp , 
+					Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )	
+		dfr$cor_fmi <- dfr$cor_VarMI <- NULL								
+		dfr$cor <- res1$pars
+		dfr$cor_SE <- res1$pars_se
+		dfr$t <- round( dfr$cor / dfr$cor_SE , 2 )
+		dfr$df <- res1$df
+		dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+		dfr$cor_fmi <- res1$pars_fmi
+		dfr$cor_fmi_St1 <- res1$pars_fmiB
+		dfr$cor_fmi_St2 <- res1$pars_fmiW
+		dfr$cor_VarMI_St1 <- res1$pars_varBetween1
+		dfr$cor_VarMI_St2 <- res1$pars_varBetween2
+		dfr$cor_VarRep <- res1$pars_varWithin	
+						}
+
+	dfr <- clean_summary_table( dfr , RR , se , Nimp )
+
 	#	i1 <- match( dfr$var1 , vars )
 	#	i2 <- match( dfr$var2 , vars )	
 	dfr <- dfr[ dfr$var1 != dfr$var2 , ]	
@@ -91,15 +113,31 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	dfr$Nweight <- rep( rowMeans( res$sumwgt1M ) , ZZ )	
 	dfr$cov <- res$cov1$pars
 	dfr$cov_SE <- res$cov1$pars_se
+	dfr$cov_df <- rubin_calc_df( res$cov1 , Nimp )
 	dfr$cov_fmi <- res$cov1$pars_fmi
 	dfr$cov_VarMI <- res$cov1$pars_varBetween
 	dfr$cov_VarRep <- res$cov1$pars_varWithin
-	if ( ( ! se ) &  ( RR==0 ) ){				
-		dfr$cov_SE <- dfr$cov_fmi <- dfr$cov_VarMI <- dfr$cov_VarRep <- NULL
-				}				
-	if ( Nimp == 1){				
-		dfr$cov_fmi <- dfr$cov_VarMI <- NULL
-				}					
+
+	if ( BIFIEobj$NMI ){
+		res1b <- res1 <- BIFIE_NMI_inference_parameters( parsM=res$cov1M , parsrepM=res$cov1repM , 
+					fayfac=fayfac , RR=RR , Nimp=Nimp , 
+					Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )	
+		dfr$cov_fmi <- dfr$cov_VarMI <- NULL								
+		dfr$cov <- res1$pars
+		dfr$cov_SE <- res1$pars_se
+		dfr$t <- round( dfr$cov / dfr$cov_SE , 2 )
+		dfr$df <- res1$df
+		dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+		dfr$cov_fmi <- res1$pars_fmi
+		dfr$cov_fmi_St1 <- res1$pars_fmiB
+		dfr$cov_fmi_St2 <- res1$pars_fmiW
+		dfr$cov_VarMI_St1 <- res1$pars_varBetween1
+		dfr$cov_VarMI_St2 <- res1$pars_varBetween2
+		dfr$cov_VarRep <- res1$pars_varWithin	
+						}
+	
+	
+	dfr <- clean_summary_table( dfr , RR , se , Nimp )	
 				
 	dfr.cov <- dfr							
 
@@ -139,8 +177,14 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 			"cov_matrix" = cov_matrix , 
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"itempair_index" = itempair_index , "GG"=GG ,
 			"parnames" = parnames , "CALL"= cl19)
+			
+	if ( BIFIEobj$NMI ){			
+		res$output_cor <- res1a
+		res$output_cov <- res1b
+						}			
 	class(res1) <- "BIFIE.correl"
 	return(res1)
 		}

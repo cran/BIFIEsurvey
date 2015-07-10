@@ -97,19 +97,13 @@ BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	dfr$Nweight <- rep( rowMeans( res$sumwgtM ) , each=ZZ )	
 	
 		
-	dfr$est <- res$regrcoefL$pars
-	dfr$SE <- res$regrcoefL$pars_se
-	dfr$t <- round( dfr$est / dfr$SE , 2 )
-	dfr$p <- pnorm( - abs( dfr$t ) ) * 2
-	dfr$fmi <- res$regrcoefL$pars_fmi
-	dfr$VarMI <- res$regrcoefL$pars_varBetween
-	dfr$VarRep <- res$regrcoefL$pars_varWithin
-	if ( ( ! se ) &  ( RR==0 ) ){					
-		dfr$t <- dfr$p <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
-				}				
-	if ( Nimp==1 ){					
-		dfr$fmi <- dfr$VarMI <- NULL
-				}	
+	dfr <- create_summary_table( res_pars=res$regrcoefL , 
+				     parsM=res$regrcoefM   , parsrepM=res$regrcoefrepM , 
+					 dfr=dfr , BIFIEobj=BIFIEobj )				
+	dfr <- clean_summary_table( dfr=dfr , RR=RR , se=se , Nimp=Nimp )	
+				
+				
+				
 	# create vector of parameter names
 	nogroupL <- rep( nogroup , nrow(dfr) )
 	parnames <- paste0( dfr$parameter   , "_" , dfr$var , 
@@ -123,6 +117,7 @@ BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 			"output" = res , 
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"GG"=GG , "parnames" = parnames , "CALL"=cl)
 	class(res1) <- "BIFIE.logistreg"
 	return(res1)

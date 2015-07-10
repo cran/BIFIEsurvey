@@ -81,8 +81,8 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[Hmisc:wtd.stats]{wtd.ecdf}} (\pkg{Hmisc}),
-\code{\link[Hmisc:wtd.stats]{wtd.quantile}} (\pkg{Hmisc}),
+\code{\link[Hmisc:wtd.stats]{Hmisc::wtd.ecdf}},
+\code{\link[Hmisc:wtd.stats]{Hmisc::wtd.quantile}}
 }
 
 

@@ -2,13 +2,13 @@
 
 #######################################################################
 # BIFIE univar.test
-BIFIE.univar.test <- function( BIFIE.method ){
+BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	#****
 	s1 <- Sys.time()	
 	cl <- match.call()		
 	res5 <- BIFIE.method	
 	if (res5$group == "one"){ stop("This function can only be applied with a grouping variable.\n")}
-		
+	
 	mean1M <- res5$output$mean1M
 	sd1M <- res5$output$sd1M
 	sumweightM <- res5$output$sumweightM
@@ -25,12 +25,11 @@ BIFIE.univar.test <- function( BIFIE.method ){
 	group <- res5$group
 	N <- res5$N
 	Nimp <- res5$Nimp
-		
+
 	#*****
 	# Rcpp call
 	res <- .Call("bifie_test_univar" , mean1M , sd1M , sumweightM , GG , group_values ,
 			mean1repM , sd1repM , sumweightrepM  , fayfac , PACKAGE="BIFIEsurvey")
-
 #	res <- bifie_test_univar(  mean1M , sd1M , sumweightM , GG , group_values ,
 #			mean1repM , sd1repM , sumweightrepM  , fayfac )
 
@@ -42,12 +41,28 @@ BIFIE.univar.test <- function( BIFIE.method ){
 	dfr$eta <- res$eta2L$pars
 	dfr$eta_SE <- res$eta2L$pars_se
 	dfr$fmi <- res$eta2L$pars_fmi
+	dfr$df <- rubin_calc_df( res$eta2L , Nimp )		
 	dfr$VarMI <- res$eta2L$pars_varBetween
-	dfr$VarRep <- res$eta2L$pars_varWithin
+	dfr$VarRep <- res$eta2L$pars_varWithin	
+		if (BIFIE.method$NMI ){
+			# eta2
+			res1 <- BIFIE_NMI_inference_parameters( parsM=res$eta2M , parsrepM=res$eta2repM , 
+						fayfac=fayfac , RR=RR , Nimp=Nimp , 
+						Nimp_NMI=BIFIE.method$Nimp_NMI , comp_cov = FALSE )			
+			dfr$eta <- res1$pars
+			dfr$eta_SE <- res1$pars_se
+			dfr$df <- res1$df
+			dfr$eta_fmi <- res1$pars_fmi
+			dfr$eta_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
+			dfr$eta_VarRep <- res1$pars_varWithin		
+							}	
 	if (RR==0){				
-		dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
+		dfr$df <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
 				}				
+	# extract replicated statistics for d and eta squared							
 	stat.eta2 <- dfr
+	
+	
 	
 	#****
 	# output d values
@@ -73,22 +88,37 @@ BIFIE.univar.test <- function( BIFIE.method ){
 					}
 	dfr$M1 <- h1
     dfr$M2 <- h2
-    dfr$SD <- sqrt( ( h3^2 + h4^2 ) / 2 )
+    dfr$SD <- sqrt( ( h3^2 + h4^2 ) / 2 )		
 	dfr$d <- res$dstatL$pars
 	dfr$d_SE <- res$dstatL$pars_se
 	dfr$t <- dfr$d / dfr$d_SE
-	dfr$p <- pnorm(  - abs(dfr$t ) )*2
+	dfr$df <- rubin_calc_df( res$dstatL , Nimp )	
+	dfr$p <- pt(  - abs(dfr$t ) , df = dfr$df)*2
+	# dfr$p <- pnorm(  - abs(dfr$t ) )*2
 	dfr$fmi <- res$dstatL$pars_fmi
 	dfr$VarMI <- res$dstatL$pars_varBetween
 	dfr$VarRep <- res$dstatL$pars_varWithin
+	if ( BIFIE.method$NMI ){
+		res1 <- BIFIE_NMI_inference_parameters( parsM= res$dstatM, parsrepM= res$dstatrepM , 
+					fayfac=fayfac , RR=RR , Nimp=BIFIE.method$Nimp , 
+					Nimp_NMI=BIFIE.method$Nimp_NMI , comp_cov = FALSE )									
+		dfr$d <- res1$pars
+		dfr$d_SE <- res1$pars_se
+		dfr$t <- round( dfr$d / dfr$d_SE , 2 )
+		dfr$df <- res1$df
+		dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+		dfr$fmi <- res1$pars_fmi
+		dfr$VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
+		dfr$VarRep <- res1$pars_varWithin	
+						}		
+	
 	if (RR==0){				
-		dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
+		dfr$d <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
 				}				
 	stat.dstat <- dfr	
 	
 	#*****
 	# F statistics
-
 	dfr <- NULL
 	for (vv in 1:VV){
 		Cdes <- matrix( 0 , nrow=GG-1 , ncol=GG*VV )
@@ -97,12 +127,17 @@ BIFIE.univar.test <- function( BIFIE.method ){
 			Cdes[ zz , c(zz + (vv-1)*GG ,zz+1 + (vv-1)*GG ) ] <- c(1,-1)
 					}
 		rdes <- rep(0,GG-1)
-		wres5 <- BIFIE.waldtest( res5 , Cdes=Cdes , rdes=rdes )		
-		dfr <- rbind( dfr , wres5$stat.D )
+		if ( wald_test ){
+			wres5 <- BIFIE.waldtest( res5 , Cdes=Cdes , rdes=rdes )		
+			dfr <- rbind( dfr , wres5$stat.D )
+						}
 				}
-	dfr <- data.frame( "variable" = vars , "group" = group , dfr )	
-	stat.F <- dfr
-	
+	if ( wald_test ){			
+		dfr <- data.frame( "variable" = vars , "group" = group , dfr )	
+		stat.F <- dfr
+			} else {
+		stat.F <- NA
+				}
 	
 	
 	parnames <- NULL
@@ -113,6 +148,7 @@ BIFIE.univar.test <- function( BIFIE.method ){
 	res1 <- list( "stat.F"= stat.F , "stat.eta" = stat.eta2 , "stat.dstat" = stat.dstat , 
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"NMI" = BIFIE.method$NMI , "Nimp_NMI" = BIFIE.method$Nimp_NMI , 
 			"GG"=GG , "parnames" = parnames , "CALL"=cl)
 	class(res1) <- "BIFIE.univar.test"
 	return(res1)

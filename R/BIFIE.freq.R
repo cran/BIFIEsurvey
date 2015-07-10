@@ -78,16 +78,34 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	             }
 	dfr$Ncases <- rowMeans( res$ncases1M )
 	dfr$Nweight <- res$perc1$pars
-	# percentage
+	# percentages
 	dfr$perc <- res$perc2$pars
 	dfr$perc_SE <- res$perc2$pars_se
+	# dfr$perc_t <- round( dfr$perc / dfr$perc_SE , 2 )
 	dfr$perc_fmi <- res$perc2$pars_fmi
+	dfr$perc_df <- rubin_calc_df( res$perc2 , Nimp , indices = NULL)
 	dfr$perc_VarMI <- res$perc2$pars_varBetween
 	dfr$perc_VarRep <- res$perc2$pars_varWithin
-			
-
+		if (BIFIEobj$NMI ){
+			res1 <- BIFIE_NMI_inference_parameters( parsM=res$perc2M , parsrepM=res$perc2repM , 
+						fayfac=fayfac , RR=RR , Nimp=Nimp , 
+						Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )			
+			dfr$perc <- res1$pars
+			dfr$perc_SE <- res1$pars_se
+			# dfr$t <- round( dfr$perc / dfr$perc_SE , 2 )
+			dfr$perc_df <- res1$df
+			# dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+			dfr$perc_fmi <- res1$pars_fmi
+		    dfr$perc_fmi_St1 <- res1$pars_fmiB
+		    dfr$perc_fmi_St2 <- res1$pars_fmiW						
+			dfr$perc_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
+			dfr$perc_VarMI_St1 <- res1$pars_varBetween1
+			dfr$perc_VarMI_St2 <- res1$pars_varBetween2						
+			dfr$perc_VarRep <- res1$pars_varWithin	
+							}	
+	
 	if ( ( ! se ) &  ( RR==0 ) ){				
-		dfr$perc_SE <- dfr$perc_fmi <- dfr$perc_VarMI <- dfr$perc_VarRep <- NULL
+		dfr$perc_df <- dfr$perc_SE <- dfr$perc_fmi <- dfr$perc_VarMI <- dfr$perc_VarRep <- NULL
 				}				
 	if ( Nimp==1 ){				
 		dfr$perc_fmi <- dfr$perc_VarMI <- NULL
@@ -104,6 +122,7 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
 	res1 <- list( "stat" = dfr , "output" = res , "timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"parnames" = parnames , "CALL"=cl )
 	class(res1) <- "BIFIE.freq"
 	return(res1)

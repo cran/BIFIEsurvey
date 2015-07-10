@@ -8,21 +8,22 @@ Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
 }
 \description{
     Contains tools for survey statistics (especially in educational
-    assessment) for datasets with replication designs (jackknife,
+    assessment) for datasets with replication designs (jackknife, 
     bootstrap, replicate weights). Descriptive statistics, linear
     and logistic regression, path models for manifest variables
     with measurement error correction and two-level hierarchical
     regressions for weighted samples are included. Statistical 
-    inference can be conducted for multiply-imputed datasets.    
+    inference can be conducted for multiply imputed datasets and
+    nested multiply imputed datasets.    
     This package is developed by BIFIE (Federal Institute for 
     Educational Research, Innovation and Development of the Austrian 
-    School System; Salzburg, Austria).      
+    School System; Salzburg, Austria).    
 }
 \details{
 \tabular{ll}{
 Package: \tab \pkg{BIFIEsurvey} \cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
+Version: \tab 1.3\cr
 Date: \tab 2015 \cr
 License: \tab GPL (>=2)\cr
 URL: \tab \url{http://www.bifie.at} \cr

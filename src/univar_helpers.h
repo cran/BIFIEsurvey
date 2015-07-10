@@ -274,8 +274,7 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 		rsquared[rr] = var_expl(0,0) / XtX_gg( R_row_index[rr], R_row_index[rr]+gg*VV) ;
 		residvar[rr] = XtX_gg( R_row_index[rr], R_row_index[rr]+gg*VV) * ( 1- rsquared[rr] );
 		
-
-		
+	
 		}
 			
 
@@ -977,7 +976,7 @@ Rcpp::List bifiehelpers_waldtest_vcov( int VV , Rcpp::NumericVector Ccols ,
 	//@@fayfac 
 	int NF = fayfac.size();
 	double f1=0;
-        //--
+        //--c
 
 	//*** calculate covariance matrix for imputation ii
 	arma::mat var_w = arma::zeros(VV,VV);
@@ -1015,9 +1014,14 @@ Rcpp::List bifiehelpers_waldtest_vcov( int VV , Rcpp::NumericVector Ccols ,
 	arma::mat hyp_stat = arma::mat( ACdes * parm_vec - Ardes ) ;
 	arma::mat chi2 = arma::mat( trans( hyp_stat ) * var_hypinv * hyp_stat ) ; 			
 	
+	// int df=ACdes.n_rows;
+	
+	
 	return Rcpp::List::create( 
 	    _["chi2"] = chi2 ,
-	    _["var_w"] = var_w
+	    _["var_w"] = var_w ,
+	    _["var_hyp"] = var_hyp ,
+	    _["hyp_stat"] = hyp_stat
 	    ) ; 
 	}
 	

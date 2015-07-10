@@ -175,14 +175,21 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		# dfr$Ncases <- rep( rowMeans( res$ncasesM ) , each=ZZ )
 		# dfr$Nweight <- rep( rowMeans( res$sumwgtM ) , each=ZZ )	
 					
-		dfr$est <- res$parsL$pars
-		dfr$SE <- res$parsL$pars_se
-		dfr$t <- round( dfr$est / dfr$SE , 2 )
-		dfr$p <- pnorm( - abs( dfr$t ) ) * 2
-		dfr$fmi <- res$parsL$pars_fmi
-		dfr$VarMI <- res$parsL$pars_varBetween
-		dfr$VarRep <- res$parsL$pars_varWithin
+#		dfr$est <- res$parsL$pars
+#		dfr$SE <- res$parsL$pars_se
+#		dfr$t <- round( dfr$est / dfr$SE , 2 )
+#		dfr$p <- pnorm( - abs( dfr$t ) ) * 2
+#		dfr$fmi <- res$parsL$pars_fmi
+#		dfr$VarMI <- res$parsL$pars_varBetween
+#		dfr$VarRep <- res$parsL$pars_varWithin
 
+		dfr <- create_summary_table( res_pars=res$parsL , 
+						 parsM=res$parsM   , parsrepM=res$parsrepM , 
+						 dfr=dfr , BIFIEobj=BIFIEobj )				
+		dfr <- clean_summary_table( dfr=dfr , RR=RR , se=se , Nimp=Nimp )
+		
+		
+		
 		# create vector of parameter names
 		nogroupL <- rep( nogroup , nrow(dfr) )
 		parnames <- paste0( dfr$parameter   , 
@@ -251,6 +258,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 				"timediff" = timediff ,
 				"Npers" = res$Npers , "Nclusters" = res$Nclusters , 
 				"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+				"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 				"GG"=GG , "micombs" = micombs , "se" = se , 
 				"parnames" = parnames , "parnames_sel" = parnames_sel ,
 				"vardecomp" = vardecomp ,

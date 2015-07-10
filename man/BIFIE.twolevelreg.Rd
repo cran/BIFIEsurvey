@@ -110,7 +110,7 @@ modeling}. Thousand Oaks: Sage.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[lme4:lmer]{lmer}} (\pkg{lme4})
+\code{\link[lme4:lmer]{lme4::lmer}}
 }
 
 

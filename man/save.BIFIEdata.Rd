@@ -53,14 +53,14 @@ is the working directory.}
 	\code{\link{save}}), \code{csv} (function \code{\link{write.csv}}),
 	\code{csv2} (function \code{\link{write.csv2}}),
 	\code{table} (function \code{\link{write.table}}),
-	\code{sav} (function \code{\link[foreign:read.spss]{read.spss}}
-	(\pkg{foreign})	for reading sav files and function
-	\code{\link[miceadds:write.pspp]{write.pspp}} (\pkg{miceadds})).
+	\code{sav} (function \code{\link[foreign:read.spss]{foreign::read.spss}}
+		for reading sav files and function
+	\code{\link[sjmisc:write_spss]{sjmisc::write_spss}}.
 		}
 \item{\dots}{Additional arguments to be passed to \code{\link{save}},
 	\code{\link{write.csv}}, \code{\link{write.csv2}},
-	\code{\link{write.table}}, \code{\link[foreign:read.spss]{read.spss}},
-	\code{\link[miceadds:write.pspp]{write.pspp}}
+	\code{\link{write.table}}, \code{\link[foreign:read.spss]{foreign::read.spss}},
+	\code{\link[sjmisc:write_spss]{sjmisc::write_spss}}
 }
 \item{filename}{
 	File name of \code{BIFIEdata} object
@@ -89,10 +89,10 @@ Saved \R object and a summary in working directory or a loaded \R object.
 %\author{
 %%  ~~who you are~~
 %}
-\note{
-For saving files in sav format, an installed version of the freeware
-software PSPP is necessary, see \code{\link[miceadds:write.pspp]{write.pspp}}.
-}
+%\note{
+%For saving files in sav format, an installed version of the freeware
+%software PSPP is necessary, see \code{\link[miceadds:write.pspp]{write.pspp}}.
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -169,8 +169,7 @@ write.BIFIEdata( bifieobj , name.BIFIEdata = "timss2_save3" , type="csv" ,
 write.BIFIEdata( bifieobj , name.BIFIEdata = "timss2_save4" , type="Rdata"  )
 
 # save imputed datasets in sav (SPSS) format
-write.BIFIEdata( bifieobj , name.BIFIEdata = "timss2_save5" , type="sav" ,
-                     pspp.path = "C:/Program Files (x86)/PSPP/bin/" )
+write.BIFIEdata( bifieobj , name.BIFIEdata = "timss2_save5" , type="sav" )
              
 #############################################################################
 # EXAMPLE 3: Loading BIFIEdata objects saved in separate files 

@@ -85,6 +85,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 			"output" = res ,
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"GG"=GG , "CALL"= cl)
 	class(res1) <- "BIFIE.hist"
 	return(res1)

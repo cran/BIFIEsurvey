@@ -5,11 +5,11 @@ vcov.BIFIEsurvey <- function( object, type=NULL , eps=1E-10 , avoid.singul = FAL
 	# extract replicated parameters		
 	parsres <- extract.replicated.pars( BIFIE.method = object , type=type )
 	res1 <- object
-	
 	#*****			
 	parsM <- parsres$parsM
 	parsrepM <- parsres$parsrepM	
-	parnames <- parsres$parnames			
+	parnames <- parsres$parnames
+	RR <- object$RR	
 	# avoid.singul <- FALSE
 	if ( ( class(object)=="BIFIE.correl" ) & is.null(type) ){ 
 				avoid.singul <- TRUE 
@@ -38,7 +38,10 @@ vcov.BIFIEsurvey <- function( object, type=NULL , eps=1E-10 , avoid.singul = FAL
 	# total variance
 	var_tot <- var_w  + ( 1 + 1/Nimp ) * var_b 
 	rownames(var_tot) <- colnames(var_tot) <- parnames
-	
+	if (object$NMI){	
+		var_tot <- BIFIE_NMI_inference_parameters( parsM , parsrepM , fayfac ,
+				RR , Nimp , object$Nimp_NMI , comp_cov = TRUE )$Tm	
+						}	
 	return(var_tot)
 	}
 #########################################################

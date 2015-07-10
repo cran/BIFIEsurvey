@@ -79,11 +79,11 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[stats:cov.wt]{cov.wt}} (\pkg{stats}),	
-\code{\link[intsvy:timss.rho]{timss.rho}} (\pkg{intsvy}),
-\code{\link[intsvy:timss.rho.pv]{timss.rho.pv}} (\pkg{intsvy}),
-\code{\link[Hmisc:rcorr]{rcorr}} (\pkg{Hmisc}),
-\code{\link[miceadds:ma.wtd.statNA]{ma.wtd.corNA}} (\pkg{miceadds})
+\code{\link[stats:cov.wt]{cov.wt}},	
+\code{\link[intsvy:timss.rho]{intsvy::timss.rho}},
+\code{\link[intsvy:timss.rho.pv]{intsvy::timss.rho.pv}},
+\code{\link[Hmisc:rcorr]{Hmisc::rcorr}},
+\code{\link[miceadds:ma.wtd.statNA]{miceadds::ma.wtd.corNA}}
 }
 
 

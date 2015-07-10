@@ -41,7 +41,7 @@ Same output like \code{table}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[base:table]{table}} (\pkg{base})	
+\code{\link[base:table]{table}}
 }
 
 \examples{

@@ -7,7 +7,8 @@ BIFIE.BIFIEdata2BIFIEcdata <- function( bifieobj , varnames=NULL , impdata.index
 						}
 	#******** select some imputed datasets or some variables
 	bifieobj <- BIFIE.data.select( bifieobj=bifieobj , varnames=varnames , 
-					       impdata.index =impdata.index )										
+					       impdata.index =impdata.index )
+						   
 	#**** data conversion
     res1 <- .Call("bifie_bifiedata2bifiecdata" ,
 					    bifieobj$datalistM , bifieobj$Nimp ,

@@ -33,7 +33,23 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 	N2 <- ncol( bifieobj$dat1)
 	dfr_long <- dfr			 
 	Nimp <- bifieobj$Nimp
-				 
+	#****
+	# check whether some variables should be removed in original BIFIE.data object
+	if ( ! is.null( varnames.new) ){
+		varnames.old <- bifieobj$varnames
+		select_vars <- setdiff( varnames.old , varnames.new )
+        bifieobj <- BIFIEdata.select( 	bifieobj , varnames = select_vars )	
+		
+		# removed variables
+		rm_vars <- intersect( varnames.old , varnames.new )
+		if ( length(rm_vars) > 0 ){
+			cat( paste0("Removed "  , length(rm_vars) , 
+						" original variables: " , paste0( rm_vars , collapse = " " ) , "\n") )
+								 }
+		varnames <- bifieobj$varnames								 
+						}
+
+
 	#***---	
 	#*** construction of new variables
 	M1_long <- NULL
@@ -62,24 +78,28 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
         varnames.added[ seq(1 , min(V21,V22)) ] <- varnames.new[ seq(1,min(V21,V22) ) ]
 				}
 	varnames1 <- c( varnames , varnames.added )		
+	
 	#***--- distinction BIFIEdata and BIFIEcdata
 	if ( ! cdata ){
 		bifieobj$datalistM <- as.matrix( cbind( bifieobj$datalistM , M1.new ) )
 		colnames(bifieobj$datalistM) <- NULL		
-    	bifieobj$dat1 <- as.matrix( bifieobj$datalistM[ seq( N*(Nimp-1) + 1 , Nimp*N ) , ])
+    	bifieobj$dat1 <- as.matrix( bifieobj$datalistM[ seq( N*(Nimp-1) + 1 , Nimp*N ) , ,drop=FALSE])				
 		colnames(bifieobj$dat1) <- varnames1		
 				}
+						
 	if ( cdata ){			
 		M1.new <- as.matrix(M1.new)				
-		VV2 <- ncol(bifieobj$dat1)
+		VV2 <- ncol(bifieobj$dat1)	
 		# create indicators
         res2 <- .Call( "bifie_bifiedata2bifiecdata" ,
 					       M1.new , bifieobj$Nimp ,  
 						   PACKAGE="BIFIEsurvey" )												
+					   
 		# colnames(res2$datalistM_imputed) <- c("_imp" , "subj" , "variable" , "value")						   
 		datalistM_ind <- res2$datalistM_ind
 		datalistM_imputed <- res2$datalistM_imputed	
 	    datalistM_impindex <- res2$datalistM_impindex		
+
 #        datalistM_imputed[,"variable"] <- datalistM_imputed[,"variable"] + VV2							
         datalistM_impindex[,2] <- datalistM_impindex[,2] + VV2										
 		bifieobj$datalistM_imputed <- rbind( bifieobj$datalistM_imputed , datalistM_imputed )
@@ -90,8 +110,8 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 		bifieobj$datalistM_impindex <- rbind( bifieobj$datalistM_impindex , datalistM_impindex )
 		bifieobj$datalistM_ind <- cbind( bifieobj$datalistM_ind , datalistM_ind )
 				}
-			
-	
+
+						
 	#*****
 	# include variable names
 	bifieobj$varnames <- varnames1

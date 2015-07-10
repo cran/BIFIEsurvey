@@ -80,6 +80,7 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
 	res1 <- list( "ecdf" = dfr , "output" = res , "timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac" = fayfac ,
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"CALL"= cl )
 	class(res1) <- "BIFIE.ecdf"
 	return(res1)

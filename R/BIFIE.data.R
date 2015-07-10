@@ -2,9 +2,14 @@
 ##################################################################
 # Convert a list of multiply imputed datasets into an object
 #      of class BIFIEdata
-BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FALSE){
+BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FALSE ,
+                   NMI=FALSE ){
 	
-	cl <- match.call()
+	cl <- match.call()		
+	# subroutine for preparation of nested multiple imputations
+	res0 <- BIFIE_data_nested_MI( data.list=data.list , NMI=NMI )
+	data.list <- res0$data.list
+	Nimp_NMI <- res0$Nimp_NMI
 	
 	if ( ( is.list( data.list ) ) & ( is.data.frame( data.list) ) ){ 
 	    h1 <- data.list
@@ -59,6 +64,8 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
     res <- list( "datalistM" = datalistM , "wgt" = wgt , "wgtrep" = wgtrep ,
         "Nimp" = Nimp , "N"= N , "dat1" = dat1  , "varnames" = cn , "fayfac"= fayfac ,
 		"RR"= ncol(wgtrep) , "time" = Sys.time() , "CALL"= cl )
+	res$NMI <- NMI		
+	res$Nimp_NMI <- Nimp_NMI
 	res$cdata <- FALSE	
     class(res) <- "BIFIEdata"	
 	#***** variable names and transformations

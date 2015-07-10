@@ -1,9 +1,11 @@
-\name{data.timss1}
+\name{data.timss}
+\alias{data.timss}
 \alias{data.timss1}
 \alias{data.timss2}
 \alias{data.timssrep}
 \alias{data.timss3}
 \alias{data.timss1.ind}
+\alias{data.timss4}
 
 \docType{data}
 \title{
@@ -20,6 +22,7 @@ data(data.timss1.ind)
 data(data.timss2)
 data(data.timssrep)
 data(data.timss3)
+data(data.timss4)
 }
 
 
@@ -35,6 +38,9 @@ The dataset \code{data.timssrep} contains replicate weights of students.
 
 The dataset \code{data.timss3} is a TIMSS dataset with some missing
 student covariates and all 5 plausible values contained in one file.
+
+The dataset \code{data.timss4} is a list containing nested multiply imputed
+datasets, with 5 between-nest and 4 within-nest imputations.
 }
 
 %\details{
@@ -195,6 +201,26 @@ lavaan.fit <- lavaan::lavaan( lavmodel, data= data.timss3a, group="female", esti
 summary(lavaan.fit)
 mod3d <- lavaan.survey::lavaan.survey(lavaan.fit=lavaan.fit, survey.design=svydes4 )
 summary(mod3d)
+
+#############################################################################
+# EXAMPLE 2: TIMSS dataset data.timss4 | Nested multiply imputed dataset
+#############################################################################  
+
+data(data.timss4)
+data(data.timssrep)
+
+#**** create BIFIEdata object
+bdat <- BIFIE.data( data.list=data.timss4 , wgt= data.timss4[[1]][[1]]$TOTWGT ,
+            wgtrep=data.timssrep[, -1 ] , NMI=TRUE , cdata=TRUE )
+summary(bdat)            
+
+#**** Model 1: Linear regression for mathematics score
+mod1 <- BIFIE.linreg( bdat , dep= "ASMMAT" , pre=c("one","books","migrant")  )
+summary(mod1)
+
+#*** Model 2: Univariate statistics ?BIFIE.univar
+mod2 <- BIFIE.univar( bdat , vars = c("ASMMAT","ASSSCI","books") )
+summary(mod2)
 }
 }
 

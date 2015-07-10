@@ -79,7 +79,7 @@ A list with following entries
 \seealso{
 See also \code{\link{BIFIE.waldtest}} for parameter tests.
 
-See \code{\link[car:deltaMethod]{deltaMethod}} (\pkg{car}) for the delta
+See \code{\link[car:deltaMethod]{car::deltaMethod}} for the delta
 method assuming that the multivariate distribution of the parameters is
 asymptotically normal.
 }

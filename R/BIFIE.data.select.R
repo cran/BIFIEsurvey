@@ -25,7 +25,14 @@ BIFIEdata.select <- function( bifieobj , varnames = NULL , impdata.index = NULL 
 BIFIE.data.select <- function( bifieobj , varnames = NULL , impdata.index = NULL ){
 	if ( bifieobj$cdata ){
 		stop("Use 'BIFIE.cdata.select' or the general function 'BIFIEdata.select'")
-						}	
+						}
+	# retain variable "one"
+	varnames0 <- bifieobj$varnames
+	if ( ! is.null(varnames) ){
+			varnames <- union( varnames , intersect( "one" , varnames0) )
+							}
+							
+							
     #******** select some imputed datasets	
     if ( ! is.null(impdata.index ) ){
         i1 <- impdata.index - 1
@@ -34,7 +41,7 @@ BIFIE.data.select <- function( bifieobj , varnames = NULL , impdata.index = NULL
 				vec <- ii*N + ( 1:N )
 				return(vec)
 						} , simplify=FALSE) )
-		bifieobj$datalistM <- bifieobj$datalistM[ ind , ]
+		bifieobj$datalistM <- bifieobj$datalistM[ ind , , drop=FALSE]
         bifieobj$Nimp <- length(i1)             
                 }
     #********* select some variables
@@ -42,8 +49,8 @@ BIFIE.data.select <- function( bifieobj , varnames = NULL , impdata.index = NULL
 		dfr1 <- data.frame( "varnames" = bifieobj$varnames , "index" = seq(1,length(bifieobj$varnames) ) )
 		dfr1$selectvars <- 1 * ( dfr1$varnames %in% varnames )
 		dfr1 <- dfr1[ dfr1$selectvars == 1 , ]
-		bifieobj$datalistM <- bifieobj$datalistM[ , dfr1$index ]
-		bifieobj$dat1 <- bifieobj$dat1[ , dfr1$index ]	
+		bifieobj$datalistM <- bifieobj$datalistM[ , dfr1$index , drop=FALSE]
+		bifieobj$dat1 <- bifieobj$dat1[ , dfr1$index , drop=FALSE]	
 		bifieobj$varnames <- bifieobj$varnames[ dfr1$index ]
 		# process variable list
 		bifieobj$variables <- bifieobj$variables[  dfr1$index , ]						
@@ -62,6 +69,13 @@ BIFIE.cdata.select <- function( bifieobj , varnames = NULL , impdata.index = NUL
 		stop("Use 'BIFIE.data.select' or the general function 'BIFIEdata.select'")
 						}	
 
+	# retain variable "one"
+	varnames0 <- bifieobj$varnames
+	if ( ! is.null(varnames) ){
+			varnames <- union( varnames , intersect( "one" , varnames0) )
+							}						
+						
+						
     #******* do some variable checking
     if ( ! is.null(varnames) ){
 #		h1 <- setdiff( varnames , colnames(bifieobj$dat1) )
@@ -98,7 +112,7 @@ BIFIE.cdata.select <- function( bifieobj , varnames = NULL , impdata.index = NUL
 		bifieobj$datalistM_impindex[,2] <- match( bifieobj$datalistM_impindex[,2] , dfr1$index - 1 ) - 1
 #        bifieobj$datalistM_imputed[,"variable"] <- 
 #                    match( bifieobj$datalistM_imputed[,"variable"] + 1 , dfr1$index ) - 1           
-        bifieobj$dat1 <- bifieobj$dat1[ , dfr1$index ]  
+        bifieobj$dat1 <- bifieobj$dat1[ , dfr1$index , drop=FALSE]  
         bifieobj$varnames <- bifieobj$varnames[ dfr1$index ]
 		
 		# process variable list	

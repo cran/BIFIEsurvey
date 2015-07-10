@@ -667,13 +667,13 @@ BEGIN_RCPP
      //            parsM_ = "matrix" , parsrepM_="matrix" , Cdes_="matrix" ,   
      //			rdes_ = "vector" , Ccols_ = "vector"   
         
-        
+  
      Rcpp::NumericMatrix parsM(parsM_);          
-     Rcpp::NumericMatrix parsrepM(parsrepM_) ;  
-     Rcpp::NumericMatrix Cdes(Cdes_) ;  
+     Rcpp::NumericMatrix parsrepM(parsrepM_);  
+     Rcpp::NumericMatrix Cdes(Cdes_);  
      Rcpp::NumericVector rdes(rdes_);  
      Rcpp::NumericVector Ccols(Ccols_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
+     Rcpp::NumericVector fayfac(fayfac_);  
        
        
      // number of involved variables in the test  
@@ -690,7 +690,8 @@ BEGIN_RCPP
      arma::mat var_b = arma::zeros(VV,VV);  
      // Rcpp::NumericMatrix var_b(VV,VV);  
      Rcpp::NumericVector parsM_sel(VV) ;  
-       
+     arma::mat var_wM = arma::zeros(df,df*Nimp); 
+     Rcpp::NumericMatrix hyp_statM(df,Nimp);
      // Rcpp::NumericMatrix var_w(VV,VV);  
        
      // arma form of the design matrix Cdes  
@@ -709,12 +710,35 @@ BEGIN_RCPP
          	    	  
      double tmp1=0;  
      double tmp2=0;  
-       
+     
+     
      for ( int ii=0 ; ii < Nimp ; ii++){  
-     	Rcpp::List res1 = bifiehelpers_waldtest(  VV ,  Ccols , parsM , parsrepM ,  
-     		 ii ,  RR , fayfac , ACdes ,  Ardes ) ; 			  
-     	  
-     	Rcpp::NumericMatrix chi2a=res1["chi2"] ;	  
+    	     
+//     	Rcpp::List res1 = bifiehelpers_waldtest(  VV ,  Ccols , parsM , parsrepM ,  
+//     		 ii ,  RR , fayfac , ACdes ,  Ardes ) ; 
+     	Rcpp::List res1 = bifiehelpers_waldtest_vcov(  VV ,  Ccols , parsM , parsrepM ,  
+     		 ii ,  RR , fayfac , ACdes ,  Ardes ) ; 
+     	
+ 
+//	    _["var_hyp"] = var_hyp ,
+//	    _["hyp_stat"] = hyp_stat     	
+     	
+	Rcpp::NumericMatrix chi2a=res1["chi2"] ;		
+//     	arma::mat var_hyp1=res1["var_hyp"] ;
+//     	arma::mat hyp_stat1=res1["hyp_stat"] ;
+     	Rcpp::NumericMatrix var_hyp1=res1["var_hyp"] ;
+     	Rcpp::NumericMatrix hyp_stat1=res1["hyp_stat"] ;
+
+
+	for (int dd=0;dd<df;dd++){
+		hyp_statM(dd,ii) = hyp_stat1(dd,0);
+		for (int ee=0;ee<df;ee++){
+			var_wM(dd,ee+ii*df) = var_hyp1(dd,ee);
+					}
+				}
+
+
+     		  
      	chi2M(ii,0) = chi2a(0,0) ;  
      	tmp1 += chi2M(ii,0) ;	  
      	chi2M(ii,1) = sqrt( chi2M(ii,0) ) ;  
@@ -726,7 +750,8 @@ BEGIN_RCPP
      	         			}  
      	         		}  
      		}  
-       
+  		
+     		
      // calculate ARIV	  
      double eps=1e-10;  
      double ariv = tmp1 - Nimp * pow( tmp2 / Nimp , 2.0 ) ;  
@@ -802,6 +827,8 @@ BEGIN_RCPP
      double nu2 = 1 + ( 1 - 2 / ( df * Nimp2 - df ) * 1 / ariv_D1 ) ;  
      nu2 = 4 + ( df * Nimp2 - df - 4 ) * nu2 * nu2 ;  
 
+     if (Nimp2 < 2 ){ nu2 = 1000 ;  }
+     
      double tmp11 = D1(0,0);
      
      double p_D1 = Rf_pf( tmp11 , df , nu2 , FALSE  , FALSE );     
@@ -821,7 +848,8 @@ BEGIN_RCPP
          _["fayfac"] = fayfac ,  
          _["var_w"] = var_w , _["var_b"] = var_b ,       
          _["D1"] = D1 ,   
-         _["Ccols"] = Ccols , _["parsM_sel"] = parsM_sel  
+         _["Ccols"] = Ccols , _["parsM_sel"] = parsM_sel  ,
+         _["var_wM"] = var_wM , _["hyp_statM"] = hyp_statM
          ) ;    
      // maximal list length is 20!  
               
@@ -831,6 +859,87 @@ BEGIN_RCPP
      
 END_RCPP
 }
+
+
+//********************************************
+// within covariance matrices
+
+// declarations
+extern "C" {
+SEXP bifie_comp_vcov_within( SEXP parsM_, SEXP parsrepM_, SEXP fayfac_ , SEXP RR_ ,
+	SEXP Nimp_ ) ;
+}
+
+// definition
+
+SEXP bifie_comp_vcov_within( SEXP parsM_, SEXP parsrepM_, SEXP fayfac_ , SEXP RR_ ,
+	SEXP Nimp_ ){
+BEGIN_RCPP
+
+	Rcpp::NumericMatrix parsM(parsM_);
+	Rcpp::NumericMatrix parsrepM(parsrepM_);
+	Rcpp::NumericVector fayfac(fayfac_);
+	int RR = as<int>(RR_);
+	int Nimp = as<int>(Nimp_);
+	
+	int VV = parsM.nrow();
+
+	//@@fayfac 
+	int NF = fayfac.size();
+	double f1=0;
+        //--
+
+	//*** calculate covariance matrix for imputations
+	arma::mat var_w = arma::zeros(VV,VV);
+	arma::mat var_wf = arma::zeros(VV,VV*Nimp);
+	Rcpp::NumericVector u_diag(VV*Nimp);
+	
+	for (int ii=0;ii<Nimp;ii++){
+	
+	for (int vv1=0;vv1<VV;vv1++){
+	for (int vv2=0;vv2<VV;vv2++){
+                  var_w(vv1,vv2) = 0 ;
+                  		}
+                  	}
+		
+		
+	for (int vv1=0;vv1<VV;vv1++){
+	for (int vv2=vv1;vv2<VV;vv2++){
+	   //@@fayfac
+	   f1 = fayfac[0];
+	   //--				
+	for (int rr=0;rr<RR;rr++){
+	      //@@fayfac
+	      if (NF>1){
+	         f1 = fayfac[rr];
+	         	}
+	      //--					
+	   var_w(vv1,vv2) += f1 * ( parsrepM( vv1 , rr+ii*RR ) - parsM( vv1 , ii ) )*
+			( parsrepM( vv2 , rr+ii*RR ) - parsM( vv2 , ii ) ) ;
+				}	
+//	var_w(vv1,vv2) = fayfac[0] * var_w(vv1,vv2) ;
+	var_w(vv2,vv1) = var_w(vv1,vv2) ;
+				} // end vv2
+	u_diag[vv1+ii*VV] = var_w(vv1 , vv1);
+			}  // end vv1
+			
+
+	for (int vv1=0;vv1<VV;vv1++){
+	for (int vv2=0;vv2<VV;vv2++){
+                  var_wf(vv1,vv2+ii*VV) = var_w(vv1,vv2) ;
+                  		}
+                  	}			
+			
+	
+	}  // end imputed dataset ii		
+		
+	
+	return Rcpp::List::create( 
+	    _["u"] = var_wf , _["u_diag"] = u_diag
+	    ) ;
+
+END_RCPP	
+	}
 
 
 //************************************************
@@ -1048,10 +1157,15 @@ BEGIN_RCPP
      int VV = HH / GG ;   
      int GG2 = GG * (GG-1) / 2 ;  
      int Nimp = sd1M.ncol() ;  
+     
+     int RR = sd1repM.ncol() / Nimp ;  
+     
        
-     Rcpp::NumericMatrix dstatM(VV*GG2,Nimp) ;  
+     Rcpp::NumericMatrix dstatM(VV*GG2,Nimp) ;
+     Rcpp::NumericMatrix dstatrepM1(VV*GG2,Nimp*RR) ; 
      Rcpp::NumericMatrix dstat_varM(VV*GG2,Nimp) ;  
-     Rcpp::NumericMatrix eta2M(VV,Nimp) ;  
+     Rcpp::NumericMatrix eta2M(VV,Nimp) ;
+     Rcpp::NumericMatrix eta2repM1(VV,Nimp*RR) ;
      Rcpp::NumericMatrix eta2_varM(VV,Nimp) ;  
      Rcpp::NumericVector eta2V(1) ;  
        
@@ -1068,7 +1182,7 @@ BEGIN_RCPP
        
        
        
-     int RR = sd1repM.ncol() / Nimp ;  
+    
        
      Rcpp::Rcout << "|"  ;  
        
@@ -1100,8 +1214,9 @@ BEGIN_RCPP
      Rcpp::NumericMatrix sd1M_rr = sd1repM( Range(vv*GG,vv*GG+GG-1) , Range(ii*RR,ii*RR + RR-1)  ) ;  
      Rcpp::NumericMatrix sumweightM_rr = sumweightrepM( Range(0,GG-1) , Range(ii*RR,ii*RR + RR-1)  ) ;  
      Rcpp::List res1 = bifiehelpers_etasquared( mean1M_rr , sd1M_rr , sumweightM_rr ,  GG ) ;  
-     Rcpp::NumericMatrix eta2repM = res1["eta2"] ;  
-     Rcpp::NumericMatrix dstatrepM = res1["dstat"] ;  
+     Rcpp::NumericMatrix eta2repM = res1["eta2"] ;      
+     Rcpp::NumericMatrix dstatrepM = res1["dstat"] ;
+     
        
      // compute standard errors  
      // eta squared  
@@ -1120,8 +1235,16 @@ BEGIN_RCPP
      for (int zz=0;zz<GG2;zz++){  
      	dstatM(zz+vv*GG2,ii) = dstatV[zz] ;  
      	dstat_varM(zz+vv*GG2,ii) = dstat_var[zz] ;  
+     	for ( int rr=0;rr<RR;rr++){	     	
+     		dstatrepM1(zz+vv*GG2,rr+ii*RR) = dstatrepM(zz,rr);
+     				}
      			}  
-     			  
+
+     //	int GG2 = GG * (GG - 1 ) / 2 ;
+     //	Rcpp::NumericMatrix dstat(GG2 , WW ) ;     
+     for ( int rr=0;rr<RR;rr++){
+     	     eta2repM1(vv,rr+ii*RR) = eta2repM(0,rr);     	          	     
+     	     			}     			
      			  
      			  
      		} // end vv			  
@@ -1141,10 +1264,12 @@ BEGIN_RCPP
                
      return Rcpp::List::create(   
          _["eta2L"] = eta2L ,   
-         _["eta2M"] = eta2M ,  
+         _["eta2M"] = eta2M ,
+         _["eta2repM"] = eta2repM1 ,
          _["eta2_varM"] = eta2_varM ,  
          _["dstatL"] = dstatL ,       
          _["dstatM"] = dstatM ,  
+         _["dstatrepM"] = dstatrepM1 ,
          _["dstat_varM"] = dstat_varM    ,  
          _["group_values_matrix"] = group_values_matrix  
          ) ;    

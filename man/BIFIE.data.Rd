@@ -14,14 +14,16 @@ conducted by specifying appropriate input in the \code{fayfac}
 argument.
 }
 \usage{
-BIFIE.data(data.list, wgt = NULL, wgtrep = NULL , fayfac = 1, cdata=FALSE)
+BIFIE.data(data.list, wgt = NULL, wgtrep = NULL , fayfac = 1, cdata=FALSE, NMI=FALSE)
 
 \method{summary}{BIFIEdata}(object,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data.list}{
-List of multiply-imputed datasets
+List of multiply imputed datasets. Can be also a list of list of imputed
+datasets in case of nested multiple imputation. Then, the argument
+\code{NMI=TRUE} must be specified.
 }
   \item{wgt}{
 A string indicating the label of case weight or a vector
@@ -36,6 +38,8 @@ Optional vector of replicate weights
 }
 \item{cdata}{An optional logical indicating whether the \code{BIFIEdata}
 object should be compactly saved. The default is \code{FALSE}.}
+\item{NMI}{Optional logical indicating whether \code{data.list} is obtained
+by nested multiple imputation.}
 \item{object}{Object of class \code{BIFIEdata}}
 \item{\dots}{Further arguments to be passed}
 }
@@ -57,6 +61,8 @@ included in the list:
 \item{varnames}{Vector with variable names}
 \item{fayfac}{Fay factor.}
 \item{RR}{Number of replicate weights}
+\item{NMI}{Logical indicating whether the dataset is nested multiply
+imputed.}
 \item{cdata}{Logical indicating whether the \code{BIFIEdata} object is in
 	compact format (\code{cdata=TRUE}) or in a non-compact format
 	(\code{cdata=FALSE}).
@@ -159,6 +165,20 @@ summary(res1)
 # finite sampling correction
 res2 <- BIFIE.univar( bdat2 , vars="ASMMAT")
 summary(res2)
+
+\dontrun{
+#############################################################################
+# EXAMPLE 4: Create BIFIEdata object with nested multiply imputed dataset
+#############################################################################
+
+data(data.timss4)
+data(data.timssrep)
+
+# nested imputed dataset, save it in compact format
+bdat <- BIFIE.data( data.list=data.timss4 , wgt= data.timss4[[1]]$TOTWGT ,
+            wgtrep=data.timssrep[, -1 ] , NMI=TRUE , cdata=TRUE )
+summary(bdat)            
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

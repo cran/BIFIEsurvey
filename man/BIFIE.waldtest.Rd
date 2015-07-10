@@ -71,9 +71,9 @@ Enders, C. K. (2010). \emph{Applied missing data analysis}. Guilford Press.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[survey:regTermTest]{regTermTest}} (\pkg{survey}),
-\code{\link[survey:anova.svyglm]{anova.svyglm}} (\pkg{survey}),
-\code{\link[car:linearHypothesis]{linearHypothesis}} (\pkg{car})
+\code{\link[survey:regTermTest]{survey::regTermTest}},
+\code{\link[survey:anova.svyglm]{survey::anova.svyglm}},
+\code{\link[car:linearHypothesis]{car::linearHypothesis}}
 }
 
 

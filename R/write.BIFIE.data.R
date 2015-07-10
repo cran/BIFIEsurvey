@@ -36,13 +36,14 @@ write.BIFIEdata <- function( BIFIEdata , name.BIFIEdata ,
 			bii <- BIFIEdata.select( BIFIEdata , varnames = varnames , impdata.index = ii )
 						}
 		if ( cdata ){
-			bii <- BIFIE.BIFIEcdata2BIFIEdata( BIFIEdata , varnames = varnames , impdata.index = ii )
+			bii <- BIFIE.BIFIEcdata2BIFIEdata( BIFIEdata , varnames = varnames ,
+			                impdata.index = ii )
 						}						
 		dat1 <- bii$datalistM
 		colnames(dat1) <- bii$varnames
 		filename.temp <- paste0( name.BIFIEdata , "__IMP" , ii , filesuf )
 		dat1 <- as.data.frame(dat1)
-	    miceadds::save.data( dat1 , filename=filename.temp , type=type , path=dir , ... )  # miceadds::
+	    miceadds::save.data( dat1 , filename=filename.temp , type=type , path=dir , ... ) 
 			}
 	#**********************************************
 	# save BIFIEdata object

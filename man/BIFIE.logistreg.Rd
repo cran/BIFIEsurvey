@@ -86,10 +86,10 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[survey:svyglm]{svyglm}} (\pkg{survey}),
-\code{\link[stats:glm]{glm}} (\pkg{stats})
+\code{\link[survey:svyglm]{survey::svyglm}},
+\code{\link[stats:glm]{glm}}
 
-For linear regression see \code{\link{BIFIE.linreg}}.
+For linear regressions see \code{\link{BIFIE.linreg}}.
 }
 
 

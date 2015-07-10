@@ -91,13 +91,31 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	dfr1 <- data.frame("prob" =  rep( c("joint" , "rowcond" , "colcond") , each=XX1 ) ,
 	          dfr1[ rep(1:XX1 , 3 ) , ] )
 	dfr1$est <- res$ctparsL$pars[ 1:XX2 ]
-	dfr1$SE <- res$ctparsL$pars_se[ 1:XX2 ]
+	dfr1$SE <- res$ctparsL$pars_se[ 1:XX2 ]		
 	dfr1$fmi <- res$ctparsL$pars_fmi[ 1:XX2 ]
+	dfr1$df <- rubin_calc_df( res$ctparsL , Nimp , indices = 1:XX2 )	
 	dfr1$VarMI <- res$ctparsL$pars_varBetween[ 1:XX2 ]
 	dfr1$VarRep <- res$ctparsL$pars_varWithin[ 1:XX2 ]
 	rownames(dfr1) <- NULL		  
 	parnames <- paste0( dfr1$prob , "_" , dfr1$var1 , dfr1$val1 , "_" ,
 				dfr1$var2 , dfr1$val2 , "_" , dfr1$group , dfr1$groupval )
+		if (BIFIEobj$NMI ){
+			res1 <- BIFIE_NMI_inference_parameters( parsM=res$ctparsM[1:XX2,] , parsrepM=res$ctparsrepM[1:XX2,] , 
+						fayfac=fayfac , RR=RR , Nimp=Nimp , 
+						Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )			
+			dfr1$est <- res1$pars
+			dfr1$SE <- res1$pars_se
+			# dfr$t <- round( dfr$perc / dfr$perc_SE , 2 )
+			dfr1$df <- res1$df
+			# dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+			dfr1$fmi <- res1$pars_fmi
+		    dfr1$fmi_St1 <- res1$pars_fmiB
+		    dfr1$fmi_St2 <- res1$pars_fmiW						
+			dfr1$VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
+			dfr1$VarMI_St1 <- res1$pars_varBetween1
+			dfr1$VarMI_St2 <- res1$pars_varBetween2						
+			dfr1$VarRep <- res1$pars_varWithin	
+							}
 				
 	#*****
 	# marginal distributions
@@ -111,13 +129,32 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	dfr2$est <- res$ctparsL$pars[ l1 ]
 	dfr2$SE <- res$ctparsL$pars_se[ l1 ]
 	dfr2$fmi <- res$ctparsL$pars_fmi[ l1 ]
+	dfr2$df <- rubin_calc_df( res$ctparsL , Nimp , indices = l1)
 	dfr2$VarMI <- res$ctparsL$pars_varBetween[ l1 ]
 	dfr2$VarRep <- res$ctparsL$pars_varWithin[ l1 ]
 	parnames2 <- paste0( dfr2$prob , "_" , dfr2$var , dfr2$val , "_" ,
 				 dfr2$group , dfr2$groupval )
 	parnames <- c( parnames , parnames2 )
 
-
+		if (BIFIEobj$NMI ){
+			res1 <- BIFIE_NMI_inference_parameters( parsM=res$ctparsM[ l1 ,] , parsrepM=res$ctparsrepM[ l1 ,] , 
+						fayfac=fayfac , RR=RR , Nimp=Nimp , 
+						Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )			
+			dfr2$est <- res1$pars
+			dfr2$SE <- res1$pars_se
+			# dfr$t <- round( dfr$perc / dfr$perc_SE , 2 )
+			dfr2$df <- res1$df
+			# dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+			dfr2$fmi <- res1$pars_fmi
+		    dfr2$fmi_St1 <- res1$pars_fmiB
+		    dfr2$fmi_St2 <- res1$pars_fmiW						
+			dfr2$VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
+			dfr2$VarMI_St1 <- res1$pars_varBetween1
+			dfr2$VarMI_St2 <- res1$pars_varBetween2						
+			dfr2$VarRep <- res1$pars_varWithin	
+							}
+	
+	
 	#*****
 	# effect sizes
 	## // w_es  2*GG
@@ -137,16 +174,36 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	dfr3$est <- res$ctparsL$pars[ l1 ]
 	dfr3$SE <- res$ctparsL$pars_se[ l1 ]
 	dfr3$fmi <- res$ctparsL$pars_fmi[ l1 ]
+	dfr3$df <- rubin_calc_df( res$ctparsL , Nimp , indices = l1)
 	dfr3$VarMI <- res$ctparsL$pars_varBetween[ l1 ]
 	dfr3$VarRep <- res$ctparsL$pars_varWithin[ l1 ]	
+	
+		if (BIFIEobj$NMI ){
+			res1 <- BIFIE_NMI_inference_parameters( parsM=res$ctparsM[ l1 ,] , parsrepM=res$ctparsrepM[ l1 ,] , 
+						fayfac=fayfac , RR=RR , Nimp=Nimp , 
+						Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )			
+			dfr3$est <- res1$pars
+			dfr3$SE <- res1$pars_se
+			# dfr$t <- round( dfr$perc / dfr$perc_SE , 2 )
+			dfr3$df <- res1$df
+			# dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+			dfr3$fmi <- res1$pars_fmi
+		    dfr3$fmi_St1 <- res1$pars_fmiB
+		    dfr3$fmi_St2 <- res1$pars_fmiW						
+			dfr3$VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
+			dfr3$VarMI_St1 <- res1$pars_varBetween1
+			dfr3$VarMI_St2 <- res1$pars_varBetween2						
+			dfr3$VarRep <- res1$pars_varWithin	
+							}	
+	
 	
 	parnames3 <- paste0( dfr3$parm , "_" ,
 				 dfr3$group , dfr3$groupval )
 	parnames <- c( parnames , parnames3 )
 	if ( ( ! se ) &  ( RR==0 ) ){				
-		dfr1$SE <- dfr1$fmi <- dfr1$VarMI <- dfr1$VarRep <- NULL
-		dfr2$SE <- dfr2$fmi <- dfr2$VarMI <- dfr2$VarRep <- NULL		
-		dfr3$SE <- dfr3$fmi <- dfr3$VarMI <- dfr3$VarRep <- NULL				
+		dfr1$df <- dfr1$SE <- dfr1$fmi <- dfr1$VarMI <- dfr1$VarRep <- NULL
+		dfr2$df <- dfr2$SE <- dfr2$fmi <- dfr2$VarMI <- dfr2$VarRep <- NULL		
+		dfr3$df <- dfr3$SE <- dfr3$fmi <- dfr3$VarMI <- dfr3$VarRep <- NULL				
 				}				
 
 	if ( Nimp == 1 ){				
@@ -171,7 +228,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	p_chi2 <- 1- pchisq( chisquare , df=p_chi2 )
 	dfr4 <- data.frame("group" = group , "groupval" = group_values )
     for (ii in 1:GG){
-		m1 <- miceadds::micombine.chisquare( dk = chisquare[ii,] , df = (VV1-1)*(VV2-1) , 
+		m1 <- micombine.chisquare( dk = chisquare[ii,] , df = (VV1-1)*(VV2-1) , 
 					display=FALSE )
 		dfr4[ii,"chi2"] <- m1["D"]
 		dfr4[ii , "df" ] <- m1["df"] 
@@ -184,6 +241,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 			"stat.es" = dfr3 , "chisq.test" = dfr4 ,
 			"output" = res , "timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"parnames" = parnames , "CALL"= cl )
 	class(res1) <- "BIFIE.crosstab"
 	return(res1)

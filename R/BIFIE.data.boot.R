@@ -69,7 +69,7 @@ BIFIE.data.boot <- function( data , wgt=NULL ,  pv_vars = NULL ,
 	fayfac <- 1/Nboot
 	#*** create BIFIE.data object
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgtname ] , 
-			      wgtrep = datarep , fayfac = fayfac , cdata=FALSE)
+			      wgtrep = datarep , fayfac = fayfac , cdata=cdata)
 	bifiedat$CALL <- cl				  
 	return(bifiedat)
 }

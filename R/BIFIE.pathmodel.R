@@ -182,6 +182,7 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 		wgtrep <- matrix( wgt , ncol=1 )
 		RR <- 0
 				}							
+											
 						
     #**** calculate path model
  #if (FALSE){	
@@ -190,10 +191,7 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 						group_values   , L , L_row_index - 1  , NL  , E ,
 						R , R_row_index - 1 , coeff_index1 , NP0 , unreliability ,
 						PACKAGE="BIFIEsurvey" ) 	
-#			}
-			
 
-			
 #	res <- bifie_pathmodel( datalistM , wgt_ , wgtrep ,	vars_index - 1,  fayfac, Nimp , group_index - 1,
 #						group_values   , L , L_row_index - 1  , NL  , E , R , 
 #                        R_row_index - 1 , coeff_index1 , NP0 , unreliability ) 
@@ -231,21 +229,11 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 			 
 	dfr$Ncases <- rep( res$ncases[,1] , each=ZZ )
 	dfr$Nweight <- rep( res$sumwgt[,1] , each=ZZ )	
-
-
-	dfr$est <- res$parsL$pars
-	dfr$SE <- res$parsL$pars_se
-	dfr$t <- round( dfr$est / dfr$SE , 2 )
-	dfr$p <- pnorm( - abs( dfr$t ) ) * 2
-	dfr$fmi <- res$parsL$pars_fmi
-	dfr$VarMI <- res$parsL$pars_varBetween
-	dfr$VarRep <- res$parsL$pars_varWithin
-	if ( ( ! se ) &  ( RR==0 ) ){				
-		dfr$t <- dfr$p <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
-				}				
-	if ( Nimp==1 ){				
-		dfr$fmi <- dfr$VarMI  <- NULL
-				}	
+	
+	dfr <- create_summary_table( res_pars=res$parsL , 
+				     parsM=res$parsM   , parsrepM=res$parsrepM , 
+					 dfr=dfr , BIFIEobj=BIFIEobj )				
+	dfr <- clean_summary_table( dfr=dfr , RR=RR , se=se , Nimp=Nimp )	
 	
 	dfr[ grep( "_R2" , paste(dfr$parameter) ) , "type"] <- "RSquared"
 	dfr[ grep( "_ResidVar" , paste(dfr$parameter) ) , "type"] <- "ResidVar"		
@@ -279,6 +267,7 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 			"output" = res , 
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"GG"=GG , "parnames" = parnames , "CALL"= cl)
 	class(res1) <- "BIFIE.pathmodel"
 	return(res1)	

@@ -77,17 +77,17 @@ A list with following entries
 See \code{\link{BIFIE.univar.test}} for a test of equal means and
 effect sizes \eqn{\eta} and \eqn{d}.
 
-\code{\link[survey:svymean]{svymean}} (\pkg{survey}),
-\code{\link[intsvy:timss.mean]{timss.mean}} (\pkg{intsvy}),
-\code{\link[intsvy:timss.mean.pv]{timss.mean.pv}} (\pkg{intsvy}),
-\code{\link[stats:weighted.mean]{weighted.mean}} (\pkg{stats}),
-\code{\link[Hmisc:wtd.stats]{wtd.mean}} (\pkg{Hmisc}),
-\code{\link[miceadds:ma.wtd.statNA]{ma.wtd.meanNA}} (\pkg{miceadds})
+\code{\link[survey:svymean]{survey::svymean}},
+\code{\link[intsvy:timss.mean]{intsvy::timss.mean}},
+\code{\link[intsvy:timss.mean.pv]{intsvy::timss.mean.pv}},
+\code{\link[stats:weighted.mean]{weighted.mean}},
+\code{\link[Hmisc:wtd.stats]{Hmisc::wtd.mean}},
+\code{\link[miceadds:ma.wtd.statNA]{miceadds::ma.wtd.meanNA}}
 
-\code{\link[survey:svyvar]{svyvar}} (\pkg{survey}),
-\code{\link[Hmisc:wtd.stats]{wtd.var}} (\pkg{Hmisc}),
-\code{\link[miceadds:ma.wtd.statNA]{ma.wtd.sdNA}} (\pkg{miceadds}),
-\code{\link[miceadds:ma.wtd.statNA]{ma.wtd.covNA}} (\pkg{miceadds})
+\code{\link[survey:svyvar]{survey::svyvar}},
+\code{\link[Hmisc:wtd.stats]{Hmisc::wtd.var}},
+\code{\link[miceadds:ma.wtd.statNA]{miceadds::ma.wtd.sdNA}},
+\code{\link[miceadds:ma.wtd.statNA]{miceadds::ma.wtd.covNA}}
 }
 
 

@@ -64,6 +64,12 @@ extract.replicated.pars <- function( BIFIE.method , type=NULL ){
 		parsrepM <- res1$output$parsrepM
 				}		
 	#************************************
+	#**** BIFIE.derivedParameters
+	if ( class( BIFIE.method) == "BIFIE.derivedParameters"){ 
+		parsM <- res1$parsM
+		parsrepM <- res1$parsrepM
+				}						
+	#************************************
 	#**** BIFIE.twolevelreg
 	if ( class( BIFIE.method) == "BIFIE.twolevelreg"){ 	
 		parsM <- res1$output$parsM

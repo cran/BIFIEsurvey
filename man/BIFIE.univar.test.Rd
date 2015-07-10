@@ -14,7 +14,7 @@ effect sizes are computed.
 }
 
 \usage{
-BIFIE.univar.test(BIFIE.method)
+BIFIE.univar.test(BIFIE.method , wald_test=TRUE)
 
 \method{summary}{BIFIE.univar.test}(object,digits=4,...)
 }
@@ -23,6 +23,8 @@ BIFIE.univar.test(BIFIE.method)
   \item{BIFIE.method}{
 Object of class \code{BIFIE.univar}
 }
+\item{wald_test}{Optional logical indicating whether a Wald test should
+	 be performed.}
 \item{object}{Object of class \code{BIFIE.univar.test}}
 \item{digits}{Number of digits for rounding output}
 \item{\dots}{Further arguments to be passed}

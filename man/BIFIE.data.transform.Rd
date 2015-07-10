@@ -247,6 +247,13 @@ transform.formula2 <- as.formula( paste0( "~ 0 + I ( BIFIE.princomp( ~ " ,
        paste0( vars , collapse="+" )  ,  " , 3 ) )") )
   ##   > transform.formula2
   ##   ~0 + I(BIFIE.princomp(~migrant + female + books + lang, 3))
+  
+#****************************
+#*** Transformation 10: Overwriting variables books and migrant 
+bifieobj4 <-  BIFIE.data.transform( bifieobj3 , 
+	        transform.formula = ~ 0 + I( 1*(books >= 1 ) ) + I(2*migrant) ,
+                varnames.new= c("books","migrant") )  
+summary(bifieobj4)  
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

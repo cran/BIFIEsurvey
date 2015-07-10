@@ -73,9 +73,9 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[survey:svytable]{svytable}} (\pkg{survey}),
-\code{\link[intsvy:timss.table]{timss.table}} (\pkg{intsvy}),
-\code{\link[Hmisc:wtd.stats]{wtd.table}} (\pkg{Hmisc}),
+\code{\link[survey:svytable]{survey::svytable}},
+\code{\link[intsvy:timss.table]{intsvy::timss.table}},
+\code{\link[Hmisc:wtd.stats]{Hmisc::wtd.table}}
 }
 
 

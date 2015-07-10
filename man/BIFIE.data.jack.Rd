@@ -12,7 +12,7 @@ especially for TIMSS/PIRLS and PISA studies.
 
 \usage{
 BIFIE.data.jack(data, wgt = NULL, jktype = "JK_TIMSS", pv_vars = NULL, 
-     jkzone = NULL, jkrep = NULL, jkfac = NULL, fayfac = 1 , 
+     jkzone = NULL, jkrep = NULL, jkfac = NULL, fayfac = NULL , 
      wgtrep = "W_FSTR" , pvpre = paste0("PV",1:5) , ngr=100 ,
      seed = .Random.seed , cdata=FALSE)
 }
@@ -48,7 +48,7 @@ Factor for multiplying jackknife replicate weights.
 If \code{jktype="JK_TIMSS"}, then \code{jkfac=2}.
 }
   \item{fayfac}{
-Fay factor for statistical inference. The default is set to 1.
+Fay factor for statistical inference. The default is set to \code{NULL}.
 }
 \item{wgtrep}{Variables in the dataset which refer to the replicate
 	weights. In case of \code{cdata=TRUE}, the replicate weights

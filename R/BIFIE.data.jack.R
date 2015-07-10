@@ -1,13 +1,23 @@
 ###########################################################
 # BIFIE.data objects for designs with jackknife zones
 BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NULL ,
-	jkzone=NULL , jkrep=NULL  ,	jkfac=NULL , fayfac = 1 , 
+	jkzone=NULL , jkrep=NULL  ,	jkfac=NULL , fayfac = NULL , 
 	wgtrep = "W_FSTR" , pvpre = paste0("PV",1:5) , ngr = 100 , 
 	seed = .Random.seed ,
-	cdata=FALSE
+	cdata=FALSE 
 		){	
 	cl <- match.call()	
-		
+	
+	# subroutine for preparation of nested multiple imputations
+	# res0 <- BIFIE_data_nested_MI( data.list=data.list , NMI=NMI )
+	# data.list <- res0$data.list
+	# Nimp_NMI <- res0$Nimp_NMI	
+	
+	if ( ( ! is.null(wgtrep) ) & ( is.null(fayfac) ) ){
+		fayfac <- 1 
+				}
+	fayfac0 <- fayfac			
+	
 	#*** list of multiply imputed datasets
 	if ( ( is.list(data) ) & ( ! is.data.frame(data) ) ){
 		dataL <- data
@@ -147,10 +157,14 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 			datalist[[ii]] <- dat1 
 						}  # end imputations						
 					}  # end pv_vars
-			
+		
+	if ( ! is.null(fayfac0) ){
+		fayfac <- fayfac0	
+					}
+					
 	#*** create BIFIE.data object
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgt ] , wgtrep = datarep , fayfac = fayfac ,
-							cdata=cdata)
+							cdata=cdata , NMI = FALSE )
 	bifiedat$CALL <- cl
 	return(bifiedat)
 }

@@ -3,7 +3,7 @@
 #######################################################################
 # BIFIE.by function
 BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
-		group=NULL , group_values=NULL , se=TRUE ){
+		group=NULL , group_values=NULL , se=TRUE , use_Rcpp = TRUE ){
 	#****
 	s1 <- Sys.time()
 	cl <- match.call()
@@ -46,12 +46,24 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 				
-	#**************************************************************************#
-	# Rcpp call
-
-	res <- .Call("bifie_by" , datalistM , wgt_ , wgtrep ,	vars_index - 1,    fayfac ,
+		
+	#****
+	# pure R implementation
+	if ( ! use_Rcpp ){	
+		res <- BIFIE_by_helper_pureR(
+			group_values , userfct , datalistM ,
+			N , vars_index , wgt_ , wgtrep , Nimp , RR , fayfac ,
+			group_index , userparnames
+				)
+					}
+	
+	#****
+	# Rcpp implementation
+	if ( use_Rcpp ){
+		res <- .Call("bifie_by" , datalistM , wgt_ , wgtrep ,	vars_index - 1,    fayfac ,
 				Nimp , group_index - 1 , group_values , userfct , PACKAGE="BIFIEsurvey")
-							
+					}
+	
 	NP <- res$NP
 	GG <- length(group_values)
 	ZZ <- NP
@@ -67,32 +79,26 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	             }				 				 	
 
 
-
 	dfr$Ncases <- rep( rowMeans( res$ncasesM ) , each=ZZ )
-	dfr$Nweight <- rep( rowMeans( res$sumwgtM ) , each=ZZ )	
-	dfr$est <- res$parsL$pars
-	dfr$SE <- res$parsL$pars_se
-	dfr$fmi <- res$parsL$pars_fmi
-	dfr$VarMI <- res$parsL$pars_varBetween
-	dfr$VarRep <- res$parsL$pars_varWithin
-	if ( ( ! se ) &  ( RR==0 ) ){				
-		dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
-				}				
-	if ( Nimp==1 ){				
-		dfr$fmi <- dfr$VarMI  <- NULL
-				}	
+	dfr$Nweight <- rep( rowMeans( res$sumwgtM ) , each=ZZ )
 
+	dfr <- create_summary_table( res_pars=res$parsL , 
+				     parsM=res$parsM   , parsrepM=res$parsrepM , 
+					 dfr=dfr , BIFIEobj=BIFIEobj )				
+	dfr <- clean_summary_table( dfr=dfr , RR=RR , se=se , Nimp=Nimp )	
+	
+				
 	# create vector of parameter names
 	parnames <- paste0( dfr$parm   , "_" , dfr$groupvar , dfr$groupval )
 
-	
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
 	res1 <- list( "stat" = dfr , 
 			"output" = res , 	"timediff" = timediff ,
-			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac , "GG"=GG ,
+			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac , "GG"=GG ,			
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"parnames" = parnames , "CALL"= cl)
 	class(res1) <- "BIFIE.by"
 	return(res1)
@@ -101,10 +107,9 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 
 ####################################################################################
 # summary for BIFIE.by function
-
 summary.BIFIE.by <- function( object , digits=4 , ... ){
     BIFIE.summary(object)
-	cat("Statistical Inference for User Definition Function \n")	
+	cat("Statistical Inference for User Defined Function \n")	
 	obji <- object$stat
 	print.object.summary( obji , digits=digits )
 			}

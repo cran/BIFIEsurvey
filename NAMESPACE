@@ -2,9 +2,55 @@
 
 useDynLib(BIFIEsurvey)
 
+
+
+
+######################################
+########### IMPORTS ##################
+
+
+#***************************************************
+#*************** R Basics / Linking To *************
+
+importFrom(graphics, par)
+importFrom(graphics, plot)
+importFrom(grDevices, nclass.Sturges)
+importFrom(methods, is)
+importFrom(Rcpp, evalCpp)
+import(stats)
+importFrom(utils, flush.console)
+importFrom(utils, object.size)
+importFrom(utils, packageDescription)
+
+
+
+#***************************************************
+#************** Depends ****************************
+
+##
+
+
+#***************************************************
+#************** Imports ****************************
+
+importFrom(miceadds, load.data)
+importFrom(miceadds, micombine.chisquare)
+importFrom(miceadds, NMIcombine)
+importFrom(miceadds, NMIwaldtest)
+importFrom(miceadds, Reval)
+importFrom(miceadds, save.data)
+importFrom(mitools, MIcombine)
+importFrom(TAM, lavaanify.IRT)
+
+
+
+######################################
+########### EXPORTS ##################
+
+
 export(   
-	BIFIE.data ,
-	BIFIE.univar ,
+    BIFIE.data ,
+    BIFIE.univar ,
     BIFIE.freq ,
     BIFIE.correl ,
     BIFIE.linreg ,
@@ -23,42 +69,24 @@ export(
     BIFIEdata.select ,
     BIFIE.BIFIEdata2BIFIEcdata  ,
     BIFIE.BIFIEcdata2BIFIEdata   ,
-    write.BIFIEdata   ,
-    load.BIFIEdata.files    ,
+    write.BIFIEdata ,
+    load.BIFIEdata.files ,
     BIFIE.mva ,
-    BIFIE.BIFIEdata2datalist    ,
+    BIFIE.BIFIEdata2datalist ,
     BIFIE.derivedParameters ,
     bifietable ,
     BIFIE.twolevelreg,
-    BIFIE.pathmodel
+    BIFIE.pathmodel 
 )    
     
     
 
+#########################################
+########### S3 METHODS ##################
 
 
-S3method(plot,BIFIE.hist)
 
-
-S3method(summary,BIFIE.univar)
-S3method(summary,BIFIE.freq)
-S3method(summary,BIFIE.correl)
-S3method(summary,BIFIE.linreg)
-S3method(summary,BIFIE.waldtest)
-S3method(summary,BIFIE.univar.test)
-S3method(summary,BIFIEdata)
-S3method(summary,BIFIE.crosstab)
-S3method(summary,BIFIE.by)
-S3method(summary,BIFIE.hist)
-S3method(summary,BIFIE.logistreg)
-
-S3method(summary,BIFIE.ecdf)
-S3method(summary,BIFIE.mva)
-S3method(summary,BIFIE.derivedParameters)
-S3method(summary,BIFIE.twolevelreg)
-S3method(summary, BIFIE.pathmodel) 
-
-
+#****** coef ***********
 S3method(coef, BIFIE.by)
 S3method(coef, BIFIE.correl)
 S3method(coef, BIFIE.crosstab)
@@ -70,6 +98,33 @@ S3method(coef, BIFIE.univar)
 S3method(coef, BIFIE.twolevelreg)
 S3method(coef, BIFIE.pathmodel)
 
+
+#****** plot ***********
+S3method(plot,BIFIE.hist)
+
+
+
+#****** summary ***********
+S3method(summary,BIFIE.univar)
+S3method(summary,BIFIE.freq)
+S3method(summary,BIFIE.correl)
+S3method(summary,BIFIE.linreg)
+S3method(summary,BIFIE.waldtest)
+S3method(summary,BIFIE.univar.test)
+S3method(summary,BIFIEdata)
+S3method(summary,BIFIE.crosstab)
+S3method(summary,BIFIE.by)
+S3method(summary,BIFIE.hist)
+S3method(summary,BIFIE.logistreg)
+S3method(summary,BIFIE.ecdf)
+S3method(summary,BIFIE.mva)
+S3method(summary,BIFIE.derivedParameters)
+S3method(summary,BIFIE.twolevelreg)
+S3method(summary, BIFIE.pathmodel) 
+
+
+
+#****** vcov ***********
 S3method(vcov, BIFIE.by)
 S3method(vcov, BIFIE.correl)
 S3method(vcov, BIFIE.crosstab)
@@ -81,12 +136,3 @@ S3method(vcov, BIFIE.univar)
 S3method(vcov, BIFIE.twolevelreg)
 S3method(vcov, BIFIE.pathmodel)
 
-
-############################################
-# imports Depends packages
-importFrom(Rcpp,evalCpp)
-# importFrom(inline,getDynLib)
-import(miceadds)
-importFrom(utils,packageDescription)
-import(mitools)
-importFrom(TAM,lavaanify.IRT)

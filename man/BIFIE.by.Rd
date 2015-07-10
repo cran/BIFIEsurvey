@@ -17,7 +17,7 @@ Computes statistics for user defined functions.
 
 \usage{
 BIFIE.by( BIFIEobj , vars , userfct , userparnames=NULL ,
-     group=NULL , group_values=NULL , se=TRUE )
+     group=NULL , group_values=NULL , se=TRUE , use_Rcpp = TRUE)
 
 \method{summary}{BIFIE.by}(object,digits=4,...)
 
@@ -49,6 +49,8 @@ values will be determined automatically.
 }
 \item{se}{Optional logical indicating whether statistical inference
 based on replication should be employed.}
+\item{use_Rcpp}{Optional logical indicating whether the user defined
+function should be evaluated in \pkg{Rcpp}.}
 \item{object}{Object of class \code{BIFIE.by}}
 \item{digits}{Number of digits for rounding output}
 \item{\dots}{Further arguments to be passed}
@@ -82,7 +84,7 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[survey:svyby]{svyby}} (\pkg{survey})
+\code{\link[survey:svyby]{survey::svyby}}
 }
 
 
@@ -109,6 +111,12 @@ res1 <-  BIFIE.by( bifieobj , vars =c("ASMMAT" , "migrant" , "books" ) ,
                 userfct=userfct , userparnames =c("MW_MAT", "MW_Migr") , 
                 group="female" )
 summary(res1)
+
+# evaluate function in pure R implementation using the use_Rcpp argument
+res1b <-  BIFIE.by( bifieobj , vars =c("ASMMAT" , "migrant" , "books" ) , 
+                userfct=userfct , userparnames =c("MW_MAT", "MW_Migr") , 
+                group="female" , use_Rcpp = FALSE )
+summary(res1b)
 
 #--- statistical inference for a derived parameter (see ?BIFIE.derivedParameters)
 # define gender difference for mathematics score (divided by 100)

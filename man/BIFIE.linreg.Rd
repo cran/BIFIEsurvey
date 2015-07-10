@@ -80,10 +80,10 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[survey:svyglm]{svyglm}} (\pkg{survey}),
-\code{\link[intsvy:timss.reg]{timss.reg}} (\pkg{intsvy}),	
-\code{\link[intsvy:timss.reg.pv]{timss.reg.pv}} (\pkg{intsvy}),
-\code{\link[stats:lm]{lm}} (\pkg{stats})
+\code{\link[survey:svyglm]{survey::svyglm}},
+\code{\link[intsvy:timss.reg]{intsvy::timss.reg}},	
+\code{\link[intsvy:timss.reg.pv]{intsvy::timss.reg.pv}},
+\code{\link[stats:lm]{lm}}
 }
 
 

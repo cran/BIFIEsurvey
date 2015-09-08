@@ -38,14 +38,15 @@ Object of class \code{BIFIEdata}
 }
 \item{lavaan.model}{String including the model specification in
    \pkg{lavaan} syntax. \code{lavaan.model} also allows the
-   extended functionality in the \code{lavaanify.IRT} (\pkg{TAM}) function.
+   extended functionality in the 
+   \code{\link[TAM:lavaanify.IRT]{TAM::lavaanify.IRT}} function.
 		}
  \item{reliability}{
 Optional vector containing the reliabilities of each variable.
 This vector can also include only a subset of all variables.
 }
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping
@@ -103,6 +104,10 @@ Buonaccorsi, J. P. (2010).
 
 \seealso{
 See the \pkg{lavaan} and \pkg{lavaan.survey} package.
+
+For the \code{lavaan} syntax, see
+\code{\link[lavaan:lavaanify]{lavaan::lavaanify}} and
+\code{\link[TAM:lavaanify.IRT]{TAM::lavaanify.IRT}}
 }
 
 

@@ -50,16 +50,20 @@ saved in a 'compact way'}
 is the working directory.}
 \item{impdata.index}{Vector of indices for selecting imputed datasets}
 \item{type}{Type of saved data. Options are \code{Rdata} (function 
-	\code{\link{save}}), \code{csv} (function \code{\link{write.csv}}),
-	\code{csv2} (function \code{\link{write.csv2}}),
-	\code{table} (function \code{\link{write.table}}),
+	\code{\link[base:save]{base::save}}, 
+	\code{csv} (function \code{\link[utils:write.csv]{utils::write.csv}}),
+	\code{csv2} (function \code{\link[utils:write.csv2]{utils::write.csv2}}),
+	\code{table} (function \code{\link[utils:write.table]{utils::write.table}}),
 	\code{sav} (function \code{\link[foreign:read.spss]{foreign::read.spss}}
 		for reading sav files and function
 	\code{\link[sjmisc:write_spss]{sjmisc::write_spss}}.
 		}
-\item{\dots}{Additional arguments to be passed to \code{\link{save}},
-	\code{\link{write.csv}}, \code{\link{write.csv2}},
-	\code{\link{write.table}}, \code{\link[foreign:read.spss]{foreign::read.spss}},
+\item{\dots}{Additional arguments to be passed to 
+	\code{\link[base:save]{base::save}},
+	\code{\link[utils:write.csv]{utils::write.csv}},
+	\code{\link[utils:write.csv2]{utils::write.csv2}},
+	\code{\link[utils:write.table]{utils::write.table}}, 
+	\code{\link[foreign:read.spss]{foreign::read.spss}},
 	\code{\link[sjmisc:write_spss]{sjmisc::write_spss}}
 }
 \item{filename}{
@@ -99,7 +103,7 @@ Saved \R object and a summary in working directory or a loaded \R object.
 \seealso{
 For creating objects of class \code{BIFIEdata} see \code{\link{BIFIE.data}}.
 
-\code{\link[base:save]{save}}, \code{\link[base:load]{load}}
+\code{\link[base:save]{base::save}}, \code{\link[base:load]{base::load}}
 }
 
 

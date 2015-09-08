@@ -29,7 +29,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 				}	
 	
 	vars_index <- unlist( sapply( vars , FUN = function(vv){ 
-						which( varnames == vv ) } ) )
+						which( varnames == vv ) } , simplify=TRUE ) )
     # vars values
 	VV <- length(vars)
 					
@@ -40,12 +40,26 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	    group <- "one"
 	    group_values <- c(1)
 			}
-    group_index <- which( varnames %in% group )
+			
+
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
-				
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
+
 		
 	#****
 	# pure R implementation
@@ -91,6 +105,12 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	# create vector of parameter names
 	parnames <- paste0( dfr$parm   , "_" , dfr$groupvar , dfr$groupval )
 
+
+	#@@@@***
+	# multiple groupings
+	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
+	#@@@@***
+						
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()

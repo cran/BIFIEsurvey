@@ -7,7 +7,8 @@ An \pkg{Rcpp} Based Version of the \code{table} Function
 }
 
 \description{
-This is an \pkg{Rcpp} based version of the \code{table} function.
+This is an \pkg{Rcpp} based version of the 
+\code{\link[base:table]{base::table}} function.
 }
 
 \usage{
@@ -26,7 +27,7 @@ character vector should also be sorted in the table output}
 %%  ~~ If necessary, more details than the description above ~~
 %}
 \value{
-Same output like \code{table}
+Same output like \code{\link[base:table]{base::table}}
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -41,7 +42,7 @@ Same output like \code{table}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[base:table]{table}}
+\code{\link[base:table]{base::table}}
 }
 
 \examples{

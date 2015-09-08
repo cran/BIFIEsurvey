@@ -108,6 +108,8 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		group_vec <- as.numeric( group_vec)
 		group_values <- as.numeric( group_values)
 		
+		
+		
 		if ( ! se ){ 
 			wgtrep1 <- matrix( wgt , ncol=1 )
 			RR <- 0

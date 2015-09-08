@@ -50,32 +50,49 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	    group <- "one"
 	    group_values <- c(1)
 			}
-    group_index <- which( varnames %in% group )
+		
+#    group_index <- which( varnames %in% group )
+	
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
+	
+	
 				
 	#**************************************************************************#
 	# Rcpp call
-
 	res <-  .Call("bifie_freq"  ,datalistM , wgt_ , as.matrix(wgtrep) , vars_index -1 , fayfac , 
 				Nimp ,  group_index -  1, group_values , as.matrix(vars_values) ,
 				vars_values_numb , PACKAGE="BIFIEsurvey" )
 					
 	GG <- res$outlist$GG
-
 	dfr <- data.frame( "var" = rep( rep( vars , vars_values_numb ) , each=GG ) )
 	VV <- length(vars)
 	varval <- unlist( sapply( 1:VV , FUN = function(vv){
 		# vv <- 1
 		rep( vars_values[ 1:vars_values_numb[vv] , vv ] , GG )
-				} ) )
+				} , simplify=FALSE ) )
 	dfr$varval <- varval
+
 	if (! nogroup){
 	   dfr$groupvar <- group
 	   dfr$groupval <- rep( rep( group_values , VV) , rep(vars_values_numb,each=GG) )
 	             }
+
 	dfr$Ncases <- rowMeans( res$ncases1M )
 	dfr$Nweight <- res$perc1$pars
 	# percentages
@@ -86,6 +103,9 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	dfr$perc_df <- rubin_calc_df( res$perc2 , Nimp , indices = NULL)
 	dfr$perc_VarMI <- res$perc2$pars_varBetween
 	dfr$perc_VarRep <- res$perc2$pars_varWithin
+	
+
+
 		if (BIFIEobj$NMI ){
 			res1 <- BIFIE_NMI_inference_parameters( parsM=res$perc2M , parsrepM=res$perc2repM , 
 						fayfac=fayfac , RR=RR , Nimp=Nimp , 
@@ -103,7 +123,8 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 			dfr$perc_VarMI_St2 <- res1$pars_varBetween2						
 			dfr$perc_VarRep <- res1$pars_varWithin	
 							}	
-	
+					
+											
 	if ( ( ! se ) &  ( RR==0 ) ){				
 		dfr$perc_df <- dfr$perc_SE <- dfr$perc_fmi <- dfr$perc_VarMI <- dfr$perc_VarRep <- NULL
 				}				
@@ -115,8 +136,12 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 	parnames <- paste0( dfr$var   , "_" , dfr$varval , 
 			ifelse( ! nogroupL , paste0( "_" , dfr$groupvar , "_" ) , "" ) ,
 			ifelse( ! nogroupL , dfr$groupval , "" ) )	
-	
-	
+
+	#@@@@***
+	# multiple groupings
+	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
+	#@@@@***
+				
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )

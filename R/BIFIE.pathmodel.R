@@ -141,7 +141,10 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 	datalistM <- bifieobj$datalistM
     fayfac <- bifieobj$fayfac	
 
-	vars_index <- match( lav.vars , colnames(dat) )
+	# vars_index <- match( lav.vars , colnames(dat) )
+	vars_index <- match( lav.vars , colnames(dat1) )
+
+	
 	# unreliability
 	unreliability <- rep(0 , NV)
 	names(unreliability) <- lav.vars
@@ -170,20 +173,33 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 	    group_values <- c(1)
 			}
 
-	group_index <- unlist( sapply( group , FUN = function(vv){ 
-                        which( varnames == vv ) } ) )
+
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
+
+					
 						
 	if (RR==1){ RR <- 0 }
 	if ( ! se ){ 
 		wgtrep <- matrix( wgt , ncol=1 )
 		RR <- 0
 				}							
-											
-						
+																				
     #**** calculate path model
  #if (FALSE){	
 	res <- .Call( "bifie_pathmodel" ,  datalistM , wgt_ , wgtrep ,
@@ -259,6 +275,13 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 	parnames <- paste0( dfr$parameter   , "_" , 
 			ifelse( ! nogroupL , paste0( "_" , dfr$groupvar , "_" ) , "" ) ,
 			ifelse( ! nogroupL , dfr$groupval , "" ) )
+	
+
+	#@@@@***
+	# multiple groupings
+	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
+	#@@@@***
+					
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()

@@ -33,7 +33,7 @@ Object of class \code{BIFIEdata}
 Vector of variables for which statistics should be computed
 }
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping
@@ -54,6 +54,8 @@ based on replication should be employed.}
 \value{
 A list with following entries
  \item{stat}{Data frame with univariate statistics}
+ \item{stat_M}{Data frame with means}
+ \item{stat_SD}{Data frame with standard deviations}
  \item{output}{Extensive output with all replicated statistics}
  \item{\dots}{More values}
 }
@@ -80,7 +82,7 @@ effect sizes \eqn{\eta} and \eqn{d}.
 \code{\link[survey:svymean]{survey::svymean}},
 \code{\link[intsvy:timss.mean]{intsvy::timss.mean}},
 \code{\link[intsvy:timss.mean.pv]{intsvy::timss.mean.pv}},
-\code{\link[stats:weighted.mean]{weighted.mean}},
+\code{\link[stats:weighted.mean]{stats::weighted.mean}},
 \code{\link[Hmisc:wtd.stats]{Hmisc::wtd.mean}},
 \code{\link[miceadds:ma.wtd.statNA]{miceadds::ma.wtd.meanNA}}
 

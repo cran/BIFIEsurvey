@@ -38,7 +38,7 @@ then use the variable \code{one} for specifying it (see Examples).
 	providing \code{dep} and \code{pre}. Note that there is 
    additional computation time needed for model matrix creation.}
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping
@@ -83,7 +83,7 @@ A list with following entries
 \code{\link[survey:svyglm]{survey::svyglm}},
 \code{\link[intsvy:timss.reg]{intsvy::timss.reg}},	
 \code{\link[intsvy:timss.reg.pv]{intsvy::timss.reg.pv}},
-\code{\link[stats:lm]{lm}}
+\code{\link[stats:lm]{stats::lm}}
 }
 
 

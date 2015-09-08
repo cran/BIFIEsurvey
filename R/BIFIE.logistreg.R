@@ -68,11 +68,25 @@ BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	    group <- "one"
 	    group_values <- c(1)
 			}
-    group_index <- which( varnames %in% group )
+			
+
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
 
 				
 	#**************************************************************************#
@@ -109,6 +123,14 @@ BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	parnames <- paste0( dfr$parameter   , "_" , dfr$var , 
 			ifelse( ! nogroupL , paste0( "_" , dfr$groupvar , "_" ) , "" ) ,
 			ifelse( ! nogroupL , dfr$groupval , "" ) )
+	
+
+	#@@@@***
+	# multiple groupings
+	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
+	#@@@@***
+						
+	
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()

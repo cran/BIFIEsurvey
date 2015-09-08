@@ -19,11 +19,14 @@ Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
     Educational Research, Innovation and Development of the Austrian 
     School System; Salzburg, Austria).    
 }
+
+%% \code{Sys.time}: \tab syssys \cr
+
 \details{
 \tabular{ll}{
 Package: \tab \pkg{BIFIEsurvey} \cr
 Type: \tab Package\cr
-Version: \tab 1.3\cr
+Version: \tab 1.4\cr
 Date: \tab 2015 \cr
 License: \tab GPL (>=2)\cr
 URL: \tab \url{http://www.bifie.at} \cr

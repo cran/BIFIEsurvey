@@ -41,7 +41,7 @@ Column variable
 \item{vars_values1}{Optional vector of values of variable \code{vars1}}
 \item{vars_values2}{Optional vector of values of variable \code{vars2}}
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping

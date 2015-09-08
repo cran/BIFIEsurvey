@@ -29,7 +29,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 				}	
 	
 	vars_index <- unlist( sapply( vars , FUN = function(vv){ 
-						which( varnames == vv ) } ) )
+						which( varnames == vv ) } , simplify=TRUE) )
     # vars values
 	VV <- length(vars)
 					
@@ -40,11 +40,27 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	    group <- "one"
 	    group_values <- c(1)
 			}
-    group_index <- which( varnames %in% group )
+			
+
+
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
+
 				
 	#**************************************************************************#
 	# Rcpp call
@@ -99,11 +115,18 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#	i1 <- match( dfr$var1 , vars )
 	#	i2 <- match( dfr$var2 , vars )	
 	dfr <- dfr[ dfr$var1 != dfr$var2 , ]	
+	
+	#@@@@***
+	# multiple groupings
+	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
+	#@@@@***					
+		
+	
 	dfr.cor <- dfr			
 				
 
 	dfr <- data.frame( "var1" = rep( vars[ itempair_index[,1] ] , each=GG ) ,
-					"var2" = rep( vars[ itempair_index[,2] ] , each=GG )
+					   "var2" = rep( vars[ itempair_index[,2] ] , each=GG )
 						)
 	if (! nogroup){
 	   dfr$groupvar <- group
@@ -138,7 +161,12 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	
 	
 	dfr <- clean_summary_table( dfr , RR , se , Nimp )	
-				
+
+	#@@@@***
+	# multiple groupings
+	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
+	#@@@@***					
+	
 	dfr.cov <- dfr							
 
 	#*****

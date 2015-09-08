@@ -47,11 +47,27 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 	    group <- "one"
 	    group_values <- c(1)
 			}
-    group_index <- which( varnames %in% group )
+			
+
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
+
+				
 				
 	#**************************************************************************#
 	# Rcpp call
@@ -77,6 +93,9 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 		# histobj[[gg]] <- h1$xname
 					}
 	names(histobj) <- paste0( vars , "_" , group , group_values )	
+	
+	
+	
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()

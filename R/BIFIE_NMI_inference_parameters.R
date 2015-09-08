@@ -13,11 +13,18 @@ BIFIE_NMI_inference_parameters <- function( parsM , parsrepM , fayfac ,
 	u_diag <- array( u_diag , dim = c( NV , Nimp_NMI[2] , Nimp_NMI[1] ) )
 	u_diag <- aperm( u_diag , c(3,2,1) )
 	u <- array( 0 , dim=c( Nimp_NMI[1] , Nimp_NMI[2] , NV , NV ) )
+
+	
 	for (ii in seq( 1 , Nimp_NMI[1] ) ){
 		for (jj in seq( 1 , Nimp_NMI[2] ) ){
+			  if (NV>1){	
 					diag(u[ii,jj,,]) <- u_diag[ii,jj,]		
+						}
+			   if (NV==1){
+					u[ii,jj,1,1] <- u_diag[ii,jj,1]
+							}
 										}
-								}	
+								}								
 	qhat <- array( parsM , dim=c(NV , Nimp_NMI[2] , Nimp_NMI[1] ) )
 	qhat <- aperm( qhat , c(3,2,1) )								
 	# inference using miceadds package

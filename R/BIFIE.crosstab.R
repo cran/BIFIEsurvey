@@ -55,11 +55,27 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	    group <- "one"
 	    group_values <- c(1)
 			}
-    group_index <- which( varnames %in% group )
+			
+
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
+				
+				
 	GG <- length(group_values)
 				
 					
@@ -234,6 +250,20 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 		dfr4[ii , "df" ] <- m1["df"] 
 		dfr4[ ii , "p"] <- m1["p"]
 				}		
+				
+
+	#@@@@***
+	# multiple groupings
+	dfr1 <- BIFIE_table_multiple_groupings( dfr1 , res00 )
+	#@@@@***
+
+	#@@@@***
+	# multiple groupings
+	dfr2 <- BIFIE_table_multiple_groupings( dfr2 , res00 )
+	#@@@@***
+						
+				
+				
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )

@@ -38,7 +38,7 @@ then use the variable \code{one} for specifying it (see Examples).
 	providing \code{dep} and \code{pre}. Note that there is 
    additional computation time needed for model matrix creation.}
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping
@@ -87,7 +87,7 @@ A list with following entries
 
 \seealso{
 \code{\link[survey:svyglm]{survey::svyglm}},
-\code{\link[stats:glm]{glm}}
+\code{\link[stats:glm]{stats::glm}}
 
 For linear regressions see \code{\link{BIFIE.linreg}}.
 }

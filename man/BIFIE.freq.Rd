@@ -32,7 +32,7 @@ Object of class \code{BIFIEdata}
 Vector of variables for which statistics should be computed
 }
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping
@@ -99,6 +99,11 @@ summary(res1)
 res2 <- BIFIE.freq( bdat , vars=c("lang" , "books" , "migrant" ) , 
               group="female" , group_values=0:1 )
 summary(res2)                    
+
+# Frequencies splitted by gender and likesc
+res3 <- BIFIE.freq( bdat , vars=c("lang" , "books" , "migrant" ) , 
+              group=c("likesc","female")  )
+summary(res3)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

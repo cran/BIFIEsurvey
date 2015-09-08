@@ -30,7 +30,7 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 				}	
 	
 	vars_index <- unlist( sapply( vars , FUN = function(vv){ 
-						which( varnames == vv ) } ) )
+						which( varnames == vv ) } , simplify=FALSE) )
     # vars values
 	VV <- length(vars)
 
@@ -41,11 +41,29 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 	    group <- "one"
 	    group_values <- c(1)
 			}
-    group_index <- which( varnames %in% group )
+			
+
+	#@@@@***
+    group_index <- match( group , varnames )
+	#@@@@***
+
     if ( is.null(group_values ) ){ 
-		t1 <- fasttable( dat1[ , group_index ] )				  
+		t1 <- fasttable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
+	
+	#@@@@***
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00$datalistM -> datalistM 
+	res00$group_index -> group_index
+	res00$GR -> GR 
+	res00$group_values -> group_values
+	res00$group -> group
+	#@@@@***			
+
+
+				
+				
 	
 	if ( is.null(breaks) ){
 	    breaks <- as.numeric(seq( 0 , 1 , .01 ))
@@ -74,6 +92,11 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 	colnames(dfr)[-1] <- paste0( rep( vars , each =GG ) ,
 						"_" , group , rep( group_values , VV ) )
 	
+	#@@@@***
+	# multiple groupings
+	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
+	#@@@@***
+						
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()

@@ -87,7 +87,9 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	if (jktype == "RW_PISA"){
 	      jkrep <- NULL
 	      jkzone <- NULL
-		  wgt <- "W_FSTUWT"
+		  if ( is.null(wgt)){
+			wgt <- "W_FSTUWT"
+					}				
 		  jkfac <- NULL
 		  repvars <- grep( wgtrep , colnames( data ) )
 		  RR <- length(repvars)
@@ -110,7 +112,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		cat("+++ Generate replicate weights\n")
 		cat(paste0("|" , paste0(rep("*",prblen), collapse="") , "|\n|")) ; flush.console()	
 		addname <- 10^( floor( log( RR+.5 , 10 ) )  + 1 )
-		data[ , jkzone ] <- match( data[ , jkzone ] , unique( data[ , jkzone] ) )
+		data[ , jkzone ] <- match( data[ , jkzone ] , unique( data[ , jkzone] ) )		
 		datarep <- .Call( "bifie_jack_timss" , wgt_= data[,wgt] , data[,jkzone]-1 , data[,jkrep] , RR , jkfac ,
 						prbar , PACKAGE="BIFIEsurvey" )
 		colnames(datarep) <- paste0("w_fstr" , substring( paste0(addname +1:RR),2) )		
@@ -163,6 +165,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 					}
 					
 	#*** create BIFIE.data object
+	
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgt ] , wgtrep = datarep , fayfac = fayfac ,
 							cdata=cdata , NMI = FALSE )
 	bifiedat$CALL <- cl

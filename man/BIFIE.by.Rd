@@ -41,7 +41,7 @@ arguments. The value of this function must be a vector.
 	value of \code{userfct}.	
 }
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping

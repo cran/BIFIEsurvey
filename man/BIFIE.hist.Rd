@@ -10,7 +10,7 @@ Histogram
 
 \description{
 Computes a histogram with same output as in 
-\code{\link[graphics:hist]{hist}} (\pkg{graphics}).
+\code{\link[graphics:hist]{graphics::hist}}.
 Statistical inference is not conducted for this method.
 }
 
@@ -33,7 +33,7 @@ Vector of variables for which statistics should be computed.
 Optional vector of breaks. Otherwise, it will be automatically defined.
 }
   \item{group}{
-Optional grouping variable
+Optional grouping variable(s)
 }
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping
@@ -73,7 +73,7 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[graphics:hist]{hist}}	
+\code{\link[graphics:hist]{graphics::hist}}	
 }
 
 

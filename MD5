@@ -1,4 +1,4 @@
-7ce757a2d470fa3769988e459ca61f96 *DESCRIPTION
+c81fefbf9b034cda412e753cf8867829 *DESCRIPTION
 bcac5fd7b93713fc3a01b17e16d1b2ba *NAMESPACE
 0b6312f9b4d5177c053c91eaf237c880 *R/BIFIE.BIFIEdata2datalist.R
 784bc25e9b1c98ddbac30085686c1829 *R/BIFIE.bifiedata2bifiecdata.R
@@ -54,7 +54,8 @@ ab66164dc55cd7409b629270336b01f2 *R/zzz.R
 8132f0403a3f66806e6e2a6f5b87f8f2 *data/data.timss4.rda
 0e9eacb0554791e4ecd3f59a496b5462 *data/data.timssrep.rda
 75c019ab99e5c9d8e282bcfcd38f4b91 *data/datalist
-953c21adc12fc0eeed5b445c6748dd8c *inst/NEWS
+4060f111df7f3f284c9bdc2ce85dbbd2 *inst/CITATION
+aed9665e343af14e251f8892b8c09b62 *inst/NEWS
 500cfb614aa3e417f71ed2798e65e76a *man/BIFIE.BIFIEdata2BIFIEcdata.Rd
 6b0d5dc7a26d3250388a3dd87eab0c04 *man/BIFIE.by.Rd
 e3e9d5843f10d110bd9e81a85d528b51 *man/BIFIE.correl.Rd
@@ -76,7 +77,7 @@ aff06400aea075a3a256ee8382ad4ce2 *man/BIFIE.twolevelreg.Rd
 21b2b74fcf05b697ef86a3af24e0216d *man/BIFIE.univar.Rd
 e3cb74611457c1c16f67d4683a3d5858 *man/BIFIE.univar.test.Rd
 a4c4d2868050f311e4b63fcdd1f8156a *man/BIFIE.waldtest.Rd
-3592f095a67b4c7e6bcfa4279f3e9bba *man/BIFIEsurvey-package.Rd
+9a8d61a676a71f9e222f96a3e520e65f *man/BIFIEsurvey-package.Rd
 44745c7728e27d5d6f29727e933efef5 *man/bifietable.Rd
 ed166fc0ea3151dd9b122a540301a73e *man/data.bifie.Rd
 f48c135bdbb707a3522b64eace36ed0d *man/data.pisaNLD.Rd

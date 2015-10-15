@@ -53,7 +53,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 				}
 	
 	#@@@@***
-	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )				
+	res00 <- BIFIE_create_pseudogroup( datalistM , group , group_index , group_values )	
 	res00$datalistM -> datalistM 
 	res00$group_index -> group_index
 	res00$GR -> GR 

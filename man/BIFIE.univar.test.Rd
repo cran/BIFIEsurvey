@@ -65,7 +65,7 @@ A list with following entries
 
 \examples{
 #############################################################################
-# EXAMPLE 1: Imputed TIMSS dataset
+# EXAMPLE 1: Imputed TIMSS dataset - One grouping variable
 #############################################################################
 
 data(data.timss1)
@@ -94,6 +94,36 @@ summary(tres2)
 res3 <- BIFIE.univar( bdat , vars=c("ASMMAT") )
 summary(res3)
 tres3 <- BIFIE.univar.test(res3)
+
+#############################################################################
+# EXAMPLE 2: Imputed TIMSS dataset - Two grouping variables
+#############################################################################
+
+data(data.timss1)
+data(data.timssrep)
+
+# create BIFIE.dat object
+bdat <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
+           wgtrep=data.timssrep[, -1 ] )
+
+#**** Model 1: 3 variables splitted by book and female
+res1 <- BIFIE.univar(bdat, vars=c("ASMMAT", "ASSSCI","scsci"), group=c("books","female"))
+summary(res1)
+
+# analysis of variance
+tres1 <- BIFIE.univar.test(res1)
+summary(tres1)
+
+# extract data frame with Cohens d statistic
+dstat <- tres1$stat.dstat
+
+# extract d values for gender comparisons with same value of books
+# -> 'books' refers to the first variable
+ind <- which( 
+  unlist( lapply( strsplit( dstat$groupval1, "#"), FUN=function(vv){vv[1]}) ) ==
+  unlist( lapply( strsplit( dstat$groupval2, "#"), FUN=function(vv){vv[1]}) )
+        )
+dstat[ ind , ]
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

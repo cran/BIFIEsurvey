@@ -5,7 +5,7 @@ BIFIE_table_multiple_groupings <- function( dfr , res00 ){
 	if (GR>1){
 		ind1 <- which( colnames(dfr) == "groupvar" )
 		ind2 <- which( colnames(dfr) == "groupval" )
-		N2 <- ncol(dfr)		
+		N2 <- ncol(dfr)			
 		dfr1 <- dfr[ , seq( 1 , ind1 - 1 ) , drop=FALSE ]
 		for (gg in 1:GR){
 			# gg <- 1

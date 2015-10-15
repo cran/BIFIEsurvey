@@ -13,10 +13,12 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	# data.list <- res0$data.list
 	# Nimp_NMI <- res0$Nimp_NMI	
 	
+	fayfac0 <- fayfac
+	
 	if ( ( ! is.null(wgtrep) ) & ( is.null(fayfac) ) ){
 		fayfac <- 1 
 				}
-	fayfac0 <- fayfac			
+				
 	
 	#*** list of multiply imputed datasets
 	if ( ( is.list(data) ) & ( ! is.data.frame(data) ) ){
@@ -98,6 +100,11 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		  pv_vars <- which( substring( colnames(data) , 1 , nc1 ) == pvpre[1] )
 		  pv_vars <- gsub( pvpre[1] , "" , colnames(data)[ pv_vars ] )
 #		  cdata <- FALSE
+		datarep <- data[ , repvars ]
+        RR <- ncol(datarep)		
+		fayfac <- 1 /  RR / ( 1 - .5)^2
+        data <- data[ , - repvars ]	
+
 				}								
 	#******** generate replicate weights
 	if ( jktype != "RW_PISA") {
@@ -118,15 +125,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		colnames(datarep) <- paste0("w_fstr" , substring( paste0(addname +1:RR),2) )		
 		cat("|\n")
 					}
-	if ( jktype == "RW_PISA") {
-		datarep <- data[ , repvars ]
-        RR <- ncol(datarep)		
-		fayfac <- 1 /  RR / ( 1 - .5)^2
-#        if ( cdata ){
-         if (TRUE ){
-            data <- data[ , - repvars ]							
-					}
-		       }
+
 	#******** generate replicated datasets for datasets
 	if ( is.null( pv_vars) ){ 
 				datalist <- dataL  

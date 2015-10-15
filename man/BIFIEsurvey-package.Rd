@@ -26,7 +26,7 @@ Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
 \tabular{ll}{
 Package: \tab \pkg{BIFIEsurvey} \cr
 Type: \tab Package\cr
-Version: \tab 1.5\cr
+Version: \tab 1.6\cr
 Date: \tab 2015 \cr
 License: \tab GPL (>=2)\cr
 URL: \tab \url{http://www.bifie.at} \cr
@@ -74,6 +74,11 @@ replicated statistics
 BIFIE [aut]
 
 \url{http://www.bifie.at}
+
+Bildungsforschung, Innovation & Entwicklung des oesterreichischen Schulwesens
+
+Federal Institute for Educational Research, Innovation and 
+Development of the Austrian School System
 
 Maintainer: Alexander Robitzsch <a.robitzsch@bifie.at>
 }

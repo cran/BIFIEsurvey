@@ -14,6 +14,15 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	sumweightM <- res5$output$sumweightM
 	GG <- res5$GG
 	group_values <- ( res5$stat$groupval )[1:GG]
+	if( res5$group == "pseudogroup" ){
+		is_pseudogroup <- TRUE
+						} else {
+		is_pseudogroup <- FALSE				
+						}						
+	if ( is.null( group_values) ){
+		group_values <- 1:GG
+								}
+	
 	mean1repM <- res5$output$mean1repM
 	sd1repM <- res5$output$sd1repM
 	sumweightrepM <- res5$output$sumweightrepM
@@ -26,6 +35,7 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	N <- res5$N
 	Nimp <- res5$Nimp
 
+	
 	#*****
 	# Rcpp call
 	res <- .Call("bifie_test_univar" , mean1M , sd1M , sumweightM , GG , group_values ,
@@ -114,7 +124,23 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	
 	if (RR==0){				
 		dfr$d <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
-				}				
+				}
+
+	if ( is_pseudogroup	){
+			stat <- res5$stat[ 1:GG , ]
+			stat$pseudogroup <- 1:GG
+			ind1 <- grep( "groupvar" , colnames(stat) )
+			ind2 <- grep( "groupval" , colnames(stat) )
+
+			groupvar_pseudo <- apply( stat[ , ind1 ] , 1 , FUN = function(hh){ paste0( hh , collapse="#") } )
+			groupval_pseudo <- apply( stat[ , ind2 ] , 1 , FUN = function(hh){ paste0( hh , collapse="#") } )
+			dfr$group <- groupvar_pseudo[1]
+			dfr$groupval1 <- groupval_pseudo[ dfr$groupval1 ]		
+			dfr$groupval2 <- groupval_pseudo[ dfr$groupval2 ]
+		
+						}
+
+			
 	stat.dstat <- dfr	
 	
 	#*****

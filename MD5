@@ -1,4 +1,4 @@
-801c2db99ff8a31b46464d94d4455e6b *DESCRIPTION
+1e216c3d015e2a7cf84d6391791ced85 *DESCRIPTION
 bcac5fd7b93713fc3a01b17e16d1b2ba *NAMESPACE
 0b6312f9b4d5177c053c91eaf237c880 *R/BIFIE.BIFIEdata2datalist.R
 784bc25e9b1c98ddbac30085686c1829 *R/BIFIE.bifiedata2bifiecdata.R
@@ -21,11 +21,12 @@ c5a58587338ee014c5d9904652d3fa3d *R/BIFIE.pathmodel.R
 bc19688d85ee18c0d3a37838bf433d57 *R/BIFIE.progressbar.R
 43b58b6976e63ee855d8298fb075afcb *R/BIFIE.summary.R
 0bc38cfdde23f8ab68f17aecc3094ce3 *R/BIFIE.twolevelreg.R
-09ecb29547ec68d04b097cebc1d58eda *R/BIFIE.univar.R
-451f65a4cb5c1cf143eed3a4c8662e90 *R/BIFIE.univar.test.R
+8cb81b0b1800edba776be4b7d8ce9278 *R/BIFIE.univar.R
+e774fece768c275c127dfdeadc4c3549 *R/BIFIE.univar.test.R
 d1b3f1aa7d6d7eccf1f2e365963345f3 *R/BIFIE.waldtest.R
 c051f85835c321fd5a2c13ceb501e8e5 *R/BIFIE_NMI_inference_parameters.R
 a57a54ad434f8a5dc3b053ed44192d22 *R/BIFIE_by_helper_pureR.R
+0a7d08b91329d7c58eb1f2de4f3d5922 *R/BIFIE_create_pseudogroup.R
 665a0828c6a5a90f7bc140a37d405f5f *R/BIFIE_data_nested_MI.R
 0a7d08b91329d7c58eb1f2de4f3d5922 *R/BIFIE_multiple_groupings_helper.R
 f3961be56dc863bb7d5604d373e804d3 *R/BIFIE_table_multiple_groupings.R
@@ -55,7 +56,7 @@ ab66164dc55cd7409b629270336b01f2 *R/zzz.R
 0e9eacb0554791e4ecd3f59a496b5462 *data/data.timssrep.rda
 75c019ab99e5c9d8e282bcfcd38f4b91 *data/datalist
 4060f111df7f3f284c9bdc2ce85dbbd2 *inst/CITATION
-a4c1a809c8e2743137a4a7737c8fbb23 *inst/NEWS
+d86270d7e984f37ec49ef0ae3f034f6a *inst/NEWS
 500cfb614aa3e417f71ed2798e65e76a *man/BIFIE.BIFIEdata2BIFIEcdata.Rd
 6b0d5dc7a26d3250388a3dd87eab0c04 *man/BIFIE.by.Rd
 e3e9d5843f10d110bd9e81a85d528b51 *man/BIFIE.correl.Rd
@@ -77,7 +78,7 @@ aff06400aea075a3a256ee8382ad4ce2 *man/BIFIE.twolevelreg.Rd
 21b2b74fcf05b697ef86a3af24e0216d *man/BIFIE.univar.Rd
 742f8d3c1f4bc7e87a41732cfb5c9d15 *man/BIFIE.univar.test.Rd
 a4c4d2868050f311e4b63fcdd1f8156a *man/BIFIE.waldtest.Rd
-39c7241cc6624995dc2bcf366e4c70c8 *man/BIFIEsurvey-package.Rd
+eb6c5a7f8087f9ae835cbd4556522a96 *man/BIFIEsurvey-package.Rd
 44745c7728e27d5d6f29727e933efef5 *man/bifietable.Rd
 ed166fc0ea3151dd9b122a540301a73e *man/data.bifie.Rd
 f48c135bdbb707a3522b64eace36ed0d *man/data.pisaNLD.Rd

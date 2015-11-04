@@ -9,6 +9,8 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	res5 <- BIFIE.method	
 	if (res5$group == "one"){ stop("This function can only be applied with a grouping variable.\n")}
 	
+	if (BIFIE.method$RR < 2){ wald_test <- FALSE }
+	
 	mean1M <- res5$output$mean1M
 	sd1M <- res5$output$sd1M
 	sumweightM <- res5$output$sumweightM
@@ -72,8 +74,6 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	# extract replicated statistics for d and eta squared							
 	stat.eta2 <- dfr
 	
-	
-	
 	#****
 	# output d values
 	group_values_matrix <- res$group_values_matrix	
@@ -101,29 +101,33 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
     dfr$SD <- sqrt( ( h3^2 + h4^2 ) / 2 )		
 	dfr$d <- res$dstatL$pars
 	dfr$d_SE <- res$dstatL$pars_se
-	dfr$t <- dfr$d / dfr$d_SE
-	dfr$df <- rubin_calc_df( res$dstatL , Nimp )	
-	dfr$p <- pt(  - abs(dfr$t ) , df = dfr$df)*2
+	dfr$d_t <- dfr$d / dfr$d_SE
+	dfr$d_df <- rubin_calc_df( res$dstatL , Nimp )	
+	dfr$d_p <- pt(  - abs(dfr$d_t ) , df = dfr$d_df)*2
 	# dfr$p <- pnorm(  - abs(dfr$t ) )*2
-	dfr$fmi <- res$dstatL$pars_fmi
-	dfr$VarMI <- res$dstatL$pars_varBetween
-	dfr$VarRep <- res$dstatL$pars_varWithin
+	dfr$d_fmi <- res$dstatL$pars_fmi
+	dfr$d_VarMI <- res$dstatL$pars_varBetween
+	dfr$d_VarRep <- res$dstatL$pars_varWithin
+
+
+	
 	if ( BIFIE.method$NMI ){
 		res1 <- BIFIE_NMI_inference_parameters( parsM= res$dstatM, parsrepM= res$dstatrepM , 
 					fayfac=fayfac , RR=RR , Nimp=BIFIE.method$Nimp , 
 					Nimp_NMI=BIFIE.method$Nimp_NMI , comp_cov = FALSE )									
 		dfr$d <- res1$pars
 		dfr$d_SE <- res1$pars_se
-		dfr$t <- round( dfr$d / dfr$d_SE , 2 )
-		dfr$df <- res1$df
-		dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
-		dfr$fmi <- res1$pars_fmi
-		dfr$VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
-		dfr$VarRep <- res1$pars_varWithin	
+		dfr$d_t <- round( dfr$d / dfr$d_SE , 2 )
+		dfr$d_df <- res1$d_df
+		dfr$d_p <- pt( - abs( dfr$d_t ) , df=dfr$d_df) * 2			
+		dfr$d_fmi <- res1$pars_fmi
+		dfr$d_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
+		dfr$d_VarRep <- res1$pars_varWithin	
 						}		
-	
-	if (RR==0){				
-		dfr$d <- dfr$SE <- dfr$fmi <- dfr$VarMI <- dfr$VarRep <- NULL
+
+	if ( ( ! res5$se ) &  ( RR==0 ) ){						
+	# if (RR==0){				
+		dfr$d_SE <- dfr$d_fmi <- dfr$d_VarMI <- dfr$d_VarRep <- NULL
 				}
 
 	if ( is_pseudogroup	){
@@ -175,7 +179,7 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 			"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac ,
 			"NMI" = BIFIE.method$NMI , "Nimp_NMI" = BIFIE.method$Nimp_NMI , 
-			"GG"=GG , "parnames" = parnames , "CALL"=cl)
+			"GG"=GG , "parnames" = parnames , "CALL"=cl , wald_test = wald_test )
 	class(res1) <- "BIFIE.univar.test"
 	return(res1)
 		}
@@ -185,9 +189,11 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 # summary
 summary.BIFIE.univar.test <- function( object , digits=4 , ... ){
     BIFIE.summary(object)
-	cat("F Test (ANOVA) \n")	
-	obji <- object$stat.F
-	print.object.summary( obji , digits=digits )	
+	if ( object$wald_test ){
+		cat("F Test (ANOVA) \n")	
+		obji <- object$stat.F
+		print.object.summary( obji , digits=digits )	
+							}
 	cat("\nEta Squared \n")	
 	obji <- object$stat.eta
 	print.object.summary( obji , digits=digits )

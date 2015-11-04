@@ -226,7 +226,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	res1 <- list( "stat" = dfr , "stat_M" = stat_M , "stat_SD" = stat_SD , 
 			"output" = res , "timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac , "parnames" = parnames ,
-			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
+			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , "se"=se ,
 			"GG" = GG , "VV"=VV , "vars" = vars , "group" = group , "CALL"=cl)
 	class(res1) <- "BIFIE.univar"
 	return(res1)

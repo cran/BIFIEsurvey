@@ -114,7 +114,7 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 			dfr$perc_SE <- res1$pars_se
 			# dfr$t <- round( dfr$perc / dfr$perc_SE , 2 )
 			dfr$perc_df <- res1$df
-			# dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+			# dfr$p <- stats::pt( - abs( dfr$t ) , df=dfr$df) * 2			
 			dfr$perc_fmi <- res1$pars_fmi
 		    dfr$perc_fmi_St1 <- res1$pars_fmiB
 		    dfr$perc_fmi_St2 <- res1$pars_fmiW						

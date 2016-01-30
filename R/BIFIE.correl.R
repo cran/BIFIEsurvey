@@ -85,7 +85,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	dfr$t <- round( dfr$cor / dfr$cor_SE , 2 )
 	dfr$df <- rubin_calc_df( res$cor1 , Nimp )
 	# dfr$p <- pnorm( - abs( dfr$t ) ) * 2		
-	dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+	dfr$p <- stats::pt( - abs( dfr$t ) , df=dfr$df) * 2			
 	dfr$cor_fmi <- res$cor1$pars_fmi
 	dfr$cor_VarMI <- res$cor1$pars_varBetween
 	dfr$cor_VarRep <- res$cor1$pars_varWithin	
@@ -101,7 +101,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		dfr$cor_SE <- res1$pars_se
 		dfr$t <- round( dfr$cor / dfr$cor_SE , 2 )
 		dfr$df <- res1$df
-		dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+		dfr$p <- stats::pt( - abs( dfr$t ) , df=dfr$df) * 2			
 		dfr$cor_fmi <- res1$pars_fmi
 		dfr$cor_fmi_St1 <- res1$pars_fmiB
 		dfr$cor_fmi_St2 <- res1$pars_fmiW
@@ -150,7 +150,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		dfr$cov_SE <- res1$pars_se
 		dfr$t <- round( dfr$cov / dfr$cov_SE , 2 )
 		dfr$df <- res1$df
-		dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+		dfr$p <- stats::pt( - abs( dfr$t ) , df=dfr$df) * 2			
 		dfr$cov_fmi <- res1$pars_fmi
 		dfr$cov_fmi_St1 <- res1$pars_fmiB
 		dfr$cov_fmi_St2 <- res1$pars_fmiW

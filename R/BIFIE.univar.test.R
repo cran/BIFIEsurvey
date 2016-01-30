@@ -103,8 +103,7 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	dfr$d_SE <- res$dstatL$pars_se
 	dfr$d_t <- dfr$d / dfr$d_SE
 	dfr$d_df <- rubin_calc_df( res$dstatL , Nimp )	
-	dfr$d_p <- pt(  - abs(dfr$d_t ) , df = dfr$d_df)*2
-	# dfr$p <- pnorm(  - abs(dfr$t ) )*2
+	dfr$d_p <- stats::pt(  - abs(dfr$d_t ) , df = dfr$d_df)*2
 	dfr$d_fmi <- res$dstatL$pars_fmi
 	dfr$d_VarMI <- res$dstatL$pars_varBetween
 	dfr$d_VarRep <- res$dstatL$pars_varWithin
@@ -119,7 +118,7 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 		dfr$d_SE <- res1$pars_se
 		dfr$d_t <- round( dfr$d / dfr$d_SE , 2 )
 		dfr$d_df <- res1$d_df
-		dfr$d_p <- pt( - abs( dfr$d_t ) , df=dfr$d_df) * 2			
+		dfr$d_p <- stats::pt( - abs( dfr$d_t ) , df=dfr$d_df) * 2			
 		dfr$d_fmi <- res1$pars_fmi
 		dfr$d_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
 		dfr$d_VarRep <- res1$pars_varWithin	

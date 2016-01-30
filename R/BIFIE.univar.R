@@ -60,7 +60,6 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	res00$group_values -> group_values
 	res00$group -> group
 	#@@@@***			
-
 				
 	#**************************************************************************#
 	#****************** no grouping variable **********************************#
@@ -83,16 +82,17 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		dfr[,vv] <- ifelse( dfr[,vv] > 1000 , Inf , dfr[,vv] )
 		
 		dfr$M_t <- dfr$M / dfr$M_SE
-		dfr$M_p <- 2*pt( - abs( dfr$M_t) , df = dfr$M_df )			
-		dfr0 <- data.frame(		"M_fmi" = res$mean1_fmi   , "M_VarMI"= res$mean1_varBetween , "M_VarRep"= res$mean1_varWithin   ,
-				"SD" = res$sd1 , "SD_SE" = res$sd1_se )
+		dfr$M_p <- 2* stats::pt( - abs( dfr$M_t) , df = dfr$M_df )			
+		dfr0 <- data.frame(		"M_fmi" = res$mean1_fmi   , 
+		        "M_VarMI"= res$mean1_varBetween , "M_VarRep"= res$mean1_varWithin   ,
+				"SD" = res$sd1 , "SD_SE" = res$sd1_se )	
 		dfr <- cbind( dfr ,  dfr0 )				
 		dfr$SD_df <- round( (Nimp-1)*( 1 +  (Nimp*res$sd1_varWithin )/ ( Nimp+1) / res$sd1_varBetween )^2  , 2 )
 		vv <- "SD_df"
 		dfr[,vv] <- ifelse( dfr[,vv] > 1000 , Inf , dfr[,vv] )
 
 		dfr$SD_t <- dfr$M / dfr$SD_SE
-		dfr$SD_p <- 2*pt( - abs( dfr$SD_t) , df = dfr$SD_df )							
+		dfr$SD_p <- 2*stats::pt( - abs( dfr$SD_t) , df = dfr$SD_df )							
 		dfr0 <- data.frame(		"SD_fmi" = res$sd1_fmi   , "SD_VarMI"= res$sd1_varBetween , "SD_VarRep"= res$sd1_varWithin            
 					)
 
@@ -101,12 +101,12 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 			# M
 			res1 <- BIFIE_NMI_inference_parameters( parsM=res$mean1M , parsrepM=res$mean1repM , 
 						fayfac=fayfac , RR=RR , Nimp=Nimp , 
-						Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )			
+						Nimp_NMI=BIFIEobj$Nimp_NMI , comp_cov = FALSE )						
 			dfr$M <- res1$pars
 			dfr$M_SE <- res1$pars_se
 			dfr$M_df <- res1$df
 			dfr$M_t <- res1$pars / res1$pars_se 
-			dfr$M_p <- 2*pt( - abs( dfr$M_t) , df = res1$df )			
+			dfr$M_p <- 2*stats::pt( - abs( dfr$M_t) , df = res1$df )			
 			dfr$M_fmi <- res1$pars_fmi
 			dfr$M_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
 			dfr$M_VarRep <- res1$pars_varWithin		
@@ -118,7 +118,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 			dfr$SD_SE <- res1$pars_se
 			dfr$SD_df <- res1$df
 			dfr$SD_t <- res1$pars / res1$pars_se 
-			dfr$SD_p <- 2*pt( - abs( dfr$SD_t) , df = res1$df )						
+			dfr$SD_p <- 2*stats::pt( - abs( dfr$SD_t) , df = res1$df )						
 			dfr$SD_fmi <- res1$pars_fmi
 			dfr$SD_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
 			dfr$SD_VarRep <- res1$pars_varWithin									
@@ -146,14 +146,14 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		dfr[,vv] <- ifelse( dfr[,vv] > 1000 , Inf , dfr[,vv] )
 
 		dfr$M_t <- dfr$M / dfr$M_SE
-		dfr$M_p <- 2*pt( - abs( dfr$M_t) , df = dfr$M_df )			
+		dfr$M_p <- 2*stats::pt( - abs( dfr$M_t) , df = dfr$M_df )			
 		dfr <- data.frame( dfr ,	"M_fmi" = res$mean1_fmi   , "M_VarMI"= res$mean1_varBetween , "M_VarRep"= res$mean1_varWithin   ,
 				"SD" = res$sd1 , "SD_SE" = res$sd1_se )
 		dfr$SD_df <- round( (Nimp-1)*( 1 +  (Nimp*res$sd1_varWithin )/ ( Nimp+1) / res$sd1_varBetween )^2  , 2 )
 		vv <- "SD_df"
 		dfr[,vv] <- ifelse( dfr[,vv] > 1000 , Inf , dfr[,vv] )
 		dfr$SD_t <- dfr$M / dfr$SD_SE
-		dfr$SD_p <- 2*pt( - abs( dfr$SD_t) , df = dfr$SD_df )							
+		dfr$SD_p <- 2*stats::pt( - abs( dfr$SD_t) , df = dfr$SD_df )							
 		dfr <- data.frame( dfr  ,	"SD_fmi" = res$sd1_fmi   , "SD_VarMI"= res$sd1_varBetween , "SD_VarRep"= res$sd1_varWithin            
 					 )
 						
@@ -166,7 +166,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 			dfr$M_SE <- res1$pars_se
 			dfr$M_df <- res1$df
 			dfr$M_t <- res1$pars / res1$pars_se 
-			dfr$M_p <- 2*pt( - abs( dfr$M_t) , df = res1$df )						
+			dfr$M_p <- 2*stats::pt( - abs( dfr$M_t) , df = res1$df )						
 			dfr$M_fmi <- res1$pars_fmi
 			dfr$M_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
 			dfr$M_VarRep <- res1$pars_varWithin		

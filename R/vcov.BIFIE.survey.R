@@ -19,7 +19,7 @@ vcov.BIFIEsurvey <- function( object, type=NULL , eps=1E-10 , avoid.singul = FAL
 						}		
 	if ( avoid.singul ){			
 #		eps <- 1E-10
-		parsrepM <- parsrepM * ( 1 + runif(prod(dim(parsrepM)) , 0 , eps ) )
+		parsrepM <- parsrepM * ( 1 + stats::runif(prod(dim(parsrepM)) , 0 , eps ) )
 				}
 	
 	fayfac <- res1$fayfac

@@ -25,17 +25,17 @@ BIFIE.derivedParameters <- function( BIFIE.method , derived.parameters , type=NU
 	FF <- length(derived.parameters)
 	if (FF>1){
 	for (ff in 2:FF){
-		t1 <- terms( allformulas)    
+		t1 <- stats::terms( allformulas)    
 		t2 <- paste( c( attr( t1 , "term.labels" ) , 
-			attr(  terms( derived.parameters[[ff]] ) , "term.labels" )  ),
+			attr(  stats::terms( derived.parameters[[ff]] ) , "term.labels" )  ),
 			collapse= " + " )
-		allformulas  <- as.formula( paste( " ~ 0 + " , t2 ) )
+		allformulas  <- stats::as.formula( paste( " ~ 0 + " , t2 ) )
 				}
 				}
 	# create matrices of derived parameters
-	der.pars <- model.matrix( allformulas , as.data.frame( t(pars0) ) )
+	der.pars <- stats::model.matrix( allformulas , as.data.frame( t(pars0) ) )
 	colnames(der.pars) <- names(derived.parameters)
-	der.pars.rep <- model.matrix( allformulas , as.data.frame( t(pars0.rep) ) )
+	der.pars.rep <- stats::model.matrix( allformulas , as.data.frame( t(pars0.rep) ) )
 	colnames(der.pars.rep) <- names(derived.parameters)
 	fayfac <- res1$fayfac
 	NP <- ncol(der.pars)
@@ -67,7 +67,7 @@ if (TRUE){
 	stat$t <- stat$coef / stat$se
 	stat$df <- rubin_calc_df2( B= diag(var_b) , W=diag(var_w) , Nimp , digits=2)
 #	stat$p <- 2* pnorm( - abs( stat$t ) )
-	stat$p <- 2*pt( - abs(stat$t) , df = stat$df )
+	stat$p <- 2*stats::pt( - abs(stat$t) , df = stat$df )
 	stat$fmi <-  ( 1+1/Nimp) * diag(var_b) / ( stat$se^2 + eps )           
 	stat$VarMI <- diag( var_b )
 	stat$VarRep <- diag( var_w )               
@@ -81,7 +81,7 @@ if (TRUE){
         stat$se <- res0$pars_se		
 		stat$df <- res0$df
 		stat$t <- res0$pars / res0$pars_se
-		stat$p <- 2*pt( - abs(stat$t) , df = stat$df )
+		stat$p <- 2*stats::pt( - abs(stat$t) , df = stat$df )
 		stat$fmi <- res0$pars_fmi
 		stat$VarMI <- res0$pars_varBetween1 +	res0$pars_varBetween2
 		stat$fmi_St1 <- res0$pars_fmiB
@@ -117,7 +117,7 @@ summary.BIFIE.derivedParameters <- function( object , digits=4 , ... ){
 		# ff <- 1
 		# cat( paste0( parnames[ff]  , paste( derived.parameters[[ff]] ) ) , "\n") 
 		cat( paste0(  object$parnames[ff] , " := " , 
-					attr(  terms( object$derived.parameters[[ff]] ) , "term.labels" )  , 
+					attr(  stats::terms( object$derived.parameters[[ff]] ) , "term.labels" )  , 
 						collapse=" " ) , 
 								"\n") 	
 						}

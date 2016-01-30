@@ -29,11 +29,11 @@ BIFIE.data.boot <- function( data , wgt=NULL ,  pv_vars = NULL ,
 	# cumulated weights
 	cumwgt <- cumsum(wgt)
 	# random numbers
-	rand_wgt <- N*matrix( runif(N*Nboot) , nrow=N , ncol=Nboot ) 
+	rand_wgt <- N*matrix( stats::runif(N*Nboot) , nrow=N , ncol=Nboot ) 
 	
 	#****
 	# apply bootstrap subfunction
-	cat("+++ Generate bootstrap samples\n"); flush.console()
+	cat("+++ Generate bootstrap samples\n"); utils::flush.console()
 	# datarep <- bifie_boot( cumwgt , rand_wgt )$wgtM
 	datarep <- .Call("bifie_boot", cumwgt , rand_wgt , PACKAGE="BIFIEsurvey")$wgtM
 	RR <- Nboot

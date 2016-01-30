@@ -160,22 +160,26 @@ BEGIN_RCPP
        
                 
      return Rcpp::List::create(   
-         _["mean1"] = mean1 ,  
-         _["mean1_se"] = mean1_se ,  
-         _["mean1_varWithin"] = mean1_varWithin ,  
-         _["mean1_varBetween"] = mean1_varBetween ,  
-         _["mean1_fmi"] = mean1_fmi ,      
-         _["mean1M"] = mean1M ,   
-         _["mean1_varM"] = mean1_varM   ,  
-         _["mean1repM"] = mean1repM ,  
-         _["sd1"] = sd1 ,  
-         _["sd1_se"] = sd1_se ,       
-         _["sd1_varWithin"] = sd1_varWithin ,  
-         _["sd1_varBetween"] = sd1_varBetween ,  
-         _["sd1_fmi"] = sd1_fmi ,      
-         _["sd1M"] = sd1M ,   _["sd1_varM"] = sd1_varM  ,   _["sd1repM"] = sd1repM ,  
-         _["sumweightrepM"] = sumweightrepM ,  _["sumweightM"] = sumweightM  ,      
-         _["ncases"] = ncases  ,  _["ncasesM"] = ncasesM    
+         Rcpp::_["mean1"] = mean1 ,  
+         Rcpp::_["mean1_se"] = mean1_se ,  
+         Rcpp::_["mean1_varWithin"] = mean1_varWithin ,  
+         Rcpp::_["mean1_varBetween"] = mean1_varBetween ,  
+         Rcpp::_["mean1_fmi"] = mean1_fmi ,      
+         Rcpp::_["mean1M"] = mean1M ,   
+         Rcpp::_["mean1_varM"] = mean1_varM   ,  
+         Rcpp::_["mean1repM"] = mean1repM ,  
+         Rcpp::_["sd1"] = sd1 ,  
+         Rcpp::_["sd1_se"] = sd1_se ,       
+         Rcpp::_["sd1_varWithin"] = sd1_varWithin ,  
+         Rcpp::_["sd1_varBetween"] = sd1_varBetween ,  
+         Rcpp::_["sd1_fmi"] = sd1_fmi ,      
+         Rcpp::_["sd1M"] = sd1M ,   
+         Rcpp::_["sd1_varM"] = sd1_varM  ,   
+         Rcpp::_["sd1repM"] = sd1repM ,  
+         Rcpp::_["sumweightrepM"] = sumweightrepM ,  
+         Rcpp::_["sumweightM"] = sumweightM  ,      
+         Rcpp::_["ncases"] = ncases  ,  
+         Rcpp::_["ncasesM"] = ncasesM    
          ) ;    
      // maximal list length is 20!  
        
@@ -308,8 +312,8 @@ BEGIN_RCPP
        
      // another output list  
      Rcpp::List out1 = Rcpp::List::create(   
-         _["GG"] = GG ,  
-         _["VV2"] = VV2  
+         Rcpp::_["GG"] = GG ,  
+         Rcpp::_["VV2"] = VV2  
      		)    ;  
        
        
@@ -319,17 +323,17 @@ BEGIN_RCPP
        
                 
      return Rcpp::List::create(   
-         _["ncases1M"] = ncases1M ,  
-         _["ncases"] = ncases   ,  
-         _["perc1"] = perc1L ,  
-         _["perc1M"] = perc1M ,  
-         _["perc1_varM"] = perc1_varM ,  
-         _["perc1repM"] = perc1repM ,  
-         _["perc2"] = perc2L ,      
-         _["perc2M"] = perc2M   ,  
-         _["perc2_varM"] = perc2_varM ,  
-         _["perc2repM"] = perc2repM    ,  
-         _["outlist"] = out1  
+         Rcpp::_["ncases1M"] = ncases1M ,  
+         Rcpp::_["ncases"] = ncases   ,  
+         Rcpp::_["perc1"] = perc1L ,  
+         Rcpp::_["perc1M"] = perc1M ,  
+         Rcpp::_["perc1_varM"] = perc1_varM ,  
+         Rcpp::_["perc1repM"] = perc1repM ,  
+         Rcpp::_["perc2"] = perc2L ,      
+         Rcpp::_["perc2M"] = perc2M   ,  
+         Rcpp::_["perc2_varM"] = perc2_varM ,  
+         Rcpp::_["perc2repM"] = perc2repM    ,  
+         Rcpp::_["outlist"] = out1  
          ) ;    
      // maximal list length is 20!  
        
@@ -513,19 +517,19 @@ BEGIN_RCPP
        
                 
      return Rcpp::List::create(   
-         _["itempair_index"] = itempair_index ,  
-         _["sumwgt1M"] = sumwgt1M ,  
-         _["ncases1M"] = ncases1M ,   
-         _["cov1"] = cov1L ,  
-         _["cov1M"] = cov1M ,   
-         _["cov1repM"] = cov1repM ,  
-         _["cov1_varM"] = cov1_varM ,  
-         _["cor1"] = cor1L ,  
-         _["cor1M"] = cor1M ,   
-         _["cor1repM"] = cor1repM ,  
-         _["cor1_varM"] = cor1_varM ,  
-         _["cor1_matrix"] = cor1_matrix ,  
-         _["cov1_matrix"] = cov1_matrix  
+         Rcpp::_["itempair_index"] = itempair_index ,  
+         Rcpp::_["sumwgt1M"] = sumwgt1M ,  
+         Rcpp::_["ncases1M"] = ncases1M ,   
+         Rcpp::_["cov1"] = cov1L ,  
+         Rcpp::_["cov1M"] = cov1M ,   
+         Rcpp::_["cov1repM"] = cov1repM ,  
+         Rcpp::_["cov1_varM"] = cov1_varM ,  
+         Rcpp::_["cor1"] = cor1L ,  
+         Rcpp::_["cor1M"] = cor1M ,   
+         Rcpp::_["cor1repM"] = cor1repM ,  
+         Rcpp::_["cor1_varM"] = cor1_varM ,  
+         Rcpp::_["cor1_matrix"] = cor1_matrix ,  
+         Rcpp::_["cov1_matrix"] = cov1_matrix  
          ) ;    
      // maximal list length is 20!  
        
@@ -636,12 +640,12 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["ncasesM"] = ncasesM ,  
-         _["sumwgtM"] = sumwgtM ,  
-         _["regrcoefrepM"] = regrcoefrepM ,  
-         _["regrcoefL"] = regrcoefL ,  
-         _["regrcoefM"] = regrcoefM ,      
-         _["regrcoef_varM"] = regrcoef_varM   
+         Rcpp::_["ncasesM"] = ncasesM ,  
+         Rcpp::_["sumwgtM"] = sumwgtM ,  
+         Rcpp::_["regrcoefrepM"] = regrcoefrepM ,  
+         Rcpp::_["regrcoefL"] = regrcoefL ,  
+         Rcpp::_["regrcoefM"] = regrcoefM ,      
+         Rcpp::_["regrcoef_varM"] = regrcoef_varM   
          ) ;    
        
      // maximal list length is 20!  
@@ -750,22 +754,24 @@ BEGIN_RCPP
      	         			}  
      	         		}  
      		}  
-  		
-     		
+  	// end ii
+     
      // calculate ARIV	  
      double eps=1e-10;  
      double ariv = tmp1 - Nimp * pow( tmp2 / Nimp , 2.0 ) ;  
      ariv = ariv / ( Nimp - 1 + eps ) * ( 1 + 1 / Nimp2 ) ;  
        
      // calculate D2 statistic  
-     double D2 = tmp1 / Nimp2 - (Nimp2+1)/(Nimp2-1+eps) * ariv ;  
+     // double D2 = tmp1 / Nimp2 - (Nimp2+1)/(Nimp2-1+eps) * ariv ;  
+     double D2 = tmp1 / df - (Nimp2+1)/(Nimp2-1+eps) * ariv ;  
+     // changed ARb 2015-12-14
      D2 = D2 / ( 1 + ariv ) ;  
      // calculate degrees of freedom  
      double df2 = df ;  
      double nu3 = 1000 ;  
      if ( Nimp > 1 ){  
-       nu3 = pow( df2 , - 3 / Nimp2 ) * ( Nimp2 - 1 ) *  
-                 pow( 1 + 1 / ( ariv + eps ) , 2 ) ;  
+       nu3 = pow( df2 , - 3.0 / Nimp2 ) * ( Nimp2 - 1 ) *  
+                 pow( 1 + 1 / ( ariv + eps ) , 2.0 ) ;  
                    }  
        
      double p_D2 = Rf_pf( D2 , df , nu3 , FALSE  , FALSE );                 
@@ -837,19 +843,24 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["chi2M"] = chi2M ,  
-         _["ariv"] = ariv ,  
-         _["D2"] = D2 ,  
-         _["df"] = df , _["nu2"] = nu2 ,  
-         _["nu3"]=nu3 ,  
-         _["p_D1"] = p_D1 ,      
-         _["p_D2"] = p_D2 ,  
-         _["Nimp"] = Nimp , _["RR"] = RR ,  
-         _["fayfac"] = fayfac ,  
-         _["var_w"] = var_w , _["var_b"] = var_b ,       
-         _["D1"] = D1 ,   
-         _["Ccols"] = Ccols , _["parsM_sel"] = parsM_sel  ,
-         _["var_wM"] = var_wM , _["hyp_statM"] = hyp_statM
+         Rcpp::_["chi2M"] = chi2M ,  
+         Rcpp::_["ariv"] = ariv ,  
+         Rcpp::_["D2"] = D2 ,  
+         Rcpp::_["df"] = df , 
+         Rcpp::_["nu2"] = nu2 ,  
+         Rcpp::_["nu3"]=nu3 ,  
+         Rcpp::_["p_D1"] = p_D1 ,      
+         Rcpp::_["p_D2"] = p_D2 ,  
+         Rcpp::_["Nimp"] = Nimp , 
+         Rcpp::_["RR"] = RR ,  
+         Rcpp::_["fayfac"] = fayfac ,  
+         Rcpp::_["var_w"] = var_w , 
+         Rcpp::_["var_b"] = var_b ,       
+         Rcpp::_["D1"] = D1 ,   
+         Rcpp::_["Ccols"] = Ccols , 
+         Rcpp::_["parsM_sel"] = parsM_sel  ,
+         Rcpp::_["var_wM"] = var_wM , 
+         Rcpp::_["hyp_statM"] = hyp_statM
          ) ;    
      // maximal list length is 20!  
               
@@ -935,7 +946,8 @@ BEGIN_RCPP
 		
 	
 	return Rcpp::List::create( 
-	    _["u"] = var_wf , _["u_diag"] = u_diag
+	    Rcpp::_["u"] = var_wf , 
+            Rcpp::_["u_diag"] = u_diag
 	    ) ;
 
 END_RCPP	
@@ -1102,16 +1114,20 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["chi2M"] = chi2M ,  
-         _["ariv"] = ariv ,  
-         _["D2"] = D2 ,  
-         _["df"] = df , _["nu2"] = nu2 ,  
-         _["nu3"]=nu3 ,  
-         _["Nimp"] = Nimp , _["RR"] = RR ,  
-         _["fayfac"] = fayfac ,  
-         _["var_w"] = var_w , _["var_b"] = var_b ,       
-         _["D1"] = D1 ,   
-         _["Ccols"] = Ccols , _["parsM_sel"] = parsM_sel  
+         Rcpp::_["chi2M"] = chi2M ,  
+         Rcpp::_["ariv"] = ariv ,  
+         Rcpp::_["D2"] = D2 ,  
+         Rcpp::_["df"] = df , 
+         Rcpp::_["nu2"] = nu2 ,  
+         Rcpp::_["nu3"]=nu3 ,  
+         Rcpp::_["Nimp"] = Nimp , 
+         Rcpp::_["RR"] = RR ,  
+         Rcpp::_["fayfac"] = fayfac ,  
+         Rcpp::_["var_w"] = var_w , 
+         Rcpp::_["var_b"] = var_b ,       
+         Rcpp::_["D1"] = D1 ,   
+         Rcpp::_["Ccols"] = Ccols , 
+         Rcpp::_["parsM_sel"] = parsM_sel  
          ) ;    
      // maximal list length is 20!  
               
@@ -1263,15 +1279,15 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["eta2L"] = eta2L ,   
-         _["eta2M"] = eta2M ,
-         _["eta2repM"] = eta2repM1 ,
-         _["eta2_varM"] = eta2_varM ,  
-         _["dstatL"] = dstatL ,       
-         _["dstatM"] = dstatM ,  
-         _["dstatrepM"] = dstatrepM1 ,
-         _["dstat_varM"] = dstat_varM    ,  
-         _["group_values_matrix"] = group_values_matrix  
+         Rcpp::_["eta2L"] = eta2L ,   
+         Rcpp::_["eta2M"] = eta2M ,
+         Rcpp::_["eta2repM"] = eta2repM1 ,
+         Rcpp::_["eta2_varM"] = eta2_varM ,  
+         Rcpp::_["dstatL"] = dstatL ,       
+         Rcpp::_["dstatM"] = dstatM ,  
+         Rcpp::_["dstatrepM"] = dstatrepM1 ,
+         Rcpp::_["dstat_varM"] = dstat_varM    ,  
+         Rcpp::_["group_values_matrix"] = group_values_matrix  
          ) ;    
      // maximal list length is 20!  
        
@@ -1408,14 +1424,14 @@ BEGIN_RCPP
      // OUTPUT              
                 
      return Rcpp::List::create(   
-         _["design_pars"] = design_pars ,  
-         _["ncases_ggM"] = ncases_ggM ,   
-         _["ncasesM"] = ncasesM ,  
-         _["sumwgtM"] = sumwgtM ,  
-         _["ctparsL"] = ctparsL ,  
-         _["ctparsM"] = ctparsM ,  
-         _["ctparsrepM"] = ctparsrepM ,  
-         _["ctpars_varM"] = ctpars_varM  
+         Rcpp::_["design_pars"] = design_pars ,  
+         Rcpp::_["ncases_ggM"] = ncases_ggM ,   
+         Rcpp::_["ncasesM"] = ncasesM ,  
+         Rcpp::_["sumwgtM"] = sumwgtM ,  
+         Rcpp::_["ctparsL"] = ctparsL ,  
+         Rcpp::_["ctparsM"] = ctparsM ,  
+         Rcpp::_["ctparsrepM"] = ctparsrepM ,  
+         Rcpp::_["ctpars_varM"] = ctpars_varM  
          ) ;    
      // maximal list length is 20!  
        
@@ -1569,16 +1585,16 @@ BEGIN_RCPP
        
                 
      return Rcpp::List::create(   
-         _["WW"] = WW ,  
-         _["N"] = N ,  
-         _["NP"] = NP ,      
-         _["userfct"] = userfct ,  
-         _["sumwgtM"] = sumwgtM ,   
-         _["parsrepM"] = pars1repM ,   
-         _["parsM"] = parsM ,  
-         _["pars_varM"] = pars_varM ,  
-         _["ncasesM"] = ncasesM  ,  
-         _["parsL"] = parsL  
+         Rcpp::_["WW"] = WW ,  
+         Rcpp::_["N"] = N ,  
+         Rcpp::_["NP"] = NP ,      
+         Rcpp::_["userfct"] = userfct ,  
+         Rcpp::_["sumwgtM"] = sumwgtM ,   
+         Rcpp::_["parsrepM"] = pars1repM ,   
+         Rcpp::_["parsM"] = parsM ,  
+         Rcpp::_["pars_varM"] = pars_varM ,  
+         Rcpp::_["ncasesM"] = ncasesM  ,  
+         Rcpp::_["parsL"] = parsL  
          ) ;    
      // maximal list length is 20!  
  
@@ -1710,16 +1726,18 @@ BEGIN_RCPP
      //*************************************************      
      // OUTPUT                                     
      return Rcpp::List::create(   
-     	_["BB"] = BB , _["breaks"] = breaks , _["mids"] = mids , 	  
-         _["sumwgtM"] = sumwgtM ,  
-         _["countsM"] = countsM ,  
-         _["ncasesM"] = ncasesM ,  
-         _["counts"] = counts ,  
-         _["sumwgt"] = sumwgt ,  
-         _["sumwgt_ggM"] = sumwgt_ggM ,  
-         _["sumwgt_gg"] = sumwgt_gg    ,  
-         _["relfreq"] = relfreq ,  
-         _["density_vec"] = density_vec  
+     	 Rcpp::_["BB"] = BB , 
+         Rcpp::_["breaks"] = breaks , 
+         Rcpp::_["mids"] = mids , 	  
+         Rcpp::_["sumwgtM"] = sumwgtM ,  
+         Rcpp::_["countsM"] = countsM ,  
+         Rcpp::_["ncasesM"] = ncasesM ,  
+         Rcpp::_["counts"] = counts ,  
+         Rcpp::_["sumwgt"] = sumwgt ,  
+         Rcpp::_["sumwgt_ggM"] = sumwgt_ggM ,  
+         Rcpp::_["sumwgt_gg"] = sumwgt_gg    ,  
+         Rcpp::_["relfreq"] = relfreq ,  
+         Rcpp::_["density_vec"] = density_vec  
          ) ;    
      // maximal list length is 20!  
        
@@ -1813,12 +1831,12 @@ BEGIN_RCPP
      //*************************************************      
      // OUTPUT                                     
      return Rcpp::List::create(   
-     	_["BB"] = BB ,   
-     	_["yval"] = breaks ,  
-     	_["sumwgtM"] = sumwgtM ,   
-     	_["ncasesM"] = ncasesM ,   
-     	_["ecdfM"] = ecdfM  ,  
-     	_["ecdf"] = ecdf   
+     	Rcpp::_["BB"] = BB ,   
+     	Rcpp::_["yval"] = breaks ,  
+     	Rcpp::_["sumwgtM"] = sumwgtM ,   
+     	Rcpp::_["ncasesM"] = ncasesM ,   
+     	Rcpp::_["ecdfM"] = ecdfM  ,  
+     	Rcpp::_["ecdf"] = ecdf   
      	) ;  
              
      
@@ -1997,12 +2015,12 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["ncasesM"] = ncasesM ,  
-         _["sumwgtM"] = sumwgtM ,  
-         _["regrcoefrepM"] = regrcoefrepM ,  
-         _["regrcoefL"] = regrcoefL ,  
-         _["regrcoefM"] = regrcoefM ,      
-         _["regrcoef_varM"] = regrcoef_varM       
+         Rcpp::_["ncasesM"] = ncasesM ,  
+         Rcpp::_["sumwgtM"] = sumwgtM ,  
+         Rcpp::_["regrcoefrepM"] = regrcoefrepM ,  
+         Rcpp::_["regrcoefL"] = regrcoefL ,  
+         Rcpp::_["regrcoefM"] = regrcoefM ,      
+         Rcpp::_["regrcoef_varM"] = regrcoef_varM       
          ) ;    
        
      // maximal list length is 20!  
@@ -2069,9 +2087,9 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(  
-         _["vec_sort"] = vec_sort ,   
-         _["tableM"] = tableM ,  
-         _["N_unique"] = ii+1  
+         Rcpp::_["vec_sort"] = vec_sort ,   
+         Rcpp::_["tableM"] = tableM ,  
+         Rcpp::_["N_unique"] = ii+1  
          ) ;    
        
      // maximal list length is 20!                
@@ -2116,8 +2134,8 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["table_names"] = uii ,  
-         _["tableM"] = tableM  
+         Rcpp::_["table_names"] = uii ,  
+         Rcpp::_["tableM"] = tableM  
          ) ;    
 
 END_RCPP
@@ -2502,15 +2520,25 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(  
-             _["parsM"] = parsM , _["parsrepM"] = parsMrep ,  
-             _["parsVar"] = parsVar , _["parsL"] = parsL ,   
-     	_["GG"] = GG , _["iterM"] = iterM ,  
-     	_["iterMrep"] = iterMrep , _["fvcovM"] = fvcovM ,  
-     	_["Npers"] = Npers , _["Nclusters"] = Nclusters ,  
-     	_["NP"] = NP , _["NX"] = NX , _["NZ"] = NZ ,  
-             _["Sigma_W_yXM"] = Sigma_W_yXM , _["Sigma_B_yXM"] = Sigma_B_yXM	,  
-             _["Sigma_W_yZM"] = Sigma_W_yZM , _["Sigma_B_yZM"] = Sigma_B_yZM	,
-             _["totmean_yXM"] = totmean_yXM , _["totmean_yZM"] = totmean_yZM
+             Rcpp::_["parsM"] = parsM , 
+             Rcpp::_["parsrepM"] = parsMrep ,  
+             Rcpp::_["parsVar"] = parsVar , 
+             Rcpp::_["parsL"] = parsL ,   
+     	     Rcpp::_["GG"] = GG , 
+             Rcpp::_["iterM"] = iterM ,  
+     	     Rcpp::_["iterMrep"] = iterMrep , 
+             Rcpp::_["fvcovM"] = fvcovM ,  
+     	     Rcpp::_["Npers"] = Npers , 
+             Rcpp::_["Nclusters"] = Nclusters ,  
+     	     Rcpp::_["NP"] = NP , 
+             Rcpp::_["NX"] = NX , 
+             Rcpp::_["NZ"] = NZ ,  
+             Rcpp::_["Sigma_W_yXM"] = Sigma_W_yXM , 
+             Rcpp::_["Sigma_B_yXM"] = Sigma_B_yXM ,  
+             Rcpp::_["Sigma_W_yZM"] = Sigma_W_yZM , 
+             Rcpp::_["Sigma_B_yZM"] = Sigma_B_yZM ,
+             Rcpp::_["totmean_yXM"] = totmean_yXM , 
+             Rcpp::_["totmean_yZM"] = totmean_yZM
               ) ;    
        
      // maximal list length is 20!  
@@ -2636,12 +2664,12 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(  
-         _["parsL"] = parsL , 	  
-         _["parsM"] = parsM ,  
-         _["ncases"] = ncases ,  
-         _["sumwgt"] = sumwgt ,  
-         _["parsrepM"] = parsrepM ,  
-         _["parsVar"] = parsVar  
+         Rcpp::_["parsL"] = parsL , 	  
+         Rcpp::_["parsM"] = parsM ,  
+         Rcpp::_["ncases"] = ncases ,  
+         Rcpp::_["sumwgt"] = sumwgt ,  
+         Rcpp::_["parsrepM"] = parsrepM ,  
+         Rcpp::_["parsVar"] = parsVar  
          ) ;    
        
      // maximal list length is 20!  

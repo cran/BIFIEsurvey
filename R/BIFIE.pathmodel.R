@@ -57,7 +57,7 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 	E <- matrix( 0 , nrow=NV , ncol=NV )
 	rownames(E) <- colnames(E) <- lav.vars
 	lav2 <- lavpartable[ lavpartable$op == "~~" , ]
-	lav2 <- na.omit( lav2 )
+	lav2 <- stats::na.omit( lav2 )
 	NG <- nrow(lav2)
 	if (NG > 0 ){
 	for ( gg in 1:NG){
@@ -156,7 +156,8 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 				}
 	
 	tot_paths <- data.frame( tot_paths , "pathindex2" = tot_paths$pathindex )
-	tot_paths$pathindex2 <- match( tot_paths$pathindex2 , na.omit(unique( tot_paths$pathindex2 )) ) + NP0
+	tot_paths$pathindex2 <- match( tot_paths$pathindex2 , 
+			stats::na.omit(unique( tot_paths$pathindex2 )) ) + NP0
 	tot_paths$pathindex2[ as.numeric(paste(tot_paths[,2])) <= 2 ] <- NA
 	if ( mean( is.na(tot_paths$pathindex2 ) ) < 1 ){
 		NP0 <- max( tot_paths$pathindex2 , na.rm=TRUE)

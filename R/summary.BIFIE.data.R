@@ -2,7 +2,7 @@
 ##############################################################
 summary.BIFIEdata <- function(object , ... ){
 	cat("------------------------------------------------------------\n")
-	d1 <- packageDescription("BIFIEsurvey")
+	d1 <- utils::packageDescription("BIFIEsurvey")
 	cat( paste( d1$Package , " " , d1$Version , " (" , d1$Date , ")" , sep="") , "\n" )	
 	cat( paste0("Function '" , class(object) ) )
 	cat("'" )		
@@ -35,7 +35,7 @@ summary.BIFIEdata <- function(object , ... ){
 		cat( "Fay factor =" , round( object$fayfac , 5 ) , "\n\n" ) 	
 							} else {
 		mf <- mean(fayfac)
-		sdf <- sd(fayfac)		
+		sdf <- stats::sd(fayfac)		
 		cat( "Fay factor: M =" , round( mf , 5 ) , "| SD =" , 
 			round( sdf , 5 ) , "\n\n" ) 													
 							}

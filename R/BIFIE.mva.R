@@ -25,7 +25,7 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 	if ( is.null(covariates) ){ 
 #	if ( FALSE ){ 
 		N <- bifieobj$N
-		transform.formula <-  paste0( "~ 0 + I ( runif( " , N , " , 0 , 1E-10) ) " )
+		transform.formula <-  paste0( "~ 0 + I ( stats::runif( " , N , " , 0 , 1E-10) ) " )
 #		transform.formula <-  paste0( "~ 0 + I ( 1: ", N , "  ) " )
 		bifieobj <- BIFIE.data.transform( bifieobj , transform.formula ,  "_null" )  
 		covariates <- bifieobj$varnames.added
@@ -73,7 +73,7 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
     if (RR < 2 ){
 		wgtrep <- bifieobj$wgtrep 
 		do_test <- FALSE
-		wgtrep <- cbind( wgtrep , wgtrep + runif( nrow(wgtrep) , 0 , 1E-4) )
+		wgtrep <- cbind( wgtrep , wgtrep + stats::runif( nrow(wgtrep) , 0 , 1E-4) )
 		bifieobj$wgtrep <- wgtrep
 		bifieobj$RR <- 2
 				}
@@ -90,7 +90,7 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 		wgtrep <- matrix( NA , nrow=N11 , ncol=2 )
 		wgtrep[,1] <-wgt
 		eps <- 1E-8
-		wgtrep[,2] <- wgt + runif(N11, -eps,eps)
+		wgtrep[,2] <- wgt + stats::runif(N11, -eps,eps)
 		RR <- 0
 		bifieobj$wgtrep <- wgtrep
 		bifieobj$RR <- ncol(wgtrep)

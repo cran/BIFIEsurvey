@@ -1,10 +1,12 @@
 Package: BIFIEsurvey
 Type: Package
 Title: Tools for Survey Statistics in Educational Assessment
-Version: 1.7-0
-Date: 2015-11-04
-Author: BIFIE
-Maintainer: Alexander Robitzsch <robitzsch@ipn.uni-kiel.de>
+Version: 1.8-0
+Date: 2016-01-30
+Author: 
+    BIFIE
+Maintainer: 
+ Alexander Robitzsch <robitzsch@ipn.uni-kiel.de>
 Description: 
     Contains tools for survey statistics (especially in educational
     assessment) for datasets with replication designs (jackknife, 
@@ -18,13 +20,13 @@ Description:
     Educational Research, Innovation and Development of the Austrian 
     School System; Salzburg, Austria).
 Depends: R (>= 2.15.0)
-Imports: stats, graphics, utils, methods, grDevices, Rcpp, miceadds (>=
-        1.3), mitools, TAM
-Suggests: survey, intsvy, svyPVpack, lavaan.survey, Hmisc, car, lme4
+Imports: graphics, grDevices, methods, miceadds, mitools, Rcpp, stats,
+        utils, TAM
+Suggests: car, Hmisc, intsvy, lavaan.survey, lme4, survey, svyPVpack
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
 URL: http://www.bifie.at
-Packaged: 2015-11-04 15:31:58 UTC; robitzsch
 NeedsCompilation: yes
+Packaged: 2016-01-30 17:33:55 UTC; sunpn563
 Repository: CRAN
-Date/Publication: 2015-11-04 18:41:39
+Date/Publication: 2016-01-30 19:01:52

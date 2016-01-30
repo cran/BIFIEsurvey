@@ -27,7 +27,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 	
 	if ( is.null(breaks) ){
 	    x <- dat1[ , vars_index ]
-		breaks <- pretty(x , n = nclass.Sturges(x))
+		breaks <- base::pretty(x , n = grDevices::nclass.Sturges(x))
 				}
 	
 		RR <- 0
@@ -87,7 +87,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 				"mids" = res$mids	
 						)
 		h1$xname <- paste0( vars , "_" , group , group_values[gg] )
-		if ( sd ( diff(res$mids) ) < .000001 ){ h1$equidist <- TRUE } else { h1$equidist <- FALSE }
+		if ( stats::sd ( diff(res$mids) ) < .000001 ){ h1$equidist <- TRUE } else { h1$equidist <- FALSE }
 		class(h1) <- "histogram"	
 		histobj[[gg]] <- h1
 		# histobj[[gg]] <- h1$xname
@@ -122,8 +122,8 @@ plot.BIFIE.hist <- function( x , ask=TRUE , ... ){
     res <- x
     GG <- res$GG
     for (gg in 1:GG){
-      plot( res$histobj[[gg]] , ... )
-      par(ask=ask)
+      graphics::plot( res$histobj[[gg]] , ... )
+      graphics::par(ask=ask)
                     }
       }
 			

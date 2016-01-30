@@ -28,7 +28,7 @@ BIFIE_NMI_inference_parameters <- function( parsM , parsrepM , fayfac ,
 	qhat <- array( parsM , dim=c(NV , Nimp_NMI[2] , Nimp_NMI[1] ) )
 	qhat <- aperm( qhat , c(3,2,1) )								
 	# inference using miceadds package
-	res1 <- NMIcombine( qhat=qhat , u = u , comp_cov= comp_cov , is_list=FALSE )	
+	res1 <- miceadds::NMIcombine( qhat=qhat , u = u , comp_cov= comp_cov , is_list=FALSE )	
 	
 	res1$df <- ifelse( res1$df > 1000 , Inf , res1$df )
 	

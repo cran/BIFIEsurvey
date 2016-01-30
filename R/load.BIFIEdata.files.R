@@ -18,7 +18,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 		datalist <- list(1:Nimp)
 		for (ii in 1:Nimp){
 			# ii <- 1
-			cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); flush.console() ;
+			cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); utils::flush.console() ;
 			dat1 <- miceadds::load.data( file = files.imp[[ii]] , path = dir , type=type , ... )
 			if (ii==1){  wgt <- dat1[ , wgt ] }
 			dat1 <- as.data.frame(dat1)
@@ -30,7 +30,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 					}    		
 		#**************
 		# read replicate weights	
-		cat(paste0( "- Read " , file.wgtrep , "\n") ); flush.console() ;
+		cat(paste0( "- Read " , file.wgtrep , "\n") ); utils::flush.console() ;
 		wgtrep <- miceadds::load.data( file = file.wgtrep , type=type , path = dir , ...)
 		#****************************
 		# create BIFIEdata object
@@ -43,7 +43,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 	if ( ! is.null( file.ind ) ){
 		#*********************
 		# Read indicator dataset
-		cat(paste0( "- Read " , file.ind , "\n") ); flush.console() ;
+		cat(paste0( "- Read " , file.ind , "\n") ); utils::flush.console() ;
 		dat_ind <- miceadds::load.data( file = file.ind , type=type , path = dir , ...)
 		if ( is.null(varnames) ){
 		     varnames <- setdiff( colnames(dat_ind ) , "one" )
@@ -59,7 +59,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 		#************************
 		# Read first imputed dataset
 		ii <- 1
-		cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); flush.console() ;
+		cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); utils::flush.console() ;
 		dat1 <- miceadds::load.data( file = files.imp[[ii]] , path = dir , type=type , ... )
 		if ( ! is.null(varnames) ){
 			dat1 <- dat1[ , varnames ]			
@@ -67,7 +67,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
         datalist <- list( dat1 )
 		#**************
 		# read replicate weights	
-		cat(paste0( "- Read " , file.wgtrep , "\n") ); flush.console() ;
+		cat(paste0( "- Read " , file.wgtrep , "\n") ); utils::flush.console() ;
 		wgtrep <- miceadds::load.data( file = file.wgtrep , type=type , path = dir , ...)
 		#***************
 		# create initial BIFIEdata object		
@@ -87,7 +87,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 		# Read other imputed datasets
 		if (Nimp>1){
 		for (ii in 2:Nimp){
-			cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); flush.console() ;
+			cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); utils::flush.console() ;
 			dat1 <- miceadds::load.data( file = files.imp[[ii]] , path = dir , type=type , ... )
 			if ( ! is.null(varnames) ){
 				dat1 <- dat1[ , varnames ]			

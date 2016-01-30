@@ -3,20 +3,20 @@
 # This function is simply copied from mice package.
 
 
-# on attach CDM
+# on attach
 .onAttach <- function(libname,pkgname){
-  d <- packageDescription("BIFIEsurvey")
-  packageStartupMessage("|---------------------------------------------------------",
+  d <- utils::packageDescription("BIFIEsurvey")
+  base::packageStartupMessage("|---------------------------------------------------------",
 		   "--------\n"  ,
 		paste("| " ,d$Package," " , d$Version," (",d$Date,")",sep="") ,
 		"                                       " , 
-        "\n| Maintainer: Alexander Robitzsch <a.robitzsch at bifie.at >      " ,
+        "\n| Maintainer: Alexander Robitzsch <robitzsch@ipn.uni-kiel.de>      " ,
 		"\n| http://www.bifie.at                                             ",
 		"\n|---------------------------------------------------" ,
 		"--------------\n" )
 	}
 version <- function(pkg="BIFIEsurvey"){
   lib <- dirname(system.file(package = pkg))
-  d <- packageDescription(pkg)
+  d <- utils::packageDescription(pkg)
   return(paste(d$Package,d$Version,d$Date,lib))
 }

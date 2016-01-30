@@ -53,7 +53,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 				}
 		if ( ! is.null(seed) ){
 			set.seed( seed )
-			indzone <- sample(1:N) 
+			indzone <- base::sample(1:N) 
 					} else {
 			indzone <- 1:N
 				}
@@ -117,7 +117,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		prblen <- 10
 		prbar <- BIFIE.progressbar( ops = RR , prblen = prblen )
 		cat("+++ Generate replicate weights\n")
-		cat(paste0("|" , paste0(rep("*",prblen), collapse="") , "|\n|")) ; flush.console()	
+		cat(paste0("|" , paste0(rep("*",prblen), collapse="") , "|\n|")) ; utils::flush.console()	
 		addname <- 10^( floor( log( RR+.5 , 10 ) )  + 1 )
 		data[ , jkzone ] <- match( data[ , jkzone ] , unique( data[ , jkzone] ) )		
 		datarep <- .Call( "bifie_jack_timss" , wgt_= data[,wgt] , data[,jkzone]-1 , data[,jkrep] , RR , jkfac ,

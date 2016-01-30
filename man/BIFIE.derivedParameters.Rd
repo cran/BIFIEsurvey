@@ -77,7 +77,7 @@ A list with following entries
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-See also \code{\link{BIFIE.waldtest}} for parameter tests.
+See also \code{\link{BIFIE.waldtest}} for multi-parameter tests.
 
 See \code{\link[car:deltaMethod]{car::deltaMethod}} for the delta
 method assuming that the multivariate distribution of the parameters is

@@ -175,7 +175,7 @@ data(data.timss4)
 data(data.timssrep)
 
 # nested imputed dataset, save it in compact format
-bdat <- BIFIE.data( data.list=data.timss4 , wgt= data.timss4[[1]]$TOTWGT ,
+bdat <- BIFIE.data( data.list=data.timss4 , wgt= data.timss4[[1]][[1]]$TOTWGT ,
             wgtrep=data.timssrep[, -1 ] , NMI=TRUE , cdata=TRUE )
 summary(bdat)            
 }

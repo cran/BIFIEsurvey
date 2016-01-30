@@ -23,13 +23,13 @@ s1 <- Sys.time()
 	for (ii in 1:Nimp){
 		# ii <- 1  # imputed dataset
 		
-		cat("-"); flush.console();
+		cat("-"); utils::flush.console();
 		dat.ii <- datalistM[ 1:N + (ii-1)*N , ]
 		
 		for (gg in 1:G){	
 			# gg <- 1	
 			ind.gg <- which( dat.ii[ , group_index ] == group_values[gg] )
-			ind.gg <- na.omit(ind.gg)	
+			ind.gg <- stats::na.omit(ind.gg)	
 			dat1 <- dat.ii[ ind.gg , vars_index ]
 			w1 <- wgt_[ ind.gg ]
 			sumwgtM[gg,ii] <- sum(w1)
@@ -43,7 +43,7 @@ s1 <- Sys.time()
 			parsrepM[ 1:NP + (gg-1)*NP , 1:RR + (ii-1)*RR ] <- h1
 					}
 			}
-		cat("|\n"); flush.console()	
+		cat("|\n"); utils::flush.console()	
 		
 	# statistical inference	
     res0 <- .Call( "bifie_comp_vcov_within" , parsM , parsrepM , fayfac , 

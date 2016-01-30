@@ -14,7 +14,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	if (bifieobj$cdata){
 	    formula_vars <- NULL
 		if (! is.null(formula) ){
-			formula_vars <- all.vars( formula )
+			formula_vars <- base::all.vars( formula )
 							}
 		varnames <- unique( c( dep , pre , group , "one" , formula_vars ) )
 		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
@@ -32,19 +32,19 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	
 	#*** look for formula objects
 	if ( ! is.null( formula) ){
-	    cat("|*** Data Preparation ") ; flush.console()
+	    cat("|*** Data Preparation ") ; utils::flush.console()
 	    bifieobj2 <- datalistM
 		colnames(bifieobj2) <- varnames
 		if ( is.null(group) ){ group <- "one" ; group_values <- 1 }
 		bifieobj2 <- as.data.frame( bifieobj2 )
-	    m1 <- model.matrix(formula , data=bifieobj2)
+	    m1 <- stats::model.matrix(formula , data=bifieobj2)
 		#***
         m0 <- m1
 		m1 <- matrix( NA , nrow=nrow(bifieobj2) , ncol=ncol(m0) )
 		m1[ match( rownames(m0),rownames(bifieobj2) ) , ] <- m0
 		colnames(m1) <- colnames(m0)
 		#****				
-		dep <- rownames( attr( terms(formula) ,"factors") )[1]
+		dep <- rownames( attr( stats::terms(formula) ,"factors") )[1]
 		pre <- colnames( m1 )
 		datalistM <- as.matrix( cbind( bifieobj2[ , dep  ] , m1 , bifieobj2[,group] ) )
 		varnames <- c( dep , pre , group )	
@@ -111,11 +111,13 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	             }							 
 	dfr$Ncases <- rep( rowMeans( res$ncasesM ) , each=ZZ )
 	dfr$Nweight <- rep( rowMeans( res$sumwgtM ) , each=ZZ )	
-	
+
 	dfr <- create_summary_table( res_pars=res$regrcoefL , 
 				     parsM=res$regrcoefM   , parsrepM=res$regrcoefrepM , 
 					 dfr=dfr , BIFIEobj=BIFIEobj )				
 	dfr <- clean_summary_table( dfr=dfr , RR=RR , se=se , Nimp=Nimp )					
+				
+				
 				
 	# create vector of parameter names
 	nogroupL <- rep( nogroup , nrow(dfr) )
@@ -128,7 +130,7 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	# multiple groupings
 	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
 	#@@@@***
-					
+						
 	
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()

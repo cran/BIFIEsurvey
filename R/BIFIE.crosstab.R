@@ -160,7 +160,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 			dfr2$SE <- res1$pars_se
 			# dfr$t <- round( dfr$perc / dfr$perc_SE , 2 )
 			dfr2$df <- res1$df
-			# dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+			# dfr$p <- stats::pt( - abs( dfr$t ) , df=dfr$df) * 2			
 			dfr2$fmi <- res1$pars_fmi
 		    dfr2$fmi_St1 <- res1$pars_fmiB
 		    dfr2$fmi_St2 <- res1$pars_fmiW						
@@ -202,7 +202,7 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 			dfr3$SE <- res1$pars_se
 			# dfr$t <- round( dfr$perc / dfr$perc_SE , 2 )
 			dfr3$df <- res1$df
-			# dfr$p <- pt( - abs( dfr$t ) , df=dfr$df) * 2			
+			# dfr$p <- stats::pt( - abs( dfr$t ) , df=dfr$df) * 2			
 			dfr3$fmi <- res1$pars_fmi
 		    dfr3$fmi_St1 <- res1$pars_fmiB
 		    dfr3$fmi_St2 <- res1$pars_fmiW						
@@ -241,10 +241,10 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 	wes <- res$ctparsM[l1,]
 	chisquare <- wes^2 * ncases_gg
 	p_chi2 <- (VV1-1)*(VV2-1)
-	p_chi2 <- 1- pchisq( chisquare , df=p_chi2 )
+	p_chi2 <- 1- stats::pchisq( chisquare , df=p_chi2 )
 	dfr4 <- data.frame("group" = group , "groupval" = group_values )
     for (ii in 1:GG){
-		m1 <- micombine.chisquare( dk = chisquare[ii,] , df = (VV1-1)*(VV2-1) , 
+		m1 <- miceadds::micombine.chisquare( dk = chisquare[ii,] , df = (VV1-1)*(VV2-1) , 
 					display=FALSE )
 		dfr4[ii,"chi2"] <- m1["D"]
 		dfr4[ii , "df" ] <- m1["df"] 

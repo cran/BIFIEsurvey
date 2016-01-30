@@ -127,9 +127,9 @@ BEGIN_RCPP
      //*************************************************      
      // OUTPUT                                     
      return Rcpp::List::create(   
-         _["cumwgt"] = cumwgt  ,  
-         _["rand_wgt"] = rand_wgt ,  
-         _["wgtM"] = wgtM      
+         Rcpp::_["cumwgt"] = cumwgt  ,  
+         Rcpp::_["rand_wgt"] = rand_wgt ,  
+         Rcpp::_["wgtM"] = wgtM      
          ) ;    
      // maximal list length is 20!  
               
@@ -229,12 +229,11 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-     //    _["datalistM"] = datalistM ,  
-         _["datalistM_ind"] = datalistM_ind ,  
-         _["datalistM_imputed"] = datalistM_imputed ,  
-         _["datalistM_impindex"] = datalistM_impindex ,      
-         _["Nimp"] = Nimp ,  
-         _["Nmiss"] = Nmiss  
+         Rcpp::_["datalistM_ind"] = datalistM_ind ,  
+         Rcpp::_["datalistM_imputed"] = datalistM_imputed ,  
+         Rcpp::_["datalistM_impindex"] = datalistM_impindex ,      
+         Rcpp::_["Nimp"] = Nimp ,  
+         Rcpp::_["Nmiss"] = Nmiss  
          ) ;    
        
      // maximal list length is 20!  
@@ -319,8 +318,8 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["datalistM"] = datalistM  ,       
-         _["Nimp"] = Nimp     
+         Rcpp::_["datalistM"] = datalistM  ,       
+         Rcpp::_["Nimp"] = Nimp     
          ) ;    
        
      // maximal list length is 20!         
@@ -388,7 +387,7 @@ BEGIN_RCPP
      // OUTPUT              
                
      return Rcpp::List::create(   
-         _["datalistM_imputed"] = datalistM_imputed // ,      
+         Rcpp::_["datalistM_imputed"] = datalistM_imputed // ,      
          ) ;    
        
      // maximal list length is 20!  

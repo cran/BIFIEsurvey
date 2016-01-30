@@ -15,10 +15,11 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		#********	
 		# extract variables						
 		if (bifieobj$cdata){
-			formula_vars <- NULL
-			if (! is.null(formula) ){
-				formula_vars <- c( all.vars( formula.fixed ) , all.vars( formula.random ) )
-								}
+			# formula_vars <- NULL
+			# if (! is.null(formula) ){
+			formula_vars <- c( base::all.vars( formula.fixed ) , 
+									base::all.vars( formula.random ) )
+			#					}
 			varnames <- unique( c( dep ,  group , "one" , idcluster , formula_vars ,
 								wgtlevel1 , wgtlevel2 ) )
 			bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
@@ -40,7 +41,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		bifieobj2 <- datalistM
 
 		#*********** X predictor matrix
-		m1 <- model.matrix( formula.fixed , datalistM )
+		m1 <- stats::model.matrix( formula.fixed , datalistM )
 		m0 <- m1
 		xnames <- colnames(m1)	
 
@@ -50,7 +51,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		X_list <- as.matrix( m1 )
 
 		#************* Z predictor matrix
-		m1 <- model.matrix( formula.random , datalistM )
+		m1 <- stats::model.matrix( formula.random , datalistM )
 		m0 <- m1
 		znames <- colnames(m1)
 		m1 <- matrix( NA , nrow=nrow(bifieobj2) , ncol=ncol(m0) )
@@ -60,7 +61,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 
 		#*************** y outcome values
 		y_list <- as.vector( bifieobj2[ , dep ] )		
-		globconv <- var(y_list , na.rm=TRUE) * globconv		
+		globconv <- stats::var(y_list , na.rm=TRUE) * globconv		
 		
 		#*************** cluster identifiers
 		
@@ -73,7 +74,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		# weights
 		wgttot <- wgt
 		wgtlev2_full <- dat1[ , wgtlevel2 ]
-		wgtlev2 <- aggregate( wgtlev2_full , list(idcluster) , mean )[,2]
+		wgtlev2 <- stats::aggregate( wgtlev2_full , list(idcluster) , mean )[,2]
 		if ( is.null(wgtlevel1) ){
 			wgtlev1 <- wgttot / wgtlev2_full
 			         } else {
@@ -239,7 +240,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 			v1 <- diag( micombs$variance )
 			dfr[ parnames_sel , "SE" ] <- sqrt( v1 )
 			dfr$t <- round( dfr$est / dfr$SE , 2 )
-			dfr$p <- pnorm( - abs( dfr$t ) ) * 2			
+			dfr$p <- stats::pnorm( - abs( dfr$t ) ) * 2			
 			dfr[ parnames_sel , "fmi" ] <- micombs$missinfo
 			dfr$VarMI <- dfr$fmi * dfr$SE^2
 			dfr$VarRep <- (1-dfr$fmi) * dfr$SE^2

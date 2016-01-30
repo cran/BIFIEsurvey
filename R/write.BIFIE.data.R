@@ -21,7 +21,7 @@ write.BIFIEdata <- function( BIFIEdata , name.BIFIEdata ,
 	if ( type == "sav" ){ filesuf <- "" }
 	#***************************************
 	# save dataset with replicate weights
-	cat(" - Saved replicate weights\n") ; flush.console()	
+	cat(" - Saved replicate weights\n") ; utils::flush.console()	
 	filename.temp <- paste0( name.BIFIEdata , "__WGTREP" , filesuf )
 	w1 <- as.data.frame( BIFIEdata$wgtrep )
 	miceadds::save.data( w1 , filename=filename.temp , type=type , path=dir , ... ) 
@@ -31,7 +31,7 @@ write.BIFIEdata <- function( BIFIEdata , name.BIFIEdata ,
 	Nimp <- BIFIEdata$Nimp
 	for (ii in 1:Nimp){
 		# ii <- 1  
-		cat(" - Saved imputed dataset" , ii , "\n") ; flush.console()
+		cat(" - Saved imputed dataset" , ii , "\n") ; utils::flush.console()
 		if (! cdata ){
 			bii <- BIFIEdata.select( BIFIEdata , varnames = varnames , impdata.index = ii )
 						}

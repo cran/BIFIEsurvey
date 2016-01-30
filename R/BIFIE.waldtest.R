@@ -58,7 +58,7 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes , type=NULL ){
 		dimnames(qhat)[[3]] <- v1 <- paste0("parm",1:df1)
 		u <- array( u , dim = c( df1 , df1 , Nimp_NMI[2] , Nimp_NMI[1] ) )
 		u <- aperm( u , c(4,3,1,2) )	
-		res <- NMIwaldtest( qhat= qhat , u = u , testnull=v1)
+		res <- miceadds::NMIwaldtest( qhat= qhat , u = u , testnull=v1)
 		dfr <- data.frame( "D1"= res$stat$F ,  "df1"= res$stat$df1 , 
 				"D1_df2"= round(res$stat$df2,1) , 
 				"D1_p" = res$stat$pval  )

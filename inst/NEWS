@@ -39,7 +39,7 @@ Salzburg (Austria)
 https://www.bifie.at/
 
 Questions or suggestions about BIFIEsurvey can be sent to
-a.robitzsch/-\bifie.at
+robitzsch@ipn.uni-kiel.de
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -47,11 +47,22 @@ CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+--------------------------------------------------------------
+Versions 1.8 -- 2016-01-30  --  CRAN BIFIEsurvey 1.8-0
+--------------------------------------------------------------
+
+FIXED * fixed a bug in calculation of D2 statistic
+FIXED * corrected a wrong output of 'VarMI' for several 
+        models for nested multiply imputed datasets
+NOTE  * cleaned namespace file and defined imported functions
+        in a more explicit way
+
+DATA  * ---
+EXAMP * ---
 
 --------------------------------------------------------------
 Versions 1.7 -- 2015-11-04  --  CRAN BIFIEsurvey 1.7-0
 --------------------------------------------------------------
-
  
 NOTE  * corrected output of 'BIFIE.univar.test' in case of
         no replicate weights

@@ -80,3 +80,25 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
     return(res)
     }            
 ########################################################################
+#**************** print method ***********************			
+print.BIFIEdata <- function(x,...){
+  cat("Object of class 'BIFIEdata'\nCall: ")
+  print( x$CALL )
+  #*** multiply imputed data  
+  if ( ! x$NMI ){
+	  cat("MI data with", x$Nimp ,"datasets\n")
+				}
+  #*** nested multiply imputed data				
+  if ( x$NMI ){
+	  v1 <- paste0( "NMI data with ", x$Nimp_NMI[1] ," between datasets and " ,
+			  x$Nimp_NMI[2], " within datasets\n")
+	  cat(v1)  
+		}
+  v1 <- paste0( x$RR , " replication weights with fayfac=" ,
+					round(x$fayfac,3) , " \n" )
+  cat(v1)
+  v1 <- paste0( x$N , " cases and " ,
+	 x$Nvars , " variables \n" )
+  cat(v1)
+}
+########################################################

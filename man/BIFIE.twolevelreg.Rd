@@ -39,7 +39,8 @@ Object of class \code{BIFIEdata}
 An \R formula for fixed effects
 }
 \item{formula.random}{An \R formula for random effects}
-\item{idcluster}{Cluster identifier}
+\item{idcluster}{Cluster identifier. The cluster identifiers must be
+sorted in the \code{BIFIE.data} object.}
 \item{wgtlevel2}{Name of Level 2 weight variable}
 \item{wgtlevel1}{Name of Level 1 weight variable. This is optional.
     If it is not provided, \code{wgtlevel} is calculated from
@@ -52,7 +53,10 @@ Optional vector of grouping values. This can be omitted and grouping
 values will be determined automatically.
 }
 \item{se}{Optional logical indicating whether statistical inference
-based on replication should be employed.}
+based on replication should be employed. In case of \code{se=FALSE},
+standard errors are computed as maximum likelihood estimates under
+the assumption of random sampling of level 2 clusters.
+}
 \item{globconv}{Convergence criterion for maximum parameter change}
 \item{maxiter}{Maximum number of iterations}
 \item{object}{Object of class \code{BIFIE.twolevelreg}}
@@ -147,16 +151,22 @@ summary(mod1a)
 mod1b <- lme4::lmer( ASMMAT01 ~ 1 + ( 1 | idschool) , data = dat , REML=FALSE)
 summary(mod1b)
 
-#--- Model 1c: weights and sampling design and all plausible values
+#--- Model 1c: Like Model 1a but for five plausible values and ML inference
 mod1c <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
                 formula.fixed = ~ 1 , formula.random = ~ 1 , idcluster="idschool" , 
-                wgtlevel2 = "SCHWGT" )
+                wgtlevel2 = "one" ,  se = FALSE )
 summary(mod1c)
+
+#--- Model 1d: weights and sampling design and all plausible values
+mod1d <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
+                formula.fixed = ~ 1 , formula.random = ~ 1 , idcluster="idschool" , 
+                wgtlevel2 = "SCHWGT" )
+summary(mod1d)
 
 #***********************************************
 # Model 2: Random slope model
 
-#--- Model 1a: without weights
+#--- Model 2a: without weights
 mod2a <- BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
                 formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
                 idcluster="idschool" , wgtlevel2 = "one" ,  se = FALSE )
@@ -167,7 +177,7 @@ mod2b <- lme4::lmer( ASMMAT01 ~ female +  ASBG06A + ( 1 + ASBG06A | idschool) ,
                    data = dat , REML=FALSE)
 summary(mod2b)
 
-#--- Model 1c: weights and sampling design and all plausible values
+#--- Model 2c: weights and sampling design and all plausible values
 mod2c <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
                 formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
                 idcluster="idschool" , wgtlevel2 = "SCHWGT" , maxiter=500 , se=FALSE)
@@ -188,10 +198,11 @@ sig2 <- .60    # residual variance
 N <- NC*Nj
 idcluster <- rep( 1:NC , each=Nj )
 dat1 <- data.frame("idcluster" = idcluster )
-dat1$X <- rep( rnorm( NC , sd = sqrt(iccx) ) , each=Nj ) + rnorm( N , sd = sqrt( 1 - iccx) )
-dat1$Y <- theta[1] + rep( rnorm(NC , sd = sqrt(Tmat[1,1] ) ) , each=Nj ) + 
-        ( theta[2] + rep( rnorm(NC , sd = sqrt(Tmat[2,2] ) ) , each=Nj ) ) * dat1$X +
-                rnorm(N , sd= sqrt(sig2) )
+dat1$X <- rep( stats::rnorm( NC , sd = sqrt(iccx) ) , each=Nj ) + 
+                 stats::rnorm( N , sd = sqrt( 1 - iccx) )
+dat1$Y <- theta[1] + rep( stats::rnorm(NC , sd = sqrt(Tmat[1,1] ) ) , each=Nj ) + 
+        ( theta[2] + rep( stats::rnorm(NC , sd = sqrt(Tmat[2,2] ) ) , each=Nj ) ) * dat1$X +
+                stats::rnorm(N , sd= sqrt(sig2) )
 
 #--- (2) create design object 
 bdat1 <- BIFIE.data.jack( data=dat1 , jktype="JK_GROUP", jkzone = "idcluster"  )
@@ -218,7 +229,7 @@ summary(mod1c)
 # extract coefficients
 coef(mod1a)
 coef(mod1c)
-# variance matrix
+# covariance matrix
 vcov(mod1a)
 vcov(mod1c)
 }

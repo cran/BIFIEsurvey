@@ -26,7 +26,7 @@ Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
 \tabular{ll}{
 Package: \tab \pkg{BIFIEsurvey} \cr
 Type: \tab Package\cr
-Version: \tab 1.8\cr
+Version: \tab 1.9.4\cr
 Date: \tab 2016 \cr
 License: \tab GPL (>=2)\cr
 URL: \tab \url{http://www.bifie.at} \cr

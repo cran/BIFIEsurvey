@@ -10,7 +10,7 @@
 		   "--------\n"  ,
 		paste("| " ,d$Package," " , d$Version," (",d$Date,")",sep="") ,
 		"                                       " , 
-        "\n| Maintainer: Alexander Robitzsch <robitzsch@ipn.uni-kiel.de>      " ,
+#        "\n| Maintainer: Alexander Robitzsch <robitzsch@ipn.uni-kiel.de>      " ,
 		"\n| http://www.bifie.at                                             ",
 		"\n|---------------------------------------------------" ,
 		"--------------\n" )

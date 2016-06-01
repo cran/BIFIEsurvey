@@ -1,6 +1,7 @@
 \name{BIFIE.data}
 \alias{BIFIE.data}
 \alias{summary.BIFIEdata}
+\alias{print.BIFIEdata}
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
@@ -17,6 +18,8 @@ argument.
 BIFIE.data(data.list, wgt = NULL, wgtrep = NULL , fayfac = 1, cdata=FALSE, NMI=FALSE)
 
 \method{summary}{BIFIEdata}(object,...)
+
+\method{print}{BIFIEdata}(x,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,6 +44,7 @@ object should be compactly saved. The default is \code{FALSE}.}
 \item{NMI}{Optional logical indicating whether \code{data.list} is obtained
 by nested multiple imputation.}
 \item{object}{Object of class \code{BIFIEdata}}
+\item{x}{Object of class \code{BIFIEdata}}
 \item{\dots}{Further arguments to be passed}
 }
 %\details{
@@ -184,4 +188,5 @@ summary(bdat)
 % R documentation directory.
 \keyword{BIFIEdata}
 \keyword{summary}
+\keyword{print}
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

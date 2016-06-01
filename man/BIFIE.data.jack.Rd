@@ -6,7 +6,7 @@ Create \code{BIFIE.data} Object with Jackknife Zones
 }
 
 \description{
-Creates a \code{BIFIE.data} objects for designs with jackknife zones,
+Creates a \code{BIFIE.data} object for designs with jackknife zones,
 especially for TIMSS/PIRLS and PISA studies.
 }
 

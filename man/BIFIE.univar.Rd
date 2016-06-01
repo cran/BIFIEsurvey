@@ -79,6 +79,13 @@ A list with following entries
 See \code{\link{BIFIE.univar.test}} for a test of equal means and
 effect sizes \eqn{\eta} and \eqn{d}.
 
+Descriptive statistics without statistical inference can be 
+estimated by the collection of
+\code{\link[miceadds:ma.wtd.statNA]{miceadds::ma.wtd.statNA}}
+functions from the \pkg{miceadds} package.
+
+Further descriptive functions:
+
 \code{\link[survey:svymean]{survey::svymean}},
 \code{\link[intsvy:timss.mean]{intsvy::timss.mean}},
 \code{\link[intsvy:timss.mean.pv]{intsvy::timss.mean.pv}},

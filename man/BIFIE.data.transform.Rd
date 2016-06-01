@@ -176,7 +176,7 @@ bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =transform.formul
                   varnames.new = "book_rec" )
 res6 <- BIFIE.freq( bifieobj , vars = c("book_rec" ) )
 summary(res6)
-
+            
 #****************************
 #*** Transformation 7: include some variables aggregated to the school level
 
@@ -187,24 +187,23 @@ transform.formula <- ~ 0 +I( as.numeric( substring( IDSTUD  , 1 , 5 ) ) )
 bifieobj <- BIFIE.data.transform( bifieobj , transform.formula = transform.formula  ,
                varnames.new = "idschool" )
                           
-# define group mean for variable ASMMAT
+#*** test function for a single dataset bifieobj$dat1
 dat1 <- as.data.frame(bifieobj$dat1)
-gm <- miceadds::fast.groupmean( data=dat1$ASMMAT , group=dat1$idschool )
-gm[ match( dat1$idschool , gm[,1] ) , 2 ]   # school means replicated for each student
+gm <- miceadds::GroupMean( data=dat1$ASMMAT , group=dat1$idschool , extend=TRUE)[,2]
 
-# define utility function for group mean
-add.groupmean <- function( x , group ){
-    gm <- miceadds::fast.groupmean( data=x , group=group )
-    gm[ match( group , gm[,1] ) , 2 ]  
-                }
 # add school mean ASMMAT
-bifieobj <- BIFIE.data.transform( bifieobj , 
-                transform.formula = ~ 0 + I( add.groupmean( ASMMAT , idschool ) ) , 
+tformula <- ~ 0 + I( miceadds::GroupMean( ASMMAT , group=idschool , extend=TRUE)[,2] )
+bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =  tformula , 
                 varnames.new = "M_ASMMAT" )
+# add within group centered mathematics values of ASMMAT                
+bifieobj <- BIFIE.data.transform( bifieobj , 
+                transform.formula =  ~ 0 + I( ASMMAT - M_ASMMAT ) , 
+                varnames.new = "WC_ASMMAT" )
+                
 # add school mean books
 bifieobj <- BIFIE.data.transform( bifieobj , 
                 transform.formula = ~ 0 + I( add.groupmean( books , idschool ) ) , 
-                varnames.new = "M_books" )
+                varnames.new = "M_books" )      
 
 #****************************
 #*** Transformation 8: include fitted values and residuals from a linear model

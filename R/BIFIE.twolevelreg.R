@@ -72,11 +72,14 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		
 		#************ weights		
 		# weights
-		wgttot <- wgt
+		eps <- max(wgt)*1E-10
+		wgttot <- wgt + eps				
 		wgtlev2_full <- dat1[ , wgtlevel2 ]
 		wgtlev2 <- stats::aggregate( wgtlev2_full , list(idcluster) , mean )[,2]
+		eps <- 1E-10 * max( wgtlev2)
+		wgtlev2 <- wgtlev2 + eps 
 		if ( is.null(wgtlevel1) ){
-			wgtlev1 <- wgttot / wgtlev2_full
+			wgtlev1 <- wgttot / ( wgtlev2_full + eps )
 			         } else {
 			wgtlev1 <- dat1[ , wgtlevel1 ]
 							}
@@ -116,13 +119,19 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 			RR <- 0
 				}	
 
-		
+		#**** display stopping message if clustering variable is not ordered
+		ordered_clusters <- sum( diff(idcluster) < 0 ) == 0
+		if ( ! ordered_clusters){
+			cat("Cluster identifiers must be ordered ")
+			cat("for applying 'BIFIE.twolevelreg'!\n")
+			stop()
+				}
+					
 		#*********** estimate multilevel model		
 		res <- .Call("bifie_mla2" , X_list , Z_list , y_list , wgttot , wgtlev2 , wgtlev1 ,
 				 globconv , maxiter , group_vec - 1  , group_values - 1 , idcluster - 1 ,
 				 wgtrep1 , Nimp , fayfac ,
 				 PACKAGE="BIFIEsurvey")
-
 				 
 		# dimensions
 		NX <- ncol(X_list)

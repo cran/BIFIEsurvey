@@ -11,8 +11,8 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes , type=NULL ){
 	# extract replicated parameters
 	parsres <- extract.replicated.pars( BIFIE.method = res1 , type=type)	
 	parsM <- parsres$parsM	
-	parsrepM <- parsres$parsrepM	
-# Revalpr("parsM")	
+	parsrepM <- parsres$parsrepM
+    parnames <- parsres$parnames	
 	fayfac <- res1$fayfac
 	N <- BIFIE.method$N	
 	Nimp <- BIFIE.method$Nimp
@@ -44,7 +44,7 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes , type=NULL ){
 			}
 			
 	if ( BIFIE.method$NMI ){
-		Cdes_cols <- Cdes[ , Ccols ]
+		Cdes_cols <- Cdes[ , Ccols , drop=FALSE]
 		df1 <- nrow(Cdes_cols)
 		parsM2 <- Cdes_cols %*% parsM[ Ccols , ] 
 		parsrepM2 <- Cdes_cols %*% parsrepM[ Ccols , ]
@@ -55,10 +55,19 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes , type=NULL ){
 		Nimp_NMI <- BIFIE.method$Nimp_NMI
 		qhat <- array( parsM2 , dim= c( df1 , Nimp_NMI[2] , Nimp_NMI[1] ) )
 		qhat <- aperm( qhat , c(3,2,1) )
-		dimnames(qhat)[[3]] <- v1 <- paste0("parm",1:df1)
+		v1 <- paste0("parm",1:df1)
+		dimnames(qhat) <- list( 
+			paste0("imp_nmi_dim1_" , seq(1,dim(qhat)[[1]] ) ) ,
+			paste0("imp_nmi_dim2_" , seq(1,dim(qhat)[[2]] ) ) ,
+			v1 )
+	
+		if ( ! is.null( dimnames(qhat) ) ){ 
+			dimnames(qhat)[[3]] <- v1
+											}
 		u <- array( u , dim = c( df1 , df1 , Nimp_NMI[2] , Nimp_NMI[1] ) )
 		u <- aperm( u , c(4,3,1,2) )	
 		res <- miceadds::NMIwaldtest( qhat= qhat , u = u , testnull=v1)
+		# res <- NMIwaldtest( qhat= qhat , u = u , testnull=v1)
 		dfr <- data.frame( "D1"= res$stat$F ,  "df1"= res$stat$df1 , 
 				"D1_df2"= round(res$stat$df2,1) , 
 				"D1_p" = res$stat$pval  )

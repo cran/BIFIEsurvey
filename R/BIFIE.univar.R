@@ -95,7 +95,6 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		dfr$SD_p <- 2*stats::pt( - abs( dfr$SD_t) , df = dfr$SD_df )							
 		dfr0 <- data.frame(		"SD_fmi" = res$sd1_fmi   , "SD_VarMI"= res$sd1_varBetween , "SD_VarRep"= res$sd1_varWithin            
 					)
-
 				
 		if (BIFIEobj$NMI ){
 			# M
@@ -129,12 +128,11 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#**************************************************************************#
 	#****************** with grouping variable ********************************#		
 	if ( ! nogroup ){
-
 		res <- .Call( "univar_multiple_V2group" , datalistM , wgt_ , wgtrep , vars_index - 1 , fayfac , Nimp ,
 				group_index - 1, group_values , PACKAGE="BIFIEsurvey" )	
 		GG <- length(group_values)
 		VV <- length(vars)
-					 
+		
 		dfr <- data.frame( "var" = rep(vars,each=GG) , 
 				"groupvar" = group , 
 				"groupval" = rep(group_values  , VV ) , 
@@ -156,7 +154,7 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 		dfr$SD_p <- 2*stats::pt( - abs( dfr$SD_t) , df = dfr$SD_df )							
 		dfr <- data.frame( dfr  ,	"SD_fmi" = res$sd1_fmi   , "SD_VarMI"= res$sd1_varBetween , "SD_VarRep"= res$sd1_varWithin            
 					 )
-						
+					 
 		if (BIFIEobj$NMI ){
 			# M
 			res1 <- BIFIE_NMI_inference_parameters( parsM=res$mean1M , parsrepM=res$mean1repM , 

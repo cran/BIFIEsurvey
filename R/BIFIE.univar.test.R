@@ -107,17 +107,16 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	dfr$d_fmi <- res$dstatL$pars_fmi
 	dfr$d_VarMI <- res$dstatL$pars_varBetween
 	dfr$d_VarRep <- res$dstatL$pars_varWithin
-
-
 	
 	if ( BIFIE.method$NMI ){
 		res1 <- BIFIE_NMI_inference_parameters( parsM= res$dstatM, parsrepM= res$dstatrepM , 
 					fayfac=fayfac , RR=RR , Nimp=BIFIE.method$Nimp , 
 					Nimp_NMI=BIFIE.method$Nimp_NMI , comp_cov = FALSE )									
+
 		dfr$d <- res1$pars
 		dfr$d_SE <- res1$pars_se
 		dfr$d_t <- round( dfr$d / dfr$d_SE , 2 )
-		dfr$d_df <- res1$d_df
+		dfr$d_df <- res1$df
 		dfr$d_p <- stats::pt( - abs( dfr$d_t ) , df=dfr$d_df) * 2			
 		dfr$d_fmi <- res1$pars_fmi
 		dfr$d_VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2
@@ -128,7 +127,7 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	# if (RR==0){				
 		dfr$d_SE <- dfr$d_fmi <- dfr$d_VarMI <- dfr$d_VarRep <- NULL
 				}
-
+				
 	if ( is_pseudogroup	){
 			stat <- res5$stat[ 1:GG , ]
 			stat$pseudogroup <- 1:GG
@@ -145,7 +144,6 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 
 			
 	stat.dstat <- dfr	
-	
 	#*****
 	# F statistics
 	dfr <- NULL
@@ -167,7 +165,6 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 			} else {
 		stat.F <- NA
 				}
-	
 	
 	parnames <- NULL
 	

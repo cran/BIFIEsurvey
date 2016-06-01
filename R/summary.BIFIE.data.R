@@ -4,8 +4,12 @@ summary.BIFIEdata <- function(object , ... ){
 	cat("------------------------------------------------------------\n")
 	d1 <- utils::packageDescription("BIFIEsurvey")
 	cat( paste( d1$Package , " " , d1$Version , " (" , d1$Date , ")" , sep="") , "\n" )	
-	cat( paste0("Function '" , class(object) ) )
-	cat("'" )		
+#	cat( paste0("Function '" , class(object) ) )
+#	cat("'" )		
+	
+	cat("\nCall:\n ", paste(deparse(object$CALL), sep = "\n", collapse = "\n"), 
+				"", sep = "")		
+	
 	if( object$cdata ){ cat("\nCompact BIFIEdata") }
 	cat("\n\n" )	
 	cat( "Date of Analysis:" , paste( object$time[1] ) , "\n\n" )

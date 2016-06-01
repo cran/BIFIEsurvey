@@ -48,6 +48,30 @@ CHANGELOG BIFIEsurvey
 
 
 --------------------------------------------------------------
+Versions 1.9.4 -- 2016-06-01  --  CRAN BIFIEsurvey 1.9.4-0
+--------------------------------------------------------------
+ 
+NOTE  * added S3 method 'print' for 'BIFIEdata' objects
+FIXED * fixed a bug in 'BIFIE.twolevelreg' in handling cases
+        with zero sample weights (thanks to Nicole Haag)
+FIXED * fixed a bug in 'BIFIE.univar.test' for nested multiply
+        imputed datasets. This update also needs miceadds 
+        package version >= 1.8 (thanks to Nicole Haag and
+        Anja Schiepe-Tiska) 
+NOTE  * added note to descriptive functions in the miceadds
+        package (which can now handle objects of class
+        BIFIEdata) in the help site of 'BIFIE.univar'
+FIXED * The function 'BIFIE.twolevelreg' needs ordered cluster
+        identifiers which is now checked in advance of model
+        fitting. If this condition is not fulfilled, then 
+        the estimation will not run (thanks to Mihaela Stiglic).   
+NOTE  * included a simplied example for including cluster
+        means in BIFIEdata object       
+
+DATA  * ---
+EXAMP * BIFIE.data.transform (1.7)
+
+--------------------------------------------------------------
 Versions 1.8 -- 2016-01-30  --  CRAN BIFIEsurvey 1.8-0
 --------------------------------------------------------------
 

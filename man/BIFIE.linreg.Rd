@@ -119,6 +119,88 @@ summary(mod1b)
 #**** Model 2: Like Model 1, but books is now treated as a factor 
 mod2 <- BIFIE.linreg( bdat , formula = ASMMAT ~ as.factor(books) + migrant  )
 summary(mod2)
+
+#############################################################################
+# EXAMPLE 2: PISA data | Nonlinear regression models
+#############################################################################
+
+data(data.pisaNLD)
+data <- data.pisaNLD
+
+#--- Create BIFIEdata object immediately using BIFIE.data.jack function
+bdat <- BIFIE.data.jack( data.pisaNLD , jktype = "RW_PISA" , cdata=TRUE )
+summary(bdat)
+
+#****************************************************
+#*** Model 1: linear regression
+mod1 <- BIFIE.linreg( bdat , formula = MATH ~ HISEI )
+summary(mod1)
+
+#****************************************************
+#*** Model 2: Cubic regression
+mod2 <- BIFIE.linreg( bdat , formula = MATH ~ HISEI + I(HISEI^2) + I(HISEI^3) )
+summary(mod2)
+
+#****************************************************
+#*** Model 3: B-spline regression
+
+# test with design of HISEI values
+dfr <- data.frame("HISEI" = 16:90 )
+des <- stats::model.frame( ~ splines::bs( HISEI , df=5 ) , dfr )
+des <- des$splines
+plot( dfr$HISEI , des[,1] , type="l" , pch=1 , lwd=2 , ylim=c(0,1) )
+for (vv in 2:ncol(des) ){
+    lines( dfr$HISEI , des[,vv] , lty=vv , col=vv , lwd=2)
+}
+
+# apply B-spline regression in BIFIEsurvey::BIFIE.linreg
+mod3 <- BIFIE.linreg( bdat , formula = MATH ~ splines::bs(HISEI,df=5) )
+summary(mod3)
+
+#*** include transformed HISEI values for B-spline matrix in bdat
+bdat2 <- BIFIE.data.transform( bdat , ~ 0 + splines::bs( HISEI , df = 5 ))
+bdat2$varnames[ bdat2$varsindex.added ] <- paste0("HISEI_bsdes" , 
+            seq( 1 , length( bdat2$varsindex.added ) ) )
+
+#****************************************************
+#*** Model 4: Nonparametric regression using BIFIE.by
+
+?BIFIE.by
+
+#---- (1) test function with one dataset
+dat1 <- bdat$dat1
+vars <- c("MATH" , "HISEI")
+X <- dat1[,vars]
+w <- bdat$wgt
+X <- as.data.frame(X)
+# estimate model
+mod <- stats::loess( MATH ~ HISEI , weights = w , data = X )
+
+# predict HISEI values
+hisei_val <- data.frame( "HISEI" = seq(16,90) )
+y_pred <- stats::predict( mod , hisei_val )
+plot( hisei_val$HISEI , y_pred , type="l")
+
+#--- (2) define loess function
+loess_fct <- function(X,w){
+    X1 <- data.frame( X , w )
+    colnames(X1) <- c( vars , "wgt")
+    X1 <- na.omit(X1)  
+#    mod <- stats::lm( MATH ~ HISEI , weights = X1$wgt , data = X1 )
+    mod <- stats::loess( MATH ~ HISEI , weights = X1$wgt , data = X1 )
+    y_pred <- stats::predict( mod , hisei_val )
+    return(y_pred)
+}
+
+#--- (3) estimate model
+mod4 <-  BIFIE.by( bdat , vars  , userfct= loess_fct )
+summary(mod4)
+
+# plot linear function pointwise and confidence intervals
+plot( hisei_val$HISEI , mod4$stat$est , type="l" , lwd = 2 , 
+        xlab="HISEI" , ylab="PVMATH" , ylim=c(430,670) ) 
+lines( hisei_val$HISEI , mod4$stat$est - 1.96* mod4$stat$SE , lty=3 )
+lines( hisei_val$HISEI , mod4$stat$est + 1.96* mod4$stat$SE , lty=3 )
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

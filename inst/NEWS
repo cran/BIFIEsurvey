@@ -48,6 +48,19 @@ CHANGELOG BIFIEsurvey
 
 
 --------------------------------------------------------------
+Versions 1.11 -- 2016-10-18  --  CRAN BIFIEsurvey 1.11-0
+--------------------------------------------------------------
+ 
+NOTE  * added an example of B-spline regression and nonparametric
+        regression in 'BIFIE.linreg' (Example 2)
+        (question raised by Lena Keller)
+NOTE  * included more details about calculation method of quantiles
+        in 'BIFIE.ecdf'
+
+DATA  * ---
+EXAMP * BIFIE.linreg (2)
+
+--------------------------------------------------------------
 Versions 1.9.4 -- 2016-06-01  --  CRAN BIFIEsurvey 1.9.4-0
 --------------------------------------------------------------
  
@@ -65,7 +78,7 @@ FIXED * The function 'BIFIE.twolevelreg' needs ordered cluster
         identifiers which is now checked in advance of model
         fitting. If this condition is not fulfilled, then 
         the estimation will not run (thanks to Mihaela Stiglic).   
-NOTE  * included a simplied example for including cluster
+NOTE  * included a simplified example for including cluster
         means in BIFIEdata object       
 
 DATA  * ---

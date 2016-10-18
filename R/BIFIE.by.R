@@ -5,11 +5,11 @@
 BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 		group=NULL , group_values=NULL , se=TRUE , use_Rcpp = TRUE ){
 	#****
-	s1 <- Sys.time()
-	cl <- match.call()
+	s1 <- base::Sys.time()
+	cl <- base::match.call()
 	bifieobj <- BIFIEobj	
 	if (bifieobj$cdata){
-		varnames <- unique( c( vars , group , "one") )
+		varnames <- base::unique( c( vars , group , "one") )
 		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	
 						}				
 	FF <- Nimp <- bifieobj$Nimp
@@ -24,18 +24,18 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	
 	if (RR==1){ RR <- 0 }
 	if ( ! se ){ 
-		wgtrep <- matrix( wgt , ncol=1 )
+		wgtrep <- base::matrix( wgt , ncol=1 )
 		RR <- 0
 				}	
 	
-	vars_index <- unlist( sapply( vars , FUN = function(vv){ 
-						which( varnames == vv ) } , simplify=TRUE ) )
+	vars_index <- base::unlist( base::sapply( vars , FUN = function(vv){ 
+						base::which( varnames == vv ) } , simplify=TRUE ) )
     # vars values
-	VV <- length(vars)
+	VV <- base::length(vars)
 					
-	wgt_ <- matrix( wgt , ncol=1 )
+	wgt_ <- base::matrix( wgt , ncol=1 )
 	if ( is.null( group) ){ nogroup <- TRUE } else { nogroup <- FALSE }
-	cat(paste0( "|" , paste0( rep("*" , FF) , collapse="") , "|\n" ))
+	base::cat( base::paste0( "|" , base::paste0( base::rep("*" , FF) , collapse="") , "|\n" ))
 	if (nogroup){
 	    group <- "one"
 	    group_values <- c(1)
@@ -43,12 +43,12 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 			
 
 	#@@@@***
-    group_index <- match( group , varnames )
+    group_index <- base::match( group , varnames )
 	#@@@@***
 
     if ( is.null(group_values ) ){ 
 		t1 <- fasttable( datalistM[ , group_index ] )				  
-	    group_values <- sort( as.numeric( paste( names(t1) ) ))
+	    group_values <- base::sort( base::as.numeric( base::paste( base::names(t1) ) ))
 				}
 	
 	#@@@@***
@@ -74,27 +74,27 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	#****
 	# Rcpp implementation
 	if ( use_Rcpp ){
-		res <- .Call("bifie_by" , datalistM , wgt_ , wgtrep ,	vars_index - 1,    fayfac ,
+		res <- base::.Call("bifie_by" , datalistM , wgt_ , wgtrep ,	vars_index - 1,    fayfac ,
 				Nimp , group_index - 1 , group_values , userfct , PACKAGE="BIFIEsurvey")
 					}
 	
 	NP <- res$NP
-	GG <- length(group_values)
+	GG <- base::length(group_values)
 	ZZ <- NP
 	if (is.null( userparnames ) ){
-		userparnames <- paste0("parm",1:NP) 
+		userparnames <- base::paste0("parm",1:NP) 
 				}
 	
-	dfr <- data.frame( "parm" = rep( userparnames , GG )
-						)
+	dfr <- base::data.frame( "parm" = base::rep( userparnames , GG )
+							)
 	if (! nogroup){
 	   dfr$groupvar <- group
-	   dfr$groupval <- rep( group_values , each=ZZ )
+	   dfr$groupval <- base::rep( group_values , each=ZZ )
 	             }				 				 	
 
 
-	dfr$Ncases <- rep( rowMeans( res$ncasesM ) , each=ZZ )
-	dfr$Nweight <- rep( rowMeans( res$sumwgtM ) , each=ZZ )
+	dfr$Ncases <- base::rep( rowMeans( res$ncasesM ) , each=ZZ )
+	dfr$Nweight <- base::rep( rowMeans( res$sumwgtM ) , each=ZZ )
 
 	dfr <- create_summary_table( res_pars=res$parsL , 
 				     parsM=res$parsM   , parsrepM=res$parsrepM , 
@@ -103,7 +103,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	
 				
 	# create vector of parameter names
-	parnames <- paste0( dfr$parm   , "_" , dfr$groupvar , dfr$groupval )
+	parnames <- base::paste0( dfr$parm   , "_" , dfr$groupvar , dfr$groupval )
 
 
 	#@@@@***
@@ -113,15 +113,15 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 						
 	
 	#*************************** OUTPUT ***************************************
-	s2 <- Sys.time()
+	s2 <- base::Sys.time()
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )
-	res1 <- list( "stat" = dfr , 
+	res1 <- base::list( "stat" = dfr , 
 			"output" = res , 	"timediff" = timediff ,
 			"N" = N , "Nimp" = Nimp , "RR" = RR , "fayfac"=fayfac , "GG"=GG ,			
 			"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 			"parnames" = parnames , "CALL"= cl)
-	class(res1) <- "BIFIE.by"
-	return(res1)
+	base::class(res1) <- "BIFIE.by"
+	base::return(res1)
 		}
 ###################################################################################
 
@@ -129,7 +129,7 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 # summary for BIFIE.by function
 summary.BIFIE.by <- function( object , digits=4 , ... ){
     BIFIE.summary(object)
-	cat("Statistical Inference for User Defined Function \n")	
+	base::cat("Statistical Inference for User Defined Function \n")	
 	obji <- object$stat
 	print.object.summary( obji , digits=digits )
 			}

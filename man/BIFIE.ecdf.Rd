@@ -37,7 +37,9 @@ Optional vector of breaks. Otherwise, it will be automatically defined.
 }
 \item{quanttype}{
 Type of calculation for quantiles. In case of \code{quanttype=1},
-a linear interpolation is used while for \code{quanttype=2} it is not.
+a linear interpolation is used (which is \code{type='i/n'} in
+\code{\link[Hmisc:wtd.stats]{Hmisc::wtd.quantile}}), 
+while for \code{quanttype=2} no interpolation is used.
 }
   \item{group}{
 Optional grouping variable

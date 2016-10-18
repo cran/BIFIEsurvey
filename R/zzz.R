@@ -16,7 +16,7 @@
 		"--------------\n" )
 	}
 version <- function(pkg="BIFIEsurvey"){
-  lib <- dirname(system.file(package = pkg))
+  lib <- base::dirname( base::system.file(package = pkg) )
   d <- utils::packageDescription(pkg)
-  return(paste(d$Package,d$Version,d$Date,lib))
+  base::return( base::paste(d$Package,d$Version,d$Date,lib) )
 }

@@ -384,25 +384,24 @@ Rcpp::List univar_helper_multiple_V2group( Rcpp::NumericMatrix dat1,
      
      Rcpp::NumericMatrix sumwgt1(GG*VV,WW);  
      Rcpp::NumericMatrix ncases1(GG*VV,1);  
-
-     // Rcpp::Rcout << "c200 " << std::flush << std::endl ;
+     double eps = 1E-20;
      
      // compute sum of weights  
      for (int nn=0;nn<N;nn++){ // beg nn
         for ( int gg=0;gg<GG;gg++){ // beg gg
-          for (int vv=0;vv<VV;vv++){ // beg vv
-           if ( ! R_IsNA( dat1(nn,vars_index[vv]) ) ){  // beg if IsNA          	  
-            if ( dat1(nn,group_index) == group_values[gg] ){ // beg if dat(,gg)==
-              for (int hh=0;hh<WW;hh++){  // beg hh	    
-               sumwgt1(gg+vv*GG,hh) += wgt1(nn,hh) ;
-               				} // end hh
-               ncases1(gg+vv*GG,0) ++ ;  
-//               break ;                
-               	         } // end if dat(,gg) == group_values[gg]
-                         } // end if IsNA
-          		} // end vv          		
-        	    } // end gg
-        	}  // end nn
+        	for (int vv=0;vv<VV;vv++){ // beg vv
+        		if ( ! R_IsNA( dat1(nn,vars_index[vv]) ) ){  // beg if IsNA          	  
+        			if ( dat1(nn,group_index) == group_values[gg] ){ // beg if dat(,gg)==
+        				for (int hh=0;hh<WW;hh++){  // beg hh	    
+        					sumwgt1(gg+vv*GG,hh) += wgt1(nn,hh) ;
+               			} // end hh
+               			ncases1(gg+vv*GG,0) ++ ;  
+               			//               break ;                
+               		} // end if dat(,gg) == group_values[gg]
+               	} // end if IsNA
+            } // end vv          		
+   	    } // end gg
+   	 }  // end nn
         	
      int VV1=VV*GG ;   	
      // compute means and standard deviations   		  
@@ -414,45 +413,44 @@ Rcpp::List univar_helper_multiple_V2group( Rcpp::NumericMatrix dat1,
        
      for (int vv=0; vv<VV;vv++){
      	for (int hh=0;hh<WW;hh++){ 
-     	   for (int gg=0;gg<GG;gg++){
-     		mean1vv(gg,hh) = 0  ;  
-     		sd1vv(gg,hh) = 0  ;
-     				}
-     			}
-        for (int nn=0;nn<N;nn++){ // begin nn
-       if ( ! R_IsNA( dat1(nn,vars_index[vv]) ) ){  // beg if IsNA            	
-        for ( int gg=0;gg<GG;gg++){ // begin gg
-            if ( dat1(nn,group_index) == group_values[gg] ){     
-              for (int hh=0;hh<WW;hh++){	    
-            	mean1vv(gg,hh) += wgt1(nn,hh) * dat1(nn,vars_index[vv]) ;  
-                sd1vv(gg,hh) += wgt1(nn,hh) * pow( dat1(nn,vars_index[vv]) , 2.0) ;
-                			}
-                break ;
-                		   } // end if	
-                             } // end gg
-                         } // end if IsNA                             
-     			}  // end nn
+     		for (int gg=0;gg<GG;gg++){
+     			mean1vv(gg,hh) = 0  ;  
+     			sd1vv(gg,hh) = 0  ;
+     		}
+     	}
+     	for (int nn=0;nn<N;nn++){ // begin nn
+     		if ( ! R_IsNA( dat1(nn,vars_index[vv]) ) ){  // beg if IsNA            	
+     			for ( int gg=0;gg<GG;gg++){ // begin gg
+     				if ( dat1(nn,group_index) == group_values[gg] ){     
+     					for (int hh=0;hh<WW;hh++){	    
+     						mean1vv(gg,hh) += wgt1(nn,hh) * dat1(nn,vars_index[vv]) ;  
+     						sd1vv(gg,hh) += wgt1(nn,hh) * pow( dat1(nn,vars_index[vv]) , 2.0) ;
+                		}
+                		break ;
+                	} // end if	
+                } // end gg
+            } // end if IsNA                             
+        }  // end nn
      	for (int gg=0;gg<GG;gg++){  // begin gg
-        for (int hh=0;hh<WW;hh++){ // beg hh    		
-           mean1(vv*GG+gg,hh) = mean1vv(gg,hh) / sumwgt1(gg+vv*GG,hh) ;  
-           sd1(vv*GG+gg,hh) = sqrt( ( sd1vv(gg,hh) - sumwgt1(gg+vv*GG,hh)*
-           	   	pow(mean1(vv*GG+gg,hh),2) ) /( sumwgt1(gg+vv*GG,hh) - 1 ) ) ;
-           				}
-           			} // end gg
+     		for (int hh=0;hh<WW;hh++){ // beg hh    		
+     			mean1(vv*GG+gg,hh) = mean1vv(gg,hh) / ( sumwgt1(gg+vv*GG,hh) + eps );  
+     			sd1(vv*GG+gg,hh) = sqrt( ( sd1vv(gg,hh) - sumwgt1(gg+vv*GG,hh)*
+     				pow(mean1(vv*GG+gg,hh),2) ) /( sumwgt1(gg+vv*GG,hh) - 1 ) ) ;
+        	}
+       	} // end gg
            
-        	} // end vv
-        	
-        	
+     } // end vv
+        	        	
 	return Rcpp::List::create( 
-	    _["sumwgt1"] = sumwgt1 ,
-	    _["ncases1"] = ncases1 ,
-	    _["mean1"] = mean1 ,
-	    _["sd1"] = sd1
+		Rcpp::_["sumwgt1"] = sumwgt1 ,
+		Rcpp::_["ncases1"] = ncases1 ,
+		Rcpp::_["mean1"] = mean1 ,
+		Rcpp::_["sd1"] = sd1
 	    ) ;          	        	
      }	
 //********************************************************************
 
-
+     // Rcpp::Rcout << "c200 " << std::flush << std::endl ;
 
 
 

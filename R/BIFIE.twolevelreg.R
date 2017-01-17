@@ -2,7 +2,8 @@
 #############################################################
 # BIFIE.twolevelreg
 BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
-           idcluster , wgtlevel2 = NULL , wgtlevel1 = NULL , group=NULL , group_values=NULL , se=TRUE ,
+           idcluster , wgtlevel2 = NULL , wgtlevel1 = NULL , group=NULL ,		   
+		   group_values=NULL , recov_constraint = NULL , se=TRUE ,
 		   globconv = 1E-6 , maxiter = 1000
 				                  ){
 				
@@ -17,8 +18,8 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		if (bifieobj$cdata){
 			# formula_vars <- NULL
 			# if (! is.null(formula) ){
-			formula_vars <- c( base::all.vars( formula.fixed ) , 
-									base::all.vars( formula.random ) )
+			formula_vars <- c( all.vars( formula.fixed ) , 
+									all.vars( formula.random ) )
 			#					}
 			varnames <- unique( c( dep ,  group , "one" , idcluster , formula_vars ,
 								wgtlevel1 , wgtlevel2 ) )
@@ -85,7 +86,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 							}
 
 		wgtrep1 <- wgtrep					
-	
+			
 		#****** groups
 		if ( is.null( group) ){ 
 					nogroup <- TRUE 
@@ -112,7 +113,20 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		group_vec <- as.numeric( group_vec)
 		group_values <- as.numeric( group_values)
 		
-		
+		# constraints for random effects covariance
+		# recov_constraint
+		is_rcov_constraint <- 1
+		NRC <- nrow(recov_constraint)
+		if ( is.null(recov_constraint)){
+			recov_constraint <- matrix( 0 , nrow=1,ncol=3)
+			is_rcov_constraint <- 0
+			NRC <- 0
+		}
+		recov_constraint[,1:2] <- recov_constraint[,1:2] - 1
+		# recov_constraint		
+		# is_rcov_constraint
+
+
 		
 		if ( ! se ){ 
 			wgtrep1 <- matrix( wgt , ncol=1 )
@@ -130,8 +144,13 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 		#*********** estimate multilevel model		
 		res <- .Call("bifie_mla2" , X_list , Z_list , y_list , wgttot , wgtlev2 , wgtlev1 ,
 				 globconv , maxiter , group_vec - 1  , group_values - 1 , idcluster - 1 ,
-				 wgtrep1 , Nimp , fayfac ,
+				 wgtrep1 , Nimp , fayfac , recov_constraint	, is_rcov_constraint ,
 				 PACKAGE="BIFIEsurvey")
+		
+		# Not requested from the output:
+		# -------------------------------
+		# 	res$NZ
+		#	res$NX		
 				 
 		# dimensions
 		NX <- ncol(X_list)
@@ -273,7 +292,7 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 				"NMI" = BIFIEobj$NMI , "Nimp_NMI" = BIFIEobj$Nimp_NMI , 
 				"GG"=GG , "micombs" = micombs , "se" = se , 
 				"parnames" = parnames , "parnames_sel" = parnames_sel ,
-				"vardecomp" = vardecomp ,
+				"vardecomp" = vardecomp , "idcluster_table" = res$idcluster_table , 
 				"CALL"= cl)		
 		class(res1) <- "BIFIE.twolevelreg"		
 		return(res1)																		

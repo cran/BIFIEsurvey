@@ -6,7 +6,7 @@
 # on attach
 .onAttach <- function(libname,pkgname){
   d <- utils::packageDescription("BIFIEsurvey")
-  base::packageStartupMessage("|---------------------------------------------------------",
+  packageStartupMessage("|---------------------------------------------------------",
 		   "--------\n"  ,
 		paste("| " ,d$Package," " , d$Version," (",d$Date,")",sep="") ,
 		"                                       " , 
@@ -16,7 +16,7 @@
 		"--------------\n" )
 	}
 version <- function(pkg="BIFIEsurvey"){
-  lib <- base::dirname( base::system.file(package = pkg) )
+  lib <- dirname( system.file(package = pkg) )
   d <- utils::packageDescription(pkg)
-  base::return( base::paste(d$Package,d$Version,d$Date,lib) )
+  return( paste(d$Package,d$Version,d$Date,lib) )
 }

@@ -27,7 +27,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 	
 	if ( is.null(breaks) ){
 	    x <- dat1[ , vars_index ]
-		breaks <- base::pretty(x , n = grDevices::nclass.Sturges(x))
+		breaks <- pretty(x , n = grDevices::nclass.Sturges(x))
 				}
 	
 		RR <- 0

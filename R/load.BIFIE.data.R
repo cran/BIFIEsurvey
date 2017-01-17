@@ -3,7 +3,7 @@
 # load BIFIEdata objects when objects are saved as full BIFIEdata
 #    objects in one file
 load.BIFIEdata <- function(filename, dir =getwd() ){
-    d1 <- base::load( file=file.path(dir,filename) )
+    d1 <- load( file=file.path(dir,filename) )
 	objname <- "bdat_temp"
 	cdata <- NULL
 	miceadds::Reval( paste0("cdata <- " , d1  ,"$cdata" )	, print.string=FALSE  )

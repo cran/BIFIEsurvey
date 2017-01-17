@@ -38,7 +38,7 @@ importFrom(utils, packageDescription)
 #***************************************************
 #************** Depends ****************************
 
-##
+##  import(survey)
 
 
 #***************************************************
@@ -59,36 +59,35 @@ importFrom(TAM, lavaanify.IRT)
 ########### EXPORTS ##################
 
 
-export(   
-    BIFIE.BIFIEcdata2BIFIEdata ,
-    BIFIE.BIFIEdata2BIFIEcdata,
-    BIFIE.BIFIEdata2datalist,
-    BIFIE.by, 
-    BIFIE.correl,
-    BIFIE.crosstab,
-    BIFIE.data,
-    BIFIE.data.boot,
-    BIFIE.data.jack,
-    BIFIE.data.transform,
-    BIFIE.derivedParameters,
-    BIFIE.ecdf,
-    BIFIE.freq,
-    BIFIE.hist,
-    BIFIE.linreg,
-    BIFIE.logistreg,
-    BIFIE.mva,
-    BIFIE.pathmodel, 
-    BIFIE.twolevelreg,
-    BIFIE.univar,
-    BIFIE.univar.test,
-    BIFIE.waldtest,
-    BIFIEdata.select,
-    bifietable,
-    load.BIFIEdata,
-    load.BIFIEdata.files,
-    save.BIFIEdata,
-    write.BIFIEdata 
-)    
+export(BIFIE.BIFIEcdata2BIFIEdata)
+export(BIFIE.BIFIEdata2BIFIEcdata)
+export(BIFIE.BIFIEdata2datalist)
+export(BIFIE.by)
+export(BIFIE.correl)
+export(BIFIE.crosstab)
+export(BIFIE.data)
+export(BIFIE.data.boot)
+export(BIFIE.data.jack)
+export(BIFIE.data.transform)
+export(BIFIE.derivedParameters)
+export(BIFIE.ecdf)
+export(BIFIE.freq)
+export(BIFIE.hist)
+export(BIFIE.linreg)
+export(BIFIE.logistreg)
+export(BIFIE.mva)
+export(BIFIE.pathmodel)
+export(BIFIE.twolevelreg)
+export(BIFIE.univar)
+export(BIFIE.univar.test)
+export(BIFIE.waldtest)
+export(BIFIEdata.select)
+export(bifietable)
+export(load.BIFIEdata)
+export(load.BIFIEdata.files)
+export(save.BIFIEdata)
+export(write.BIFIEdata)
+
     
     
 

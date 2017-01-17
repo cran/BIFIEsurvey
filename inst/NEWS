@@ -47,6 +47,22 @@ CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+
+--------------------------------------------------------------
+Versions 1.12 -- 2017-01-16  --  CRAN BIFIEsurvey 1.12-0
+--------------------------------------------------------------
+ 
+FIXED * fixed a problem in 'BIFIE.data.select' with side effects
+        on 'BIFIE.mva' if there is only one missing case of a
+        variable
+ADDED * added option for fixed entries in random effects
+        covariance matrix in 'BIFIE.twolevelreg', see 
+        Example 1, Models 2d und 2e for specification  
+        (suggested by Andrea Cantieni)
+
+DATA  * ---
+EXAMP * BIFIE.twolevelreg (1.2d, 1.2e)
+
 --------------------------------------------------------------
 Versions 1.11 -- 2016-10-18  --  CRAN BIFIEsurvey 1.11-0
 --------------------------------------------------------------

@@ -52,7 +52,7 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 
 	missvars_index <- match( missvars , colnames(bifieobj$dat1) )
 	datalistM_ind_sel <- bifieobj$datalistM_ind[ , missvars_index , drop=FALSE ]											
-
+	
 	respvars <- paste0("resp_" , missvars )
 	colnames(datalistM_ind_sel) <- respvars
 	VVadd <- length(respvars )
@@ -63,8 +63,6 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 	bifieobj$dat1 <- cbind( bifieobj$dat1 , datalistM_ind_sel )
 	bifieobj$Nvars <- bifieobj$Nvars + VVadd
 	bifieobj$varnames <- c( bifieobj$varnames , respvars )
-
-
 	# select dataset
 	bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames = varnames1 )
 	
@@ -100,9 +98,8 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 	# collect results
 	VV <- length(respvars)
 	CVV <- length(covariates)
-	res_list <- list( 1:VV)
+	res_list <- list(1:VV)
 	dfr <- NULL
-	
 	RR <- bifieobj$RR
 
 	
@@ -114,7 +111,7 @@ BIFIE.mva <- function( BIFIEobj , missvars , covariates=NULL , se=TRUE ){
 		res <- BIFIE.univar( bifieobj , vars = covariates , group= rvv, 
 					group_values = 0:1 )
 		res.vv$stat <- res$stat
-		
+	
 		res1 <- BIFIE.univar.test( res , wald_test = FALSE )					
 		res.vv$dstat <- res1$stat.dstat
 						
@@ -173,4 +170,4 @@ summary.BIFIE.mva <- function( object , digits=4 , ... ){
 	cat("Missing Value Analysis \n")	
 	obji <- object$stat.mva
 	print.object.summary( obji , digits=digits )			
-			}
+}

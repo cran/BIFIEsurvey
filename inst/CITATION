@@ -8,9 +8,8 @@ citEntry(entry="Manual",
          author = personList(as.person("BIFIE")),
          year = year,
          note = vers,
+         url = "https://CRAN.R-project.org/package=BIFIEsurvey" ,
          textVersion =
-         paste0("BIFIE (",
-               year,
-               "). BIFIEsurvey: Tools for survey statistics in educational assessment. ",
-               vers, "."))
-
+         paste0("BIFIE (", year , "). BIFIEsurvey: Tools for survey statistics in educational assessment. ",
+               vers, ". https://CRAN.R-project.org/package=BIFIEsurvey") 
+        )

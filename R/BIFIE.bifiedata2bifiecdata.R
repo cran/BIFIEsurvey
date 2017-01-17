@@ -30,11 +30,12 @@ BIFIE.BIFIEdata2BIFIEcdata <- function( bifieobj , varnames=NULL , impdata.index
 BIFIE.BIFIEcdata2BIFIEdata <- function( bifieobj , varnames=NULL , impdata.index = NULL ){
    if ( ! bifieobj$cdata ){
 		stop( "You may want to use 'BIFIE.BIFIEdata2BIFIEcdata'\n")
-						}											
+    }											
+
 	#******** select some imputed datasets or some variables
 	bifieobj <- BIFIE.cdata.select( bifieobj=bifieobj , varnames=varnames , 
 					impdata.index =impdata.index )				
-
+				
 	#***** conversion to BIFIEdata object
 	bifieobj$datalistM <- .Call("bifie_bifiecdata2bifiedata" ,
 								   as.matrix(bifieobj$datalistM_ind) , 

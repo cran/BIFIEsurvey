@@ -6,7 +6,7 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 	varnames <- bifieobj$varnames	
 	transform.formula <- stats::as.formula( transform.formula )
 	# select variables which should be transformed
-	vars <- base::all.vars( transform.formula )
+	vars <- all.vars( transform.formula )
 	# ind_vars <- which( varnames %in% vars )	
 	ind_vars <- unlist( sapply( vars , FUN = function(vv){
 	             which( varnames == vv )
@@ -20,7 +20,7 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 	#***--- distinction BIFIEdata and BIFIEcdata
 	cdata <- bifieobj$cdata
 	if ( ! cdata ){
-		dfr <- base::as.data.frame( bifieobj$datalistM[ , ind_vars] )
+		dfr <- as.data.frame( bifieobj$datalistM[ , ind_vars] )
 		colnames(dfr) <- vars
 				 }
 	if ( cdata ){

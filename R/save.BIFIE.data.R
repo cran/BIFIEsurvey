@@ -30,7 +30,7 @@ save.BIFIEdata <- function( BIFIEdata , name.BIFIEdata , cdata=TRUE , varnames=N
 				}		
 	#***********************************************************
 	#****** save objects
-    base::save( BIFIEdata , file= paste0( name.BIFIEdata , ".Rdata") )
+    save( BIFIEdata , file= paste0( name.BIFIEdata , ".Rdata") )
     sink( paste0( name.BIFIEdata , "__SUMMARY.Rout") )
 		cat( getwd() , "\n" ,
 			paste0( name.BIFIEdata , ".Rdata\n") , 

@@ -2128,13 +2128,13 @@ Rcpp::NumericVector rescale_lev1weights( Rcpp::NumericMatrix idcluster_table ,
 		for (int ii=idcluster_table(jj,0) ; ii <idcluster_table(jj,1)+1 ; ii++){
 		   wgtlev1_table(jj,0) ++ ;
 		   wgtlev1_table(jj,1) += wgtlev1[ii] ;
-					}
+		}
 		for (int ii=idcluster_table(jj,0) ; ii <idcluster_table(jj,1)+1 ; ii++){
 		   wgtlev1a[ii] = wgtlev1[ii] / wgtlev1_table(jj,1) * wgtlev1_table(jj,0) ; 	
-					}
-			  }			
-   	return( wrap( wgtlev1a) ) ;
-   			}
+		}
+	}			
+ 	return( wrap( wgtlev1a) ) ;
+}
 //***********************************************************
 
 
@@ -2488,9 +2488,14 @@ Rcpp::List bifie_mla2_estimation( arma::mat theta_init , arma::mat Tmat_init ,
 		Rcpp::NumericMatrix X , Rcpp::NumericMatrix Z , 
 		Rcpp::NumericVector y , Rcpp::NumericVector wgtlev2 , 
 		Rcpp::NumericVector wgtlev1 ,
-	        Rcpp::NumericVector wgttot , Rcpp::NumericMatrix idcluster_table ,
-	        double globconv , int maxiter  ){
-	
+	  Rcpp::NumericVector wgttot , Rcpp::NumericMatrix idcluster_table ,
+	  double globconv , int maxiter , Rcpp::NumericMatrix recov_constraint ,
+    int is_rcov_constraint , int NRC ){
+	 
+   
+// recov_constraint , is_rcov_constraint, NRC
+	    
+  
 	int iter=0;
 	
 	
@@ -2511,6 +2516,7 @@ Rcpp::List bifie_mla2_estimation( arma::mat theta_init , arma::mat Tmat_init ,
 	
 	arma::mat Xa = rcppmat2armamat( X )["armamat"] ;	
 	
+  
 		
 	//***************************************
 	// determine sufficient statistics ;		
@@ -2563,7 +2569,18 @@ Rcpp::List bifie_mla2_estimation( arma::mat theta_init , arma::mat Tmat_init ,
 		Tmat(ii,hh) = Tmat_new(ii,hh) ;
 				}
 			}
+  //*** begin constraints random effects covariance matrix  
+  // recov_constraint , is_rcov_constraint, NRC    
+  if (is_rcov_constraint == 1){
+      for (int hh=0;hh<NRC;hh++){
+        Tmat(recov_constraint(hh,0), recov_constraint(hh,1))=recov_constraint(hh,2);
+        Tmat(recov_constraint(hh,1), recov_constraint(hh,0))=recov_constraint(hh,2);      
+      }
+  }
+  //*** end constraints    
 	
+  // include constraints for covariance matrix
+  
 	arma::mat sig2_new = res2["sig2"];
 	sig2(0,0) = sig2_new(0,0);
         // Rcpp::Rcout << "sig2=" <<  sig2(0,0) <<  std::flush << std::endl ;
@@ -2659,7 +2676,9 @@ Rcpp::List bifie_mla2_estimation_replicates( int N__ , int NC__ ,
 	Rcpp::NumericMatrix idcluster_table2 , arma::mat theta0 , arma::mat Tmat0 ,
 	arma::mat sig20 , int NX , int NZ ,  Rcpp::NumericMatrix X__ ,  
 	Rcpp::NumericMatrix Z__ , Rcpp::NumericVector y__ , 
-	double globconv , int maxiter , int NP){
+	double globconv , int maxiter , int NP ,
+  Rcpp::NumericMatrix recov_constraint , int is_rcov_constraint , int NRC
+  ){
 
 	Rcpp::NumericVector wgttot__rr(N__);
 	Rcpp::NumericVector fac__rr(N__);
@@ -2711,7 +2730,9 @@ Rcpp::List bifie_mla2_estimation_replicates( int N__ , int NC__ ,
 	// estimation
 	Rcpp::List res33 = bifie_mla2_estimation( theta0 , Tmat0 ,
 		 sig20 , NX , NZ ,  NC__ ,  N__ , X__ ,  Z__ , y__ , wgtlev2__rr , 
-		 wgtlev1a , wgttot__rr , idcluster_table2 , globconv , maxiter ) ;
+		 wgtlev1a , wgttot__rr , idcluster_table2 , globconv , maxiter,
+     recov_constraint, is_rcov_constraint, NRC
+      ) ;
 	Rcpp::NumericVector pars=res33["pars_"] ;
         for (int pp=0;pp<NP;pp++){
         	pars_temp(pp,rr) = pars[pp] ;

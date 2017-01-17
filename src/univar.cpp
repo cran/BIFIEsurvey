@@ -2159,14 +2159,16 @@ END_RCPP
 extern "C" {
 SEXP bifie_mla2( SEXP X_list_, SEXP Z_list_, SEXP y_list_, SEXP wgttot_, SEXP wgtlev2_, 
 	SEXP wgtlev1_, SEXP globconv_, SEXP maxiter_, SEXP group_, SEXP group_values_, 
-	SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_) ;
+	SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_ ,
+  SEXP recov_constraint_	, SEXP is_rcov_constraint_ ) ;
 }
 
 // definition
 
 SEXP bifie_mla2( SEXP X_list_, SEXP Z_list_, SEXP y_list_, SEXP wgttot_, 
 	SEXP wgtlev2_, SEXP wgtlev1_, SEXP globconv_, SEXP maxiter_, SEXP group_, 
-	SEXP group_values_, SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_ ){
+	SEXP group_values_, SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_,
+  SEXP recov_constraint_ , SEXP is_rcov_constraint_ ){
 BEGIN_RCPP
    
        
@@ -2186,6 +2188,11 @@ BEGIN_RCPP
      Rcpp::NumericMatrix wgtrep(wgtrep_);    // length N  
      int Nimp = as<int>(Nimp_);  
      Rcpp::NumericVector fayfac(fayfac_);   
+     Rcpp::NumericMatrix recov_constraint(recov_constraint_);
+     int is_rcov_constraint = as<int>(is_rcov_constraint_);     
+       
+     // recov_constraint
+     // is_rcov_constraint       
        
      // new declarations  
      int NZ = Z_list.ncol();  
@@ -2193,7 +2200,9 @@ BEGIN_RCPP
      int N = wgttot.size();  
      int NC = wgtlev2.size();   
      int GG = group_values.size();  
-     int RR = wgtrep.ncol();  
+     int RR = wgtrep.ncol();      
+     //*** number of constraints
+     int NRC = recov_constraint.nrow();   
        
      double eps = 1E-8;  
        
@@ -2367,22 +2376,22 @@ BEGIN_RCPP
        vv = 0 ;	  
        // theta inits  
        for (int ii=0;ii<NX;ii++){	  
-     	theta_init(vv,0) = parsM( vv + gg*NP , 0 ) ;  
-     	vv ++ ;  
-     			  }  
+     	    theta_init(vv,0) = parsM( vv + gg*NP , 0 ) ;  
+     	    vv ++ ;  
+     	 }  
        // Tmat inits  
        for (int ii=0;ii<NZ;ii++){  
        	 for (int jj=0;jj<NZ;jj++){  
        	 	 Tmat_init(ii,jj) = parsM(vv + gg*NP , 0 ) ;  
        	 	 if ( jj>ii){  
        	 	 	 Tmat_init(jj,ii) = Tmat_init(ii,jj) ;  
-       	 	 	 	}  
+        	 }  
        	 	 vv ++ ;  
-       	 	 		}  
-     			 }  
+       	 }  
+     	 }  
         // sig2 inits  
         sig2_init(0,0) = parsM(vv+gg*NP,0) ;  
-     	   }  
+    }  
      	  
        
        
@@ -2408,7 +2417,8 @@ BEGIN_RCPP
      // estimate model (FIML)  
      Rcpp::List res32 = bifie_mla2_estimation( theta_init , Tmat_init ,  
      	 sig2_init, NX , NZ ,  NC__ ,  N__ , X__ ,  Z__ , y__ , wgtlev2__ ,   
-     	 wgtlev1a , wgttot__ , idcluster_table2 , globconv , maxiter ) ;  
+     	 wgtlev1a , wgttot__ , idcluster_table2 , globconv , maxiter ,
+       recov_constraint, is_rcov_constraint, NRC ) ;  
      pars = res32["pars_"] ; // extract estimated parameters  
      for (int pp=0;pp<NP;pp++){  
         parsM( pp + gg*NP , imp ) = pars[pp] ;  
@@ -2459,7 +2469,8 @@ BEGIN_RCPP
      Rcpp::List res35=bifie_mla2_estimation_replicates( N__ , NC__ ,  
      	wgttot__ , wgtrep__ , wgtlev1__ , wgtlev2__ ,  
      	idcluster_table2 , theta0 , Tmat0 , sig20 , NX , NZ ,  X__ ,    
-     	Z__ , y__ ,  globconv ,  maxiter_rep , NP) ;  
+     	Z__ , y__ ,  globconv ,  maxiter_rep , NP,
+       recov_constraint, is_rcov_constraint, NRC ) ;  
        
      Rcpp::NumericMatrix pars2 = res35["pars_temp"] ; // extract estimated parameters  
      for (int pp=0;pp<NP;pp++){  
@@ -2524,15 +2535,16 @@ BEGIN_RCPP
              Rcpp::_["parsrepM"] = parsMrep ,  
              Rcpp::_["parsVar"] = parsVar , 
              Rcpp::_["parsL"] = parsL ,   
-     	     Rcpp::_["GG"] = GG , 
+     	       Rcpp::_["GG"] = GG , 
              Rcpp::_["iterM"] = iterM ,  
-     	     Rcpp::_["iterMrep"] = iterMrep , 
+     	       Rcpp::_["iterMrep"] = iterMrep , 
              Rcpp::_["fvcovM"] = fvcovM ,  
-     	     Rcpp::_["Npers"] = Npers , 
+     	       Rcpp::_["Npers"] = Npers , 
              Rcpp::_["Nclusters"] = Nclusters ,  
-     	     Rcpp::_["NP"] = NP , 
-             Rcpp::_["NX"] = NX , 
-             Rcpp::_["NZ"] = NZ ,  
+     	       Rcpp::_["NP"] = NP , 
+             // Rcpp::_["NX"] = NX , 
+             // Rcpp::_["NZ"] = NZ ,  
+             Rcpp::_["idcluster_table"] = idcluster_table2 , 
              Rcpp::_["Sigma_W_yXM"] = Sigma_W_yXM , 
              Rcpp::_["Sigma_B_yXM"] = Sigma_B_yXM ,  
              Rcpp::_["Sigma_W_yZM"] = Sigma_W_yZM , 

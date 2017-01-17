@@ -12,7 +12,7 @@ BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	if (bifieobj$cdata){	
 	    formula_vars <- NULL		
 		if (! is.null(formula) ){
-			formula_vars <- base::all.vars( formula )
+			formula_vars <- all.vars( formula )
 							}
 		varnames <- unique( c( dep , pre , group , "one" , formula_vars ) )
 		bifieobj <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames=varnames )	

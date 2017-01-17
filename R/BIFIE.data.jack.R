@@ -53,7 +53,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 				}
 		if ( ! is.null(seed) ){
 			set.seed( seed )
-			indzone <- base::sample(1:N) 
+			indzone <- sample(1:N) 
 					} else {
 			indzone <- 1:N
 				}

@@ -20,8 +20,8 @@ EM algorithm (Raudenbush & Bryk, 2002).
 
 \usage{
 BIFIE.twolevelreg( BIFIEobj , dep , formula.fixed , formula.random , idcluster , 
-   wgtlevel2 = NULL , wgtlevel1 = NULL , group=NULL , group_values=NULL , se=TRUE ,
-   globconv = 1E-6 , maxiter = 1000 )    
+   wgtlevel2 = NULL , wgtlevel1 = NULL , group=NULL , group_values=NULL , 
+   recov_constraint=NULL, se=TRUE, globconv = 1E-6 , maxiter = 1000 )    
 
 \method{summary}{BIFIE.twolevelreg}(object,digits=4,...)
 
@@ -51,6 +51,13 @@ Optional grouping variable
   \item{group_values}{
 Optional vector of grouping values. This can be omitted and grouping
 values will be determined automatically.
+}
+\item{recov_constraint}{Matrix for constraints of random effects covariance
+matrix. The random effects are numbered according to the order in 
+the specification in \code{formula.random}. The first column in
+\code{recov_constraint} contains the row index in the 
+covariance matrix, the second column the column index and the third column
+the value to be fixed.
 }
 \item{se}{Optional logical indicating whether statistical inference
 based on replication should be employed. In case of \code{se=FALSE},
@@ -182,6 +189,29 @@ mod2c <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" ,
                 formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
                 idcluster="idschool" , wgtlevel2 = "SCHWGT" , maxiter=500 , se=FALSE)
 summary(mod2c)
+
+#--- Model 2d: Uncorrelated intecepts and slopes
+
+# constraint for zero covariance between intercept and slope
+recov_constraint <- matrix( c(1,2,0) , ncol=3 )
+mod2d <- BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
+                formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
+                idcluster="idschool" , wgtlevel2 = "one" ,  se = FALSE,
+                recov_constraint=recov_constraint )
+summary(mod2d)                            
+
+#--- Model 2e: Fixed entries in the random effects covariance matrix
+
+# two constraints for random effects covariance
+# Cov(Int, Slo)=0  # zero slope for intercept and slope
+# Var(Slo)=10      # slope variance of 10
+recov_constraint <- matrix( c(1,2,0,  
+                      2,2,10) , ncol=3 , byrow=TRUE)
+mod2e <- BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
+                formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
+                idcluster="idschool" , wgtlevel2 = "one" ,  se = FALSE,
+                recov_constraint=recov_constraint )
+summary(mod2e)
 
 #############################################################################
 # SIMULATED EXAMPLE 2: Two-level regression with random slopes

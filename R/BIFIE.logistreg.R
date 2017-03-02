@@ -86,14 +86,12 @@ BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	res00$GR -> GR 
 	res00$group_values -> group_values
 	res00$group -> group
-	#@@@@***			
-
-				
+	#@@@@***							
 	#**************************************************************************#
 	# Rcpp call
-	res <- .Call("bifie_logistreg" ,  datalistM , wgt_ , as.matrix(wgtrep) , dep_index -1 , 
+	res <- bifie_logistreg(  datalistM , wgt_ , as.matrix(wgtrep) , dep_index -1 , 
 				pre_index - 1 ,  fayfac ,    Nimp ,  group_index -  1, group_values ,
-				eps , maxiter , PACKAGE="BIFIEsurvey" )
+				eps , maxiter )
 
 		
 	GG <- length(group_values)
@@ -123,15 +121,11 @@ BIFIE.logistreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	parnames <- paste0( dfr$parameter   , "_" , dfr$var , 
 			ifelse( ! nogroupL , paste0( "_" , dfr$groupvar , "_" ) , "" ) ,
 			ifelse( ! nogroupL , dfr$groupval , "" ) )
-	
-
 	#@@@@***
 	# multiple groupings
 	dfr <- BIFIE_table_multiple_groupings( dfr , res00 )
 	#@@@@***
-						
-	
-	
+
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )

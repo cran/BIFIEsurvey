@@ -47,6 +47,15 @@ CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+--------------------------------------------------------------------------
+VERSIONS BIFIEsurvey 1.13  |  2017-03-02  |  Last: BIFIEsurvey 1.13-24
+--------------------------------------------------------------------------
+ 
+NOTE  * restructured Rcpp functions
+NOTE  * small addition in manual of 'BIFIE.data.jack'
+
+DATA  * ---
+EXAMP * ---
 
 --------------------------------------------------------------
 Versions 1.12 -- 2017-01-16  --  CRAN BIFIEsurvey 1.12-0

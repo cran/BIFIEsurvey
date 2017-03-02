@@ -86,18 +86,19 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bifieobj <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
+bifieobj <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt=data.timss1[[1]]$TOTWGT,
            wgtrep=data.timssrep[, -1 ] )
 
 # histogram  
-res1 <- BIFIE.hist( bifieobj , vars = "ASMMAT" , group="female" )
+res1 <- BIFIEsurvey::BIFIE.hist( bifieobj , vars = "ASMMAT" , group="female" )
 # plot histogram for first group (female = 0)
 plot( res1$histobj$ASMMAT_female0 , col="lightblue")
 # plot both histograms after each other
 plot( res1 )
            
-# define own break vector
-res2 <- BIFIE.hist( bifieobj , vars = "ASMMAT" , breaks=seq(0,900,10), group="female" )
+# user-defined vector of breaks
+res2 <- BIFIEsurvey::BIFIE.hist( bifieobj , vars = "ASMMAT", 
+              breaks=seq(0,900,10), group="female" )
 plot( res2 , col="orange")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

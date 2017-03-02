@@ -77,16 +77,17 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIEdata object
-bdat1 <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+bdat1 <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt= data.timss1[[1]]$TOTWGT,
             wgtrep=data.timssrep[, -1 ])
 summary(bdat1)           
 
 # convert BIFIEdata object bdat1 into a BIFIEcdata object with
 #  only using the first three datasets and a variable selection
-bdat2 <- BIFIE.BIFIEdata2BIFIEcdata( bifieobj=bdat1 , varnames=bdat1$varnames[ c(1:7,10) ] )
+bdat2 <- BIFIEsurvey::BIFIE.BIFIEdata2BIFIEcdata( bifieobj=bdat1, 
+                varnames=bdat1$varnames[ c(1:7,10) ] )
 
 # convert bdat2 into BIFIEdata object and only use the first three imputed datasets
-bdat3 <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj=bdat2 , impdata.index=1:3 )
+bdat3 <- BIFIEsurvey::BIFIE.BIFIEcdata2BIFIEdata( bifieobj=bdat2 , impdata.index=1:3)
 
 # object summaries
 summary(bdat1)
@@ -102,14 +103,14 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIEdata object
-bifieobj <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+bifieobj <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt= data.timss1[[1]]$TOTWGT,
             wgtrep=data.timssrep[, -1 ])
 summary(bifieobj)
 
 # define variables for which unique values should be extracted
 vars <- c( "female" , "books" ,"ASMMAT" )
 # convert these variables from BIFIEdata object into a list of datasets
-bdatlist <- BIFIE.BIFIEdata2datalist( bifieobj , varnames = vars )
+bdatlist <- BIFIEsurvey::BIFIE.BIFIEdata2datalist( bifieobj , varnames = vars )
 # look for unique values in first dataset for variables
 values <- lapply( bdatlist[[1]] , FUN = function(vv){
                 sort( unique( vv ) ) } )

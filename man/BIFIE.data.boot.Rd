@@ -69,11 +69,11 @@ Object of class \code{BIFIEdata}
 data(data.timss1)
 
 # bootstrap samples using weights
-bifieobj1 <- BIFIE.data.boot( data.timss1 , wgt="TOTWGT" )
+bifieobj1 <- BIFIEsurvey::BIFIE.data.boot( data.timss1 , wgt="TOTWGT" )
 summary(bifieobj1)
 
 # bootstrap samples without weights
-bifieobj2 <- BIFIE.data.boot( data.timss1  )
+bifieobj2 <- BIFIEsurvey::BIFIE.data.boot( data.timss1  )
 summary(bifieobj2)
 }
 }

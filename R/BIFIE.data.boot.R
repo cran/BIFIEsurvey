@@ -35,7 +35,7 @@ BIFIE.data.boot <- function( data , wgt=NULL ,  pv_vars = NULL ,
 	# apply bootstrap subfunction
 	cat("+++ Generate bootstrap samples\n"); utils::flush.console()
 	# datarep <- bifie_boot( cumwgt , rand_wgt )$wgtM
-	datarep <- .Call("bifie_boot", cumwgt , rand_wgt , PACKAGE="BIFIEsurvey")$wgtM
+	datarep <- bifie_boot( cumwgt , rand_wgt)$wgtM
 	RR <- Nboot
 	addname <- 10^( floor( log( RR+.5 , 10 ) )  + 1 )
 	colnames(datarep) <- paste0("w_fstr" , substring( paste0(addname +1:RR),2) )	

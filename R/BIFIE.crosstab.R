@@ -81,9 +81,9 @@ BIFIE.crosstab <- function( BIFIEobj , vars1 , vars2 ,
 					
 	#**************************************************************************#
 	# Rcpp call
-	res <- .Call( "bifie_crosstab" , datalistM , wgt_ , wgtrep , vars_values1  ,
+	res <- bifie_crosstab( datalistM , wgt_ , wgtrep , vars_values1  ,
 		vars_index1 - 1,    vars_values2 ,  vars_index2 - 1 , fayfac ,
-		Nimp , group_index - 1 , group_values , PACKAGE="BIFIEsurvey")
+		Nimp , group_index - 1 , group_values )
 	ZZ <- nrow(res$ctparsM)
 	design_pars <- res$design_pars
 	VV1 <- length(vars_values1)

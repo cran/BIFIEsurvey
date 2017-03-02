@@ -47,11 +47,8 @@ BIFIE.derivedParameters <- function( BIFIE.method , derived.parameters , type=NU
 	# compute covariance matrices
 	# Function for (ordinary) multiple imputation
 
-if (TRUE){	
-	res0 <- .Call("bifie_waldtest" ,  parsM , parsrepM , 
-						Cdes , rdes , Ccols - 1 , fayfac ,
-						PACKAGE="BIFIEsurvey")
-			}
+    res0 <- bifie_waldtest(  parsM , parsrepM , 
+						Cdes , rdes , Ccols - 1 , fayfac )
 #	res0 <- bifie_waldtest(  parsM , parsrepM , 
 #						Cdes , rdes , Ccols - 1 , fayfac )
 	var_w <- res0$var_w
@@ -125,4 +122,4 @@ summary.BIFIE.derivedParameters <- function( object , digits=4 , ... ){
 	cat("\nStatistical Inference for Derived Parameters \n")	
 	obji <- object$stat
 	print.object.summary( obji , digits=digits )
-			}	
+}	

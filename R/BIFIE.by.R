@@ -74,8 +74,8 @@ BIFIE.by <- function( BIFIEobj , vars , userfct , userparnames=NULL ,
 	#****
 	# Rcpp implementation
 	if ( use_Rcpp ){
-		res <- .Call("bifie_by" , datalistM , wgt_ , wgtrep ,	vars_index - 1,    fayfac ,
-				Nimp , group_index - 1 , group_values , userfct , PACKAGE="BIFIEsurvey")
+		res <- bifie_by( datalistM , wgt_ , wgtrep ,	vars_index - 1,    fayfac ,
+				Nimp , group_index - 1 , group_values , userfct)
 					}
 	
 	NP <- res$NP

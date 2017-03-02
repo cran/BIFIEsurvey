@@ -75,9 +75,9 @@ BIFIE.freq <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=TR
 				
 	#**************************************************************************#
 	# Rcpp call
-	res <-  .Call("bifie_freq"  ,datalistM , wgt_ , as.matrix(wgtrep) , vars_index -1 , fayfac , 
+	res <-  bifie_freq( datalistM , wgt_ , as.matrix(wgtrep) , vars_index -1 , fayfac , 
 				Nimp ,  group_index -  1, group_values , as.matrix(vars_values) ,
-				vars_values_numb , PACKAGE="BIFIEsurvey" )
+				vars_values_numb  )
 					
 	GG <- res$outlist$GG
 	dfr <- data.frame( "var" = rep( rep( vars , vars_values_numb ) , each=GG ) )

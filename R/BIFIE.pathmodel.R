@@ -201,18 +201,12 @@ BIFIE.pathmodel <- function( BIFIEobj , lavaan.model , reliability=NULL ,
 		RR <- 0
 				}							
 																				
-    #**** calculate path model
- #if (FALSE){	
-	res <- .Call( "bifie_pathmodel" ,  datalistM , wgt_ , wgtrep ,
+    #**** estimate path model
+	res <- bifie_pathmodel(  datalistM , wgt_ , wgtrep ,
 						vars_index - 1,  fayfac, Nimp , group_index - 1,
 						group_values   , L , L_row_index - 1  , NL  , E ,
-						R , R_row_index - 1 , coeff_index1 , NP0 , unreliability ,
-						PACKAGE="BIFIEsurvey" ) 	
+						R , R_row_index - 1 , coeff_index1 , NP0 , unreliability )
 
-#	res <- bifie_pathmodel( datalistM , wgt_ , wgtrep ,	vars_index - 1,  fayfac, Nimp , group_index - 1,
-#						group_values   , L , L_row_index - 1  , NL  , E , R , 
-#                        R_row_index - 1 , coeff_index1 , NP0 , unreliability ) 
-						
 	GG <- length(group_values)
 
 	

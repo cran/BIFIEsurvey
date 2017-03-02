@@ -116,7 +116,7 @@ For creating objects of class \code{BIFIEdata} see \code{\link{BIFIE.data}}.
 data(data.timss1)
 data(data.timssrep)
 
-bifieobj <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+bifieobj <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt=data.timss1[[1]]$TOTWGT,
                  wgtrep=data.timssrep[, -1 ] )
 summary(bifieobj)       
 
@@ -126,18 +126,18 @@ save.BIFIEdata( BIFIEdata=bifieobj, name.BIFIEdata="timss1_cdata" )
 save.BIFIEdata( BIFIEdata=bifieobj, name.BIFIEdata="timss1_data", cdata=FALSE )
 
 # load this object with object name "bdat2"
-bdat2 <- load.BIFIEdata( filename = "timss1_data.Rdata" )
+bdat2 <- BIFIEsurvey::load.BIFIEdata( filename = "timss1_data.Rdata" )
 summary(bdat2)
 
 # save bifieobj with selected variables
 save.BIFIEdata( bifieobj, name.BIFIEdata="timss1_selectvars_cdata" , 
                      varnames= bifieobj$varnames[ c(1:7,13,12,9) ] )
 # the same object, but use the non-compact way of saving
-save.BIFIEdata( bifieobj, name.BIFIEdata="timss1_selectvars_data" , cdata=FALSE , 
+save.BIFIEdata( bifieobj, name.BIFIEdata="timss1_selectvars_data", cdata=FALSE, 
                      varnames= bifieobj$varnames[ c(1:7,13,12,9) ] )
 
 # load object timss1_cdata (in compact data format)
-bdat3 <- load.BIFIEdata( filename = "timss1_cdata.Rdata" )
+bdat3 <- BIFIEsurvey::load.BIFIEdata( filename = "timss1_cdata.Rdata" )
 summary(bdat3)
 # save selected variables of object bdat3
 save.BIFIEdata( bdat3, name.BIFIEdata="timss1_selectvars2_cdata" ,  
@@ -151,7 +151,7 @@ data(data.timss2)
 data(data.timssrep)
 
 # create compactBIFIEdata
-bifieobj <- BIFIE.data( data.list=data.timss2 , wgt= data.timss2[[1]]$TOTWGT ,
+bifieobj <- BIFIEsurvey::BIFIE.data( data.list=data.timss2, wgt=data.timss2[[1]]$TOTWGT,
                 wgtrep=data.timssrep[, -1 ] , cdata=TRUE)
 summary(bifieobj)           
 
@@ -194,7 +194,7 @@ varnames <- scan( nlines=1, what="character")
    IDSTUD   TOTWGT books lang migrant likesc  ASMMAT
 
 # load files and create BIFIEdata object
-bifieobj1 <- load.BIFIEdata.files( files.imp , wgt="TOTWGT" , file.wgtrep ,
+bifieobj1 <- BIFIEsurvey::load.BIFIEdata.files( files.imp, wgt="TOTWGT", file.wgtrep,
                         type="Rdata" , varnames=varnames )
 summary(bifieobj1)
 
@@ -203,7 +203,8 @@ files.imp <- miceadds::grep.vec( c("timss2_save1__IMP" , ".csv" ) ,
                         list.files(getwd()) )$x
 file.wgtrep <- miceadds::grep.vec( c("timss2_save1__WGTREP" , ".csv" ) , 
                         list.files(getwd()) )$x
-bifieobj2 <- load.BIFIEdata.files( files.imp, wgt="TOTWGT", file.wgtrep , type="csv2" )
+bifieobj2 <- BIFIEsurvey::load.BIFIEdata.files( files.imp, wgt="TOTWGT", 
+                    file.wgtrep , type="csv2" )
 summary(bifieobj2)
 
 #***--- read sav format
@@ -211,8 +212,8 @@ files.imp <- miceadds::grep.vec( c("timss2_save5__IMP" , ".sav" ) ,
                         list.files(getwd()) )$x
 file.wgtrep <- miceadds::grep.vec( c("timss2_save5__WGTREP" , ".sav" ) , 
                         list.files(getwd()) )$x
-bifieobj3 <- load.BIFIEdata.files( files.imp , wgt="TOTWGT" , file.wgtrep , type="sav" ,
-                       to.data.frame=TRUE , use.value.labels=FALSE )
+bifieobj3 <- BIFIEsurvey::load.BIFIEdata.files( files.imp , wgt="TOTWGT", 
+                file.wgtrep, type="sav", to.data.frame=TRUE , use.value.labels=FALSE)
 summary(bifieobj3)
 
 #############################################################################
@@ -225,7 +226,7 @@ data(data.timss1.ind)
 data(data.timssrep)
 
 # create BIFIEdata object at first
-bifieobj <- BIFIE.data( data.list=data.timss1 , wgt= "TOTWGT" ,
+bifieobj <- BIFIEsurvey::BIFIE.data( data.list=data.timss1 , wgt= "TOTWGT" ,
             wgtrep=data.timssrep[, -1 ] )
 summary(bifieobj)       
 
@@ -244,18 +245,19 @@ file.ind <- miceadds::grep.vec( c("timss1_ex__IND" , ".Rdata" ) ,
 # define variables for selection
 varnames <- c("IDSTUD","TOTWGT","female","books","lang","ASMMAT")
 # read files using indicator dataset
-bifieobj2 <- load.BIFIEdata.files( files.imp , wgt="TOTWGT" , file.wgtrep=file.wgtrep , 
-                     file.ind=file.ind, type="Rdata" , varnames=varnames)
+bifieobj2 <- BIFIEsurvey::load.BIFIEdata.files( files.imp , wgt="TOTWGT", 
+                  file.wgtrep=file.wgtrep, file.ind=file.ind, type="Rdata", 
+                  varnames=varnames)
 summary(bifieobj2)
 
 # read files without indicator dataset
-bifieobj3 <- load.BIFIEdata.files( files.imp , wgt="TOTWGT" , file.wgtrep=file.wgtrep , 
-                type="Rdata"  , varnames = varnames)
+bifieobj3 <- BIFIEsurvey::load.BIFIEdata.files( files.imp , wgt="TOTWGT", 
+                file.wgtrep=file.wgtrep, type="Rdata"  , varnames = varnames)
 summary(bifieobj3)
 
 # compare some descriptive statistics
-res2 <- BIFIE.univar( bifieobj2 , vars = c("books" , "ASMMAT" , "lang") )
-res3 <- BIFIE.univar( bifieobj3 , vars = c("books" , "ASMMAT" , "lang") )
+res2 <- BIFIEsurvey::BIFIE.univar( bifieobj2 , vars = c("books" , "ASMMAT" , "lang") )
+res3 <- BIFIEsurvey::BIFIE.univar( bifieobj3 , vars = c("books" , "ASMMAT" , "lang") )
 summary(res2)
 summary(res3)
 }                     

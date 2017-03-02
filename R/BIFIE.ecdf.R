@@ -61,10 +61,6 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 	res00$group -> group
 	#@@@@***			
 
-
-				
-				
-	
 	if ( is.null(breaks) ){
 	    breaks <- as.numeric(seq( 0 , 1 , .01 ))
 				}
@@ -74,10 +70,9 @@ BIFIE.ecdf <- function( BIFIEobj , vars , breaks=NULL , quanttype=1 ,
 	#**************************************************************************#
 	# Rcpp call
 
-	res <- .Call("bifie_ecdf" , datalistM , wgt_ , wgtrep , 
+	res <- bifie_ecdf( datalistM , wgt_ , wgtrep , 
 					vars_index - 1,    fayfac ,
-					Nimp , group_index - 1 , group_values , breaks , quanttype , maxval , 
-					PACKAGE="BIFIEsurvey" )
+					Nimp , group_index - 1 , group_values , breaks , quanttype , maxval )
 
 #	res <- bifie_ecdf( datalistM , wgt_ , wgtrep , 
 #            vars_index - 1,    fayfac ,

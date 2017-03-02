@@ -10,9 +10,7 @@ BIFIE.BIFIEdata2BIFIEcdata <- function( bifieobj , varnames=NULL , impdata.index
 					       impdata.index =impdata.index )
 						   
 	#**** data conversion
-    res1 <- .Call("bifie_bifiedata2bifiecdata" ,
-					    bifieobj$datalistM , bifieobj$Nimp ,
-					    PACKAGE="BIFIEsurvey" )
+    res1 <- bifie_bifiedata2bifiecdata(bifieobj$datalistM , bifieobj$Nimp )
     bifieobj$cdata <- TRUE
     bifieobj$datalistM <- NULL
     bifieobj$datalistM_ind <- res1$datalistM_ind	
@@ -22,7 +20,7 @@ BIFIE.BIFIEdata2BIFIEcdata <- function( bifieobj , varnames=NULL , impdata.index
 #	colnames(bifieobj$datalistM_imputed) <- c("_imp" , "subj" , "variable" , "value")
     bifieobj$time <- Sys.time()
     return(bifieobj)
-            }
+}
 #######################################################			
 
 #######################################################
@@ -37,13 +35,12 @@ BIFIE.BIFIEcdata2BIFIEdata <- function( bifieobj , varnames=NULL , impdata.index
 					impdata.index =impdata.index )				
 				
 	#***** conversion to BIFIEdata object
-	bifieobj$datalistM <- .Call("bifie_bifiecdata2bifiedata" ,
+	bifieobj$datalistM <- bifie_bifiecdata2bifiedata(
 								   as.matrix(bifieobj$datalistM_ind) , 
 								   as.matrix(bifieobj$datalistM_imputed) , 
 								   bifieobj$Nimp , 
 								   as.matrix(bifieobj$dat1) ,
-								   as.matrix(bifieobj$datalistM_impindex) , 
-								   PACKAGE="BIFIEsurvey" )$datalistM
+								   as.matrix(bifieobj$datalistM_impindex) )$datalistM
 	bifieobj$cdata <- FALSE
 	bifieobj$datalistM_imputed <- NULL
     bifieobj$datalistM_impindex <- NULL	

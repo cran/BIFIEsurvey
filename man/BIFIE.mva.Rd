@@ -74,16 +74,16 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-BIFIEdata <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
-                wgtrep=data.timssrep[, -1 ] )
+BIFIEdata <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, 
+                wgt=data.timss1[[1]]$TOTWGT, wgtrep=data.timssrep[, -1 ] )
 
 # missing value analysis for "scsci" and "books" and three covariates
-res1 <- BIFIE.mva( BIFIEdata , missvars=c("scsci" , "books" ) , 
+res1 <- BIFIEsurvey::BIFIE.mva( BIFIEdata , missvars=c("scsci" , "books" ) , 
              covariates=c("ASMMAT" , "female" , "ASSSCI") )
 summary(res1)
 
 # missing value analysis without statistical inference and without covariates
-res2 <- BIFIE.mva( BIFIEdata , missvars=c("scsci" , "books" ) , se=FALSE)
+res2 <- BIFIEsurvey::BIFIE.mva( BIFIEdata, missvars=c("scsci", "books"), se=FALSE)
 summary(res2)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

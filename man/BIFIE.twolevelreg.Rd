@@ -138,20 +138,20 @@ dat <- data.bifie01
 set.seed(987)
 
 # create dataset with replicate weights and plausible values
-bdat1 <- BIFIE.data.jack( data=dat  ,  jktype="JK_TIMSS" , jkzone = "JKCZONE" , 
+bdat1 <- BIFIEsurvey::BIFIE.data.jack( data=dat, jktype="JK_TIMSS", jkzone="JKCZONE", 
             jkrep="JKCREP" , wgt="TOTWGT" , pv_vars = c("ASMMAT","ASSSCI") )
 
 # create dataset without plausible values and ignoring weights
-bdat2 <- BIFIE.data.jack( data=dat , jktype="JK_RANDOM", ngr=10 )
+bdat2 <- BIFIEsurvey::BIFIE.data.jack( data=dat , jktype="JK_RANDOM", ngr=10 )
 # => standard errors from ML estimation
 
 #***********************************************
 # Model 1: Random intercept model
 
 #--- Model 1a: without weights, first plausible value
-mod1a <- BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
-                formula.fixed = ~ 1 , formula.random = ~ 1 , idcluster="idschool" , 
-                wgtlevel2 = "one" ,  se = FALSE )
+mod1a <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat2, dep="ASMMAT01", 
+                formula.fixed = ~ 1, formula.random = ~ 1 , idcluster="idschool", 
+                wgtlevel2 = "one", se = FALSE )
 summary(mod1a)
 
 #--- Model 1b: estimation in lme4
@@ -159,14 +159,14 @@ mod1b <- lme4::lmer( ASMMAT01 ~ 1 + ( 1 | idschool) , data = dat , REML=FALSE)
 summary(mod1b)
 
 #--- Model 1c: Like Model 1a but for five plausible values and ML inference
-mod1c <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
-                formula.fixed = ~ 1 , formula.random = ~ 1 , idcluster="idschool" , 
+mod1c <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat1, dep="ASMMAT" , 
+                formula.fixed = ~ 1, formula.random = ~ 1, idcluster="idschool", 
                 wgtlevel2 = "one" ,  se = FALSE )
 summary(mod1c)
 
 #--- Model 1d: weights and sampling design and all plausible values
-mod1d <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
-                formula.fixed = ~ 1 , formula.random = ~ 1 , idcluster="idschool" , 
+mod1d <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
+                formula.fixed = ~ 1, formula.random = ~ 1, idcluster="idschool", 
                 wgtlevel2 = "SCHWGT" )
 summary(mod1d)
 
@@ -174,7 +174,7 @@ summary(mod1d)
 # Model 2: Random slope model
 
 #--- Model 2a: without weights
-mod2a <- BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
+mod2a <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
                 formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
                 idcluster="idschool" , wgtlevel2 = "one" ,  se = FALSE )
 summary(mod2a)
@@ -185,7 +185,7 @@ mod2b <- lme4::lmer( ASMMAT01 ~ female +  ASBG06A + ( 1 + ASBG06A | idschool) ,
 summary(mod2b)
 
 #--- Model 2c: weights and sampling design and all plausible values
-mod2c <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
+mod2c <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="ASMMAT" , 
                 formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
                 idcluster="idschool" , wgtlevel2 = "SCHWGT" , maxiter=500 , se=FALSE)
 summary(mod2c)
@@ -194,8 +194,8 @@ summary(mod2c)
 
 # constraint for zero covariance between intercept and slope
 recov_constraint <- matrix( c(1,2,0) , ncol=3 )
-mod2d <- BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
-                formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
+mod2d <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
+                formula.fixed = ~ female +  ASBG06A, formula.random = ~ ASBG06A, 
                 idcluster="idschool" , wgtlevel2 = "one" ,  se = FALSE,
                 recov_constraint=recov_constraint )
 summary(mod2d)                            
@@ -207,8 +207,8 @@ summary(mod2d)
 # Var(Slo)=10      # slope variance of 10
 recov_constraint <- matrix( c(1,2,0,  
                       2,2,10) , ncol=3 , byrow=TRUE)
-mod2e <- BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
-                formula.fixed = ~  female +  ASBG06A , formula.random = ~ ASBG06A , 
+mod2e <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat2 , dep="ASMMAT01" , 
+                formula.fixed = ~  female +  ASBG06A, formula.random = ~ ASBG06A, 
                 idcluster="idschool" , wgtlevel2 = "one" ,  se = FALSE,
                 recov_constraint=recov_constraint )
 summary(mod2e)
@@ -231,18 +231,18 @@ dat1 <- data.frame("idcluster" = idcluster )
 dat1$X <- rep( stats::rnorm( NC , sd = sqrt(iccx) ) , each=Nj ) + 
                  stats::rnorm( N , sd = sqrt( 1 - iccx) )
 dat1$Y <- theta[1] + rep( stats::rnorm(NC , sd = sqrt(Tmat[1,1] ) ) , each=Nj ) + 
-        ( theta[2] + rep( stats::rnorm(NC , sd = sqrt(Tmat[2,2] ) ) , each=Nj ) ) * dat1$X +
-                stats::rnorm(N , sd= sqrt(sig2) )
+      theta[2] + rep( stats::rnorm(NC, sd=sqrt(Tmat[2,2])), each=Nj )) * dat1$X +
+      stats::rnorm(N, sd= sqrt(sig2) )
 
 #--- (2) create design object 
-bdat1 <- BIFIE.data.jack( data=dat1 , jktype="JK_GROUP", jkzone = "idcluster"  )
+bdat1 <- BIFIEsurvey::BIFIE.data.jack( data=dat1, jktype="JK_GROUP", jkzone="idcluster")
 summary(bdat1)
 
 #*** Model 1: Random slope model (ML standard errors)
 
 #- estimation using BIFIE.twolevelreg
-mod1a <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="Y" , 
-                formula.fixed = ~ 1+X , formula.random = ~ 1+X , idcluster="idcluster" , 
+mod1a <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat1, dep="Y" , 
+                formula.fixed = ~ 1+X, formula.random = ~ 1+X, idcluster="idcluster", 
                 wgtlevel2 = "one" ,  se = FALSE )
 summary(mod1a)
 
@@ -251,7 +251,7 @@ mod1b <- lme4::lmer( Y ~ X + ( 1+X | idcluster) , data = dat1 , REML = FALSE  )
 summary(mod1b)
 
 #- using Jackknife for inference
-mod1c <- BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="Y" , 
+mod1c <- BIFIEsurvey::BIFIE.twolevelreg( BIFIEobj=bdat1 , dep="Y" , 
                 formula.fixed = ~ 1+X , formula.random = ~ 1+X , idcluster="idcluster" , 
                 wgtlevel2 = "one" ,  se = TRUE )
 summary(mod1c)

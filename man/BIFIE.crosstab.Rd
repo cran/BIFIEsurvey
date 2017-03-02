@@ -103,11 +103,12 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bifieobj <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
+bifieobj <- BIFIEsurvey::BIFIE.data( data.list=data.timss1 , wgt=data.timss1[[1]]$TOTWGT,
            wgtrep=data.timssrep[, -1 ] )
 
 #--- Model 1: cross tabulation           
-res1 <- BIFIE.crosstab( bifieobj , vars1="migrant" , vars2 = "books" , group="female" )
+res1 <- BIFIEsurvey::BIFIE.crosstab( bifieobj , vars1="migrant" , 
+               vars2 = "books", group="female" )
 summary(res1)                  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

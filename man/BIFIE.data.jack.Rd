@@ -24,7 +24,8 @@ Data frame: Can be a single or a list of multiply-imputed datasets
 }
   \item{wgt}{
 A string indicating the label of case weight.
-If \code{jktype="JK_TIMSS"}, then \code{wgt="TOTWGT"}.
+In case of \code{jktype="JK_TIMSS"} the weight is specified as
+ \code{wgt="TOTWGT"} as the default.
 }
   \item{pv_vars}{
 An optional vector of plausible values which define multiply-imputed datasets.
@@ -102,12 +103,12 @@ data(data.timss3)
 # define plausible values
 pv_vars <- c("ASMMAT" , "ASSSCI" )
 # create BIFIE.data objects -> 5 imputed datasets
-bdat1 <- BIFIE.data.jack( data=data.timss3  ,  pv_vars = pv_vars ,
+bdat1 <- BIFIEsurvey::BIFIE.data.jack( data=data.timss3  ,  pv_vars = pv_vars ,
              jktype="JK_TIMSS"  )
 summary(bdat1)
 
 # create BIFIE.data objects -> all PVs are included in one dataset
-bdat2 <- BIFIE.data.jack( data=data.timss3  ,  jktype="JK_TIMSS"  )
+bdat2 <- BIFIEsurvey::BIFIE.data.jack( data=data.timss3  ,  jktype="JK_TIMSS"  )
 summary(bdat2)
 
 #############################################################################
@@ -117,29 +118,30 @@ summary(bdat2)
 data(data.test1)
 
 # create jackknife zones based on random group creation
-bdat1 <- BIFIE.data.jack( data = data.test1 ,  jktype="JK_RANDOM" , ngr = 50  )
+bdat1 <- BIFIEsurvey::BIFIE.data.jack( data = data.test1 ,  jktype="JK_RANDOM", 
+                    ngr = 50 )
 summary(bdat1)
-stat1 <- BIFIE.univar( bdat1 , vars ="math" ,  group="stratum" )
+stat1 <- BIFIEsurvey::BIFIE.univar( bdat1 , vars ="math" ,  group="stratum" )
 summary(stat1)
 
 # random creation of groups and inclusion of weights
-bdat2 <- BIFIE.data.jack( data = data.test1 ,  jktype="JK_RANDOM" , ngr = 75 , seed=987 ,
-                wgt="wgtstud")
+bdat2 <- BIFIEsurvey::BIFIE.data.jack( data = data.test1 ,  jktype="JK_RANDOM", 
+                ngr = 75, seed=987, wgt="wgtstud")
 summary(bdat2)
-stat2 <- BIFIE.univar( bdat2 , vars ="math" ,  group="stratum" )
+stat2 <- BIFIEsurvey::BIFIE.univar( bdat2 , vars ="math" ,  group="stratum" )
 summary(stat2)
 
 # using idclass as jackknife zones
-bdat3 <- BIFIE.data.jack( data = data.test1 ,  jktype="JK_GROUP" , jkzone="idclass" , 
-                wgt="wgtstud")
+bdat3 <- BIFIEsurvey::BIFIE.data.jack( data = data.test1 ,  jktype="JK_GROUP", 
+                jkzone="idclass", wgt="wgtstud")
 summary(bdat3)
-stat3 <- BIFIE.univar( bdat3 , vars ="math" ,  group="stratum" )
+stat3 <- BIFIEsurvey::BIFIE.univar( bdat3 , vars ="math" ,  group="stratum" )
 summary(stat3)
 
 # create BIFIEdata object with a list of imputed datasets
 dataList <- list( data.test1 , data.test1 , data.test1 )
-bdat4 <- BIFIE.data.jack( data = dataList ,  jktype="JK_GROUP" , jkzone="idclass" , 
-                wgt="wgtstud")
+bdat4 <- BIFIEsurvey::BIFIE.data.jack( data = dataList ,  jktype="JK_GROUP" , 
+                jkzone="idclass", wgt="wgtstud")
 summary(bdat4)                
 
 \dontrun{
@@ -150,10 +152,10 @@ summary(bdat4)
 data(data.pisaNLD)
 
 # BIFIEdata with cdata=FALSE
-bifieobj <- BIFIE.data.jack( data.pisaNLD , jktype = "RW_PISA" , cdata=FALSE )
+bifieobj <- BIFIEsurvey::BIFIE.data.jack( data.pisaNLD, jktype="RW_PISA", cdata=FALSE)
 summary(bifieobj)
 # BIFIEdata with cdata=TRUE
-bifieobj1 <- BIFIE.data.jack( data.pisaNLD , jktype = "RW_PISA" , cdata=TRUE )
+bifieobj1 <- BIFIEsurvey::BIFIE.data.jack( data.pisaNLD, jktype="RW_PISA", cdata=TRUE)
 summary(bifieobj1)
 }
 }

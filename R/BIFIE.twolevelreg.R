@@ -142,10 +142,9 @@ BIFIE.twolevelreg <- function( BIFIEobj , dep , formula.fixed , formula.random ,
 				}
 					
 		#*********** estimate multilevel model		
-		res <- .Call("bifie_mla2" , X_list , Z_list , y_list , wgttot , wgtlev2 , wgtlev1 ,
+		res <- bifie_mla2( X_list , Z_list , y_list , wgttot , wgtlev2 , wgtlev1 ,
 				 globconv , maxiter , group_vec - 1  , group_values - 1 , idcluster - 1 ,
-				 wgtrep1 , Nimp , fayfac , recov_constraint	, is_rcov_constraint ,
-				 PACKAGE="BIFIEsurvey")
+				 wgtrep1 , Nimp , fayfac , recov_constraint	, is_rcov_constraint )
 		
 		# Not requested from the output:
 		# -------------------------------

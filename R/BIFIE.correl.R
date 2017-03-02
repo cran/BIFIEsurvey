@@ -65,8 +65,8 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#**************************************************************************#
 	# Rcpp call
 
-	res <- .Call( "bifie_correl" , datalistM , wgt_ , as.matrix(wgtrep) , vars_index -1 , fayfac , 
-                Nimp ,  group_index -  1, group_values , PACKAGE="BIFIEsurvey" )
+	res <- bifie_correl( datalistM , wgt_ , as.matrix(wgtrep) , vars_index -1 , fayfac , 
+                Nimp ,  group_index -  1, group_values)
 	GG <- length(group_values)
     itempair_index <- res$itempair_index + 1
 	ZZ <- nrow(itempair_index )	

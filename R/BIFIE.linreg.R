@@ -95,9 +95,8 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 				
 	#**************************************************************************#
 	# Rcpp call
-	res <- .Call ( "bifie_linreg" , datalistM , wgt_ , as.matrix(wgtrep) , dep_index -1 , 
-            pre_index - 1 ,  fayfac ,    Nimp ,  group_index -  1, group_values ,
-			PACKAGE="BIFIEsurvey" )	
+	res <- bifie_linreg( datalistM , wgt_ , as.matrix(wgtrep) , dep_index -1 , 
+            pre_index - 1 ,  fayfac ,    Nimp ,  group_index -  1, group_values )
 	GG <- length(group_values)
 #	ZZ <- nrow(itempair_index )	
     ZZ <- 2*VV+2

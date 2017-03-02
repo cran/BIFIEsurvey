@@ -23,16 +23,8 @@ Some Tools for Survey Statistics in Educational Assessment, Developed by BIFIE
 %% \code{Sys.time}: \tab syssys \cr
 
 \details{
-\tabular{ll}{
-Package: \tab \pkg{BIFIEsurvey} \cr
-Type: \tab Package\cr
-Version: \tab 1.12\cr
-Date: \tab 2017 \cr
-License: \tab GPL (>=2)\cr
-URL: \tab \url{http://www.bifie.at} \cr
-}
 
-This package include basic descriptive functions for large scale assessment data 
+The \pkg{BIFIEsurvey} package include basic descriptive functions for large scale assessment data 
 to complement the more comprehensive \pkg{survey} package. The
 functions in this package were written in \pkg{Rcpp}.
 

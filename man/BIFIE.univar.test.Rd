@@ -72,28 +72,29 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bdat <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt=data.timss1[[1]]$TOTWGT,
            wgtrep=data.timssrep[, -1 ] )
 
 #**** Model 1: 3 variables splitted by book
-res1 <- BIFIE.univar( bdat , vars=c("ASMMAT", "ASSSCI","scsci") , group="books" )
+res1 <- BIFIEsurvey::BIFIE.univar( bdat, vars=c("ASMMAT", "ASSSCI","scsci"), 
+                    group="books")
 summary(res1)
 # analysis of variance
-tres1 <- BIFIE.univar.test(res1)
+tres1 <- BIFIEsurvey::BIFIE.univar.test(res1)
 summary(tres1)
 
 #**** Model 2: One variable splitted by gender
-res2 <- BIFIE.univar( bdat , vars=c("ASMMAT") , group="female" )
+res2 <- BIFIEsurvey::BIFIE.univar( bdat , vars=c("ASMMAT") , group="female" )
 summary(res2)
 # analysis of variance
-tres2 <- BIFIE.univar.test(res2)
+tres2 <- BIFIEsurvey::BIFIE.univar.test(res2)
 summary(tres2)
 
 \dontrun{
 #**** Model 3: Univariate statistic: math
-res3 <- BIFIE.univar( bdat , vars=c("ASMMAT") )
+res3 <- BIFIEsurvey::BIFIE.univar( bdat , vars=c("ASMMAT") )
 summary(res3)
-tres3 <- BIFIE.univar.test(res3)
+tres3 <- BIFIEsurvey::BIFIE.univar.test(res3)
 
 #############################################################################
 # EXAMPLE 2: Imputed TIMSS dataset - Two grouping variables
@@ -103,15 +104,16 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bdat <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
-           wgtrep=data.timssrep[, -1 ] )
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss1 , wgt=data.timss1[[1]]$TOTWGT ,
+                  wgtrep=data.timssrep[, -1 ] )
 
 #**** Model 1: 3 variables splitted by book and female
-res1 <- BIFIE.univar(bdat, vars=c("ASMMAT", "ASSSCI","scsci"), group=c("books","female"))
+res1 <- BIFIEsurvey::BIFIE.univar(bdat, vars=c("ASMMAT", "ASSSCI","scsci"), 
+                  group=c("books","female"))
 summary(res1)
 
 # analysis of variance
-tres1 <- BIFIE.univar.test(res1)
+tres1 <- BIFIEsurvey::BIFIE.univar.test(res1)
 summary(tres1)
 
 # extract data frame with Cohens d statistic

@@ -59,7 +59,7 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 				}
 		jkzone <- 1:N
 		N1 <- N / ngr
-		jkzone <- floor( jkzone / ( N1 + .00001  ) ) + 1
+		jkzone <- floor( jkzone / ( N1 + 1E-5  ) ) + 1
 		jkzone <- jkzone[indzone]
 		jkrep <- rep(0,N)
 		data$jkzone <- jkzone
@@ -120,8 +120,8 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		cat(paste0("|" , paste0(rep("*",prblen), collapse="") , "|\n|")) ; utils::flush.console()	
 		addname <- 10^( floor( log( RR+.5 , 10 ) )  + 1 )
 		data[ , jkzone ] <- match( data[ , jkzone ] , unique( data[ , jkzone] ) )		
-		datarep <- .Call( "bifie_jack_timss" , wgt_= data[,wgt] , data[,jkzone]-1 , data[,jkrep] , RR , jkfac ,
-						prbar , PACKAGE="BIFIEsurvey" )
+		datarep <- bifie_jack_timss( data[,wgt] , data[,jkzone]-1 , data[,jkrep] , 
+						RR , jkfac ,  prbar )
 		colnames(datarep) <- paste0("w_fstr" , substring( paste0(addname +1:RR),2) )		
 		cat("|\n")
 					}
@@ -156,15 +156,13 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 			dat1 <- data.frame( data0 , data[ , dfr[ dfr$impdata_index == ii  , "data_index" ] ] )
 			colnames(dat1)[ newvars ] <- pv_vars
 			datalist[[ii]] <- dat1 
-						}  # end imputations						
-					}  # end pv_vars
-		
+		}  # end imputations						
+	}  # end pv_vars		
 	if ( ! is.null(fayfac0) ){
 		fayfac <- fayfac0	
-					}
+	}
 					
-	#*** create BIFIE.data object
-	
+	#*** create BIFIE.data object	
 	bifiedat <- BIFIE.data( datalist , wgt = data[, wgt ] , wgtrep = datarep , fayfac = fayfac ,
 							cdata=cdata , NMI = FALSE )
 	bifiedat$CALL <- cl

@@ -40,10 +40,8 @@ BIFIE.univar.test <- function( BIFIE.method , wald_test=TRUE ){
 	
 	#*****
 	# Rcpp call
-	res <- .Call("bifie_test_univar" , mean1M , sd1M , sumweightM , GG , group_values ,
-			mean1repM , sd1repM , sumweightrepM  , fayfac , PACKAGE="BIFIEsurvey")
-#	res <- bifie_test_univar(  mean1M , sd1M , sumweightM , GG , group_values ,
-#			mean1repM , sd1repM , sumweightrepM  , fayfac )
+	res <- bifie_test_univar( mean1M , sd1M , sumweightM , GG , group_values ,
+			     mean1repM , sd1repM , sumweightrepM  , fayfac )
 
 			
 	#****

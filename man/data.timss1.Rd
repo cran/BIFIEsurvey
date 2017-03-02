@@ -72,19 +72,19 @@ data(data.timssrep)
 # There are 5 plausible values, but student covariates are not imputed.
 
 #--- create object of class BIFIE data
-bdat3 <- BIFIE.data(data.timss3 , wgt = data.timss3$TOTWGT , 
+bdat3 <- BIFIEsurvey::BIFIE.data(data.timss3 , wgt = data.timss3$TOTWGT , 
               wgtrep = data.timssrep[,-1] , fayfac = 1)
 summary(bdat3)              
 # This BIFIEdata object contains one dataset in which all
 # plausible values are included. This object can be used
 # in analysis without plausible values.
 # Equivalently, one can define bdat3 much simpler by
-bdat3 <- BIFIE.data.jack(data.timss3 , jktype="JK_TIMSS")
+bdat3 <- BIFIEsurvey::BIFIE.data.jack(data.timss3 , jktype="JK_TIMSS")
 summary(bdat3)              
 
 #--- In the following, the object bdat4 is defined with 5 datasets 
 # referring to 5 plausible values.
-bdat4 <- BIFIE.data.jack(data.timss3 , pv_vars = c("ASMMAT","ASSSCI") ,
+bdat4 <- BIFIEsurvey::BIFIE.data.jack(data.timss3 , pv_vars=c("ASMMAT","ASSSCI"),
                jktype="JK_TIMSS")
 summary(bdat4)              
 
@@ -103,7 +103,7 @@ for (ii in 1:5){
     dat1 <- cbind(  dat1 , data.timssrep[,-1] ) 
     datL[[ii]] <- dat1 
                 }
-datL <- mitools::imputationList(list( datL[[1]],datL[[2]],datL[[3]],datL[[4]],datL[[5]]) )
+datL <- mitools::imputationList(list( datL[[1]],datL[[2]],datL[[3]],datL[[4]],datL[[5]]))
 svydes4 <- survey::svrepdesign(data=datL,weights=~TOTWGT ,type="JKn",
                    repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
 summary(svydes4)
@@ -122,11 +122,11 @@ mod1a <-  survey::svyglm( scsci ~ migrant + books , design = svydes3)
 summary(mod1a)
 
 #--- regression with pirls.reg (intsvy)
-mod1b <- intsvy::pirls.reg( y = "scsci" , x = c("migrant" , "books" ) , data= data.timss3)
+mod1b <- intsvy::pirls.reg( y="scsci", x=c("migrant", "books" ), data= data.timss3)
 mod1b
 
 #---- regression with BIFIEsurvey
-mod1c <- BIFIE.linreg( bdat3 , dep="scsci" , pre = c("one" , "migrant" , "books" ) )
+mod1c <- BIFIEsurvey::BIFIE.linreg( bdat3, dep="scsci", pre=c("one","migrant","books"))
 summary(mod1c)
 
 #--- regression with lavaan.survey package
@@ -157,8 +157,8 @@ mod2b[["0"]]   # regression coefficients female = 0
 mod2b[["1"]]   # regression coefficients female = 1 
 
 #--- regression with BIFIEsurvey
-mod2c <- BIFIE.linreg( bdat3 , dep="scsci" , pre = c("one" , "migrant" , "books" ) , 
-                 group="female")
+mod2c <- BIFIEsurvey::BIFIE.linreg( bdat3 , dep="scsci" , 
+               pre=c("one","migrant","books"), group="female")
 summary(mod2c)   
 
 #--- regression with lavaan.survey package
@@ -187,7 +187,7 @@ mod3b <- intsvy::pirls.reg.pv( pvlabel = "ASMMAT" , x = c("migrant" , "books" ) 
              data= data.timss3a)
 
 #--- regression with BIFIEsurvey
-mod3c <- BIFIE.linreg( bdat4 , dep="ASMMAT" , pre = c("one" , "migrant" , "books" ) )
+mod3c <- BIFIEsurvey::BIFIE.linreg( bdat4, dep="ASMMAT", pre=c("one","migrant","books"))
 summary(mod3c)
 
 #--- regression with lavaan.survey package
@@ -210,16 +210,16 @@ data(data.timss4)
 data(data.timssrep)
 
 #**** create BIFIEdata object
-bdat <- BIFIE.data( data.list=data.timss4 , wgt= data.timss4[[1]][[1]]$TOTWGT ,
-            wgtrep=data.timssrep[, -1 ] , NMI=TRUE , cdata=TRUE )
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss4, wgt=data.timss4[[1]][[1]]$TOTWGT,
+               wgtrep=data.timssrep[, -1 ] , NMI=TRUE , cdata=TRUE )
 summary(bdat)            
 
 #**** Model 1: Linear regression for mathematics score
-mod1 <- BIFIE.linreg( bdat , dep= "ASMMAT" , pre=c("one","books","migrant")  )
+mod1 <- BIFIEsurvey::BIFIE.linreg( bdat, dep= "ASMMAT", pre=c("one","books","migrant"))
 summary(mod1)
 
-#*** Model 2: Univariate statistics ?BIFIE.univar
-mod2 <- BIFIE.univar( bdat , vars = c("ASMMAT","ASSSCI","books") )
+#*** Model 2: Univariate statistics ?BIFIEsurvey::BIFIE.univar
+mod2 <- BIFIEsurvey::BIFIE.univar( bdat , vars = c("ASMMAT","ASSSCI","books") )
 summary(mod2)
 }
 }

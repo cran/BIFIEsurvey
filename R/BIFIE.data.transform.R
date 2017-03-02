@@ -22,12 +22,12 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 	if ( ! cdata ){
 		dfr <- as.data.frame( bifieobj$datalistM[ , ind_vars] )
 		colnames(dfr) <- vars
-				 }
+	}
 	if ( cdata ){
 		dfr1 <- BIFIE.BIFIEcdata2BIFIEdata( bifieobj , varnames = vars )
 		dfr <- as.data.frame( dfr1$datalistM )
 		colnames(dfr) <- dfr1$varnames
-				 }
+	}
 	N <- bifieobj$N
 	N1 <- bifieobj$Nimp * N
 	N2 <- ncol( bifieobj$dat1)
@@ -38,16 +38,15 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 	if ( ! is.null( varnames.new) ){
 		varnames.old <- bifieobj$varnames
 		select_vars <- setdiff( varnames.old , varnames.new )
-        bifieobj <- BIFIEdata.select( 	bifieobj , varnames = select_vars )	
-		
+        bifieobj <- BIFIEdata.select( bifieobj , varnames = select_vars )			
 		# removed variables
 		rm_vars <- intersect( varnames.old , varnames.new )
 		if ( length(rm_vars) > 0 ){
 			cat( paste0("Removed "  , length(rm_vars) , 
 						" original variables: " , paste0( rm_vars , collapse = " " ) , "\n") )
-								 }
+	    }
 		varnames <- bifieobj$varnames								 
-						}
+	}
 
 
 	#***---	
@@ -79,11 +78,12 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 				}
 	varnames1 <- c( varnames , varnames.added )		
 	
-	#***--- distinction BIFIEdata and BIFIEcdata
+	#***--- distinction between BIFIEdata and BIFIEcdata
 	if ( ! cdata ){
 		bifieobj$datalistM <- as.matrix( cbind( bifieobj$datalistM , M1.new ) )
 		colnames(bifieobj$datalistM) <- NULL		
-    	bifieobj$dat1 <- as.matrix( bifieobj$datalistM[ seq( N*(Nimp-1) + 1 , Nimp*N ) , ,drop=FALSE])				
+    	bifieobj$dat1 <- as.matrix( bifieobj$datalistM[ seq( N*(Nimp-1) + 1 , Nimp*N ),
+							,drop=FALSE])				
 		colnames(bifieobj$dat1) <- varnames1		
 				}
 						
@@ -91,9 +91,7 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 		M1.new <- as.matrix(M1.new)				
 		VV2 <- ncol(bifieobj$dat1)	
 		# create indicators
-        res2 <- .Call( "bifie_bifiedata2bifiecdata" ,
-					       M1.new , bifieobj$Nimp ,  
-						   PACKAGE="BIFIEsurvey" )												
+        res2 <- bifie_bifiedata2bifiecdata( M1.new , bifieobj$Nimp )						
 					   
 		# colnames(res2$datalistM_imputed) <- c("_imp" , "subj" , "variable" , "value")						   
 		datalistM_ind <- res2$datalistM_ind
@@ -109,8 +107,7 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 		colnames(bifieobj$dat1) <- varnames1
 		bifieobj$datalistM_impindex <- rbind( bifieobj$datalistM_impindex , datalistM_impindex )
 		bifieobj$datalistM_ind <- cbind( bifieobj$datalistM_ind , datalistM_ind )
-				}
-
+	}
 						
 	#*****
 	# include variable names
@@ -131,5 +128,5 @@ BIFIE.data.transform <- function( bifieobj , transform.formula ,
 	dfr3 -> bifieobj$variables
 	bifieobj$Nvars <- ncol(bifieobj$dat1)
 	return( bifieobj )
-		}
+}
 #################################################################		

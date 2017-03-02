@@ -1,8 +1,8 @@
 Package: BIFIEsurvey
 Type: Package
 Title: Tools for Survey Statistics in Educational Assessment
-Version: 1.12-0
-Date: 2017-01-16
+Version: 1.13-24
+Date: 2017-03-02 10:00:05
 Author: 
     BIFIE
 Maintainer: 
@@ -27,6 +27,6 @@ LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
 URL: http://www.bifie.at
 NeedsCompilation: yes
-Packaged: 2017-01-16 12:44:48 UTC; sunpn563
+Packaged: 2017-03-02 09:00:17 UTC; sunpn563
 Repository: CRAN
-Date/Publication: 2017-01-17 01:09:07
+Date/Publication: 2017-03-02 14:29:37

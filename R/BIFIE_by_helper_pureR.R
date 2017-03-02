@@ -41,13 +41,13 @@ s1 <- Sys.time()
 					do.call( userfct , list( "X" = dat1 , "w" = wgtrep1[ , rr] ) )
 									} )
 			parsrepM[ 1:NP + (gg-1)*NP , 1:RR + (ii-1)*RR ] <- h1
-					}
-			}
+		}
+	}
 		cat("|\n"); utils::flush.console()	
 		
 	# statistical inference	
-    res0 <- .Call( "bifie_comp_vcov_within" , parsM , parsrepM , fayfac , 
-				RR , Nimp , package="BIFIEsurvey" )
+    res0 <- bifie_comp_vcov_within( parsM , parsrepM , fayfac , 
+				RR , Nimp )
 	u_diag <- res0$u_diag
 	eps <- 1E-15
 	qhat <- parsM
@@ -68,5 +68,5 @@ s1 <- Sys.time()
 					WW = RR	, parsL = parsL )
 
 	return(res)
-		}
+}
 ############################################################

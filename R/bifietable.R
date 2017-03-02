@@ -11,14 +11,13 @@ fasttable <- function( vec  , sort.names=FALSE ){
 				characters <- FALSE
 						}
 	if ( ! characters ){
-		res <- .Call("bifie_fasttable" , datavec , PACKAGE="BIFIEsurvey" )
+		res <- bifie_fasttable( datavec )
 		res1 <- res$tableM[ 1:res$N_unique , , drop=FALSE]
 		tvec <- res1[,2]
 		names(tvec) <- res1[,1]
 				}
 	if ( characters ){ 			
-		# t1 <- bifie_table1_character( vec )
-		t1 <- .Call("bifie_table1_character" , vec , PACKAGE="BIFIEsurvey")
+		t1 <- bifie_table1_character( vec )
 		res <- t1$tableM
 		names(res) <- t1$table_names
 		if ( sort.names ){ 

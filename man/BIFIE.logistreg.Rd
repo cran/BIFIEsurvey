@@ -102,42 +102,42 @@ data(data.timss2)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bdat <- BIFIE.data( data.list=data.timss2 , wgt=  data.timss2[[1]]$TOTWGT ,
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss2, wgt=data.timss2[[1]]$TOTWGT,
                       wgtrep=data.timssrep[, -1 ] )
 
 #**** Model 1: Logistic regression - prediction of migrational background
-res1 <- BIFIE.logistreg( BIFIEobj=bdat, dep="migrant", pre= c("one","books","lang"),
-            group="female" , se=FALSE )
+res1 <- BIFIEsurvey::BIFIE.logistreg( BIFIEobj=bdat, dep="migrant", 
+           pre= c("one","books","lang"), group="female", se=FALSE )
 summary(res1)
 
 \dontrun{
 # same model, but with formula specification and standard errors
-res1a <- BIFIE.logistreg( BIFIEobj=bdat, formula= migrant ~ books + lang , 
-                 group="female"  )
+res1a <- BIFIEsurvey::BIFIE.logistreg( BIFIEobj=bdat, 
+              formula= migrant ~ books + lang, group="female"  )
 summary(res1a)
 
 #############################################################################
-# SIMULATED EXAMPLE 2: Comparison of glm and BIFIE.logistreg
+# SIMULATED EXAMPLE 2: Comparison of stats::glm and BIFIEsurvey::BIFIE.logistreg
 #############################################################################
 
 #*** (1) simulate data
 set.seed(987)
 N <- 300
-x1 <- rnorm( N )
-x2 <- runif( N)
+x1 <- stats::rnorm(N)
+x2 <- stats::runif(N)
 ypred <- -0.75+.2*x1 + 3*x2
-y <- 1*( plogis(ypred) > runif(N) )
+y <- 1*( stats::plogis(ypred) > stats::runif(N) )
 data <- data.frame( "y" = y , "x1"=x1 , "x2"=x2 )
 
 #*** (2) estimation logistic regression using glm
-mod1 <- glm( y ~ x1 + x2 , family="binomial")
+mod1 <- stats::glm( y ~ x1 + x2 , family="binomial")
 
 #*** (3) estimation logistic regression using BIFIEdata
 # create BIFIEdata object by defining 30 Jackknife zones
-bifiedata <- BIFIE.data.jack( data , jktype="JK_RANDOM" , ngr=30 )
+bifiedata <- BIFIEsurvey::BIFIE.data.jack( data , jktype="JK_RANDOM" , ngr=30 )
 summary(bifiedata)
 # estimate logistic regression
-mod2 <- BIFIE.logistreg( bifiedata , formula = y ~ x1+x2 )
+mod2 <- BIFIEsurvey::BIFIE.logistreg( bifiedata , formula = y ~ x1+x2 )
 
 #*** (4) compare results
 summary(mod2)	# BIFIE.logistreg

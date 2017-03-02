@@ -120,8 +120,9 @@ For the \code{lavaan} syntax, see
 data(data.bifie01)
 dat <- data.bifie01
 # create dataset with replicate weights and plausible values
-bifieobj <- BIFIE.data.jack( data=dat  ,  jktype="JK_TIMSS" , jkzone = "JKCZONE" , 
-            jkrep="JKCREP" , wgt="TOTWGT"   , pv_vars = c("ASMMAT","ASSSCI") )
+bifieobj <- BIFIEsurvey::BIFIE.data.jack( data=dat,  jktype="JK_TIMSS", 
+                jkzone = "JKCZONE", jkrep="JKCREP", wgt="TOTWGT", 
+                pv_vars = c("ASMMAT","ASSSCI") )
 
 #**************************************************************            
 #*** Model 1: Path model
@@ -135,12 +136,12 @@ lavmodel1 <- "
      ASBM02E ~ ASBM02A + ASBM02B
         "
 #--- Model 1a: model calculated by gender
-mod1a <- BIFIE.pathmodel( bifieobj , lavmodel1 , group = "female" )
+mod1a <- BIFIEsurvey::BIFIE.pathmodel( bifieobj , lavmodel1 , group = "female" )
 summary(mod1a)
         
 #--- Model 1b: Input of some known reliabilities
 reliability <- c( "ASBM02B" = .6 , "ASBM02A" = .8 )
-mod1b <- BIFIE.pathmodel( bifieobj , lavmodel1 , reliability=reliability )
+mod1b <- BIFIEsurvey::BIFIE.pathmodel( bifieobj, lavmodel1, reliability=reliability)
 summary(mod1b)        
         
 #**************************************************************            
@@ -151,7 +152,7 @@ lavmodel2 <- "
      ASMMAT ~ ASBG07A + ASBG07B + ASBM03A 
      ASBG07A ~~ .2*ASBG07A
         "
-mod2 <- BIFIE.pathmodel( bifieobj , lavmodel2  )
+mod2 <- BIFIEsurvey::BIFIE.pathmodel( bifieobj, lavmodel2  )
 summary(mod2)
 }
 }

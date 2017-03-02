@@ -22,17 +22,10 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes , type=NULL ){
 	# which columns in C do have non-zero entries
 	Ccols <- which( colSums( abs( Cdes) ) > 0 )
 
-	if ( ! BIFIE.method$NMI ){
-		
+	if ( ! BIFIE.method$NMI ){		
 		# apply Rcpp Wald test function
-		if (TRUE){
-		   res <- .Call("bifie_waldtest" ,  parsM   , parsrepM , Cdes , rdes , Ccols - 1 , fayfac ,
-						   PACKAGE="BIFIEsurvey")					   
-					}
+	   res <- bifie_waldtest( parsM   , parsrepM , Cdes , rdes , Ccols - 1 , fayfac )
 					
-	#    if (FALSE){
-	#	  res <- bifie_waldtest(  parsM , parsrepM , Cdes , rdes , Ccols - 1 , fayfac )				
-	#	          }
 		RR <- res$RR
 		Nimp <- res$Nimp
 		fayfac <- res$fayfac
@@ -49,8 +42,8 @@ BIFIE.waldtest <- function( BIFIE.method , Cdes , rdes , type=NULL ){
 		parsM2 <- Cdes_cols %*% parsM[ Ccols , ] 
 		parsrepM2 <- Cdes_cols %*% parsrepM[ Ccols , ]
 		# within covariance matrices
-		res0 <- .Call( "bifie_comp_vcov_within" , parsM2 , parsrepM2 , fayfac , 
-					BIFIE.method$RR , Nimp , package="BIFIEsurvey" )
+		res0 <- bifie_comp_vcov_within( parsM2 , parsrepM2 , fayfac , 
+					BIFIE.method$RR , Nimp )
 		u <- res0$u
 		Nimp_NMI <- BIFIE.method$Nimp_NMI
 		qhat <- array( parsM2 , dim= c( df1 , Nimp_NMI[2] , Nimp_NMI[1] ) )
@@ -96,4 +89,4 @@ summary.BIFIE.waldtest <- function( object , digits=4 , ... ){
 	if (  object$NMI ){ cat("D1 Statistic for Wald Test \n\n")	 }
 	obji <- object$stat.D
 	print.object.summary( obji , digits=digits )			
-			}
+}

@@ -114,11 +114,11 @@ objects see \code{\link{BIFIE.data.jack}}.
 data(data.timss1)
 data(data.timssrep)
 
-bdat <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt= data.timss1[[1]]$TOTWGT,
             wgtrep=data.timssrep[, -1 ] )
 summary(bdat)            
 # create BIFIEdata object in a compact way
-bdat2 <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+bdat2 <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt= data.timss1[[1]]$TOTWGT,
             wgtrep=data.timssrep[, -1 ] , cdata=TRUE)
 summary(bdat2)  
 
@@ -129,7 +129,7 @@ summary(bdat2)
 data(data.timss2)
 
 # use first dataset with missing data from data.timss2
-bdat <- BIFIE.data( data.list=data.timss2[[1]] , wgt=data.timss2[[1]]$TOTWGT )
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss2[[1]], wgt=data.timss2[[1]]$TOTWGT)
 }
 
 #############################################################################
@@ -141,7 +141,7 @@ data(data.timssrep)
 
 #-----
 # BIFIEdata object without finite sampling correction
-bdat1 <- BIFIE.data( data.list=data.timss1 , wgt= data.timss1[[1]]$TOTWGT ,
+bdat1 <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt= data.timss1[[1]]$TOTWGT,
             wgtrep=data.timssrep[, -1 ] )
 summary(bdat1)            
 
@@ -164,10 +164,10 @@ summary(bdat1)
 
 #---- compare some univariate statistics
 # no finite sampling correction
-res1 <- BIFIE.univar( bdat1 , vars="ASMMAT")
+res1 <- BIFIEsurvey::BIFIE.univar( bdat1 , vars="ASMMAT")
 summary(res1)
 # finite sampling correction
-res2 <- BIFIE.univar( bdat2 , vars="ASMMAT")
+res2 <- BIFIEsurvey::BIFIE.univar( bdat2 , vars="ASMMAT")
 summary(res2)
 
 \dontrun{
@@ -179,8 +179,9 @@ data(data.timss4)
 data(data.timssrep)
 
 # nested imputed dataset, save it in compact format
-bdat <- BIFIE.data( data.list=data.timss4 , wgt= data.timss4[[1]][[1]]$TOTWGT ,
-            wgtrep=data.timssrep[, -1 ] , NMI=TRUE , cdata=TRUE )
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss4 , 
+            wgt= data.timss4[[1]][[1]]$TOTWGT, wgtrep=data.timssrep[, -1 ] , 
+            NMI=TRUE , cdata=TRUE )
 summary(bdat)            
 }
 }

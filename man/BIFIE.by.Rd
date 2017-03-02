@@ -97,23 +97,23 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bifieobj <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
+bifieobj <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt=data.timss1[[1]]$TOTWGT,
            wgtrep=data.timssrep[, -1 ] )
 
 #****************************           
 #*** Model 1: Weighted means (as a toy example)
 userfct <- function(X,w){
-        pars <- c( weighted.mean( X[,1] , w ) , 
-                 weighted.mean(X[,2] , w )   )
+        pars <- c( stats::weighted.mean( X[,1] , w ) , 
+                     stats::weighted.mean(X[,2] , w )   )
         return(pars)
                         }
-res1 <-  BIFIE.by( bifieobj , vars =c("ASMMAT" , "migrant" , "books" ) , 
+res1 <-  BIFIEsurvey::BIFIE.by( bifieobj , vars =c("ASMMAT" , "migrant" , "books"), 
                 userfct=userfct , userparnames =c("MW_MAT", "MW_Migr") , 
                 group="female" )
 summary(res1)
 
 # evaluate function in pure R implementation using the use_Rcpp argument
-res1b <-  BIFIE.by( bifieobj , vars =c("ASMMAT" , "migrant" , "books" ) , 
+res1b <-  BIFIEsurvey::BIFIE.by( bifieobj , vars =c("ASMMAT" , "migrant" , "books" ) , 
                 userfct=userfct , userparnames =c("MW_MAT", "MW_Migr") , 
                 group="female" , use_Rcpp = FALSE )
 summary(res1b)
@@ -124,7 +124,8 @@ derived.parameters <- list(
         "gender_diff" = ~ 0 + I( ( MW_MAT_female1 - MW_MAT_female0 ) / 100 )
                             )
 # inference derived parameter
-res1d <- BIFIE.derivedParameters( res1 , derived.parameters = derived.parameters )
+res1d <- BIFIEsurvey::BIFIE.derivedParameters( res1 , 
+                derived.parameters = derived.parameters )
 summary(res1d)
 
 \dontrun{
@@ -146,10 +147,12 @@ my_rlm <- function(X,w){
     return( coef(mod) )
                 }
 # (3) estimate model
-res2 <-  BIFIE.by( bifieobj , vars  , userfct=my_rlm , group="female" , group_values=0:1)
+res2 <-  BIFIEsurvey::BIFIE.by( bifieobj , vars  , userfct=my_rlm , 
+                group="female", group_values=0:1)
 summary(res2)
 # estimate model without computing standard errors
-res2a <-  BIFIE.by( bifieobj , vars  , userfct=my_rlm , group="female" , se=FALSE)
+res2a <-  BIFIEsurvey::BIFIE.by( bifieobj , vars  , userfct=my_rlm, 
+                group="female" , se=FALSE)
 summary(res2a)
 
 # define a user function with formula language
@@ -160,7 +163,8 @@ my_rlm2 <- function(X,w){
     return( coef(mod) )
                 }
 # estimate model
-res2b <-  BIFIE.by( bifieobj, vars , userfct=my_rlm2, group="female", group_values=0:1)
+res2b <-  BIFIEsurvey::BIFIE.by( bifieobj, vars , userfct=my_rlm2, 
+                group="female", group_values=0:1)
 summary(res2b)
 
 
@@ -177,7 +181,7 @@ userfct <- function(X,w){
         return(pars)
                         }
 #*** extract number of unique values                        
-res3 <-  BIFIE.by( bifieobj , vars = vars , userfct=userfct , 
+res3 <-  BIFIEsurvey::BIFIE.by( bifieobj , vars = vars , userfct=userfct , 
               userparnames = paste0( vars, "_Nunique"),  se =FALSE )
 summary(res3)
   ##   Statistical Inference for User Definition Function 

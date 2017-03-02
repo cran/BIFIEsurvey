@@ -17,8 +17,8 @@ BIFIE.BIFIEdata2datalist <- function( bifieobj , varnames = NULL ,
 		dat0 <- datalistM[ (ii-1)*N + 1:N , ]
 		colnames(dat0) <- cndat1
 		datalist[[ii]] <- as.data.frame(dat0)
-					}
+	}
 	return(datalist)                
-				}
+}
 #######################################################################################				
 				

@@ -28,9 +28,8 @@ vcov.BIFIEsurvey <- function( object, type=NULL , eps=1E-10 , avoid.singul = FAL
 	Ccols <- which( colSums( abs( Cdes) ) > 0 )
 	rdes <- c(0)
 	# compute covariance matrices
-	res0 <- .Call("bifie_comp_vcov" ,  parsM = parsM , parsrepM = parsrepM , 
-						Cdes , rdes , Ccols - 1 , fayfac=fayfac ,
-						PACKAGE="BIFIEsurvey")
+	res0 <- bifie_comp_vcov(  parsM = parsM , parsrepM = parsrepM , 
+						Cdes , rdes , Ccols - 1 , fayfac=fayfac )
 	var_w <- res0$var_w
 	var_b <- res0$var_b
 	Nimp <- res1$Nimp
@@ -41,53 +40,53 @@ vcov.BIFIEsurvey <- function( object, type=NULL , eps=1E-10 , avoid.singul = FAL
 	if (object$NMI){	
 		var_tot <- BIFIE_NMI_inference_parameters( parsM , parsrepM , fayfac ,
 				RR , Nimp , object$Nimp_NMI , comp_cov = TRUE )$Tm	
-						}	
+	}	
 	return(var_tot)
-	}
+}
 #########################################################
 vcov.BIFIE.correl <- function( object , type = NULL , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type=type, ... )
 	return(pars)
-		}
+}
 # further BIFIE functions		
 vcov.BIFIE.by <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ...)
 	return(pars)
-		}
+}
 vcov.BIFIE.derivedParameters <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ... )
 	return(pars)
-		}
+}
 vcov.BIFIE.crosstab <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ... )
 	return(pars)
-		}
+}
 vcov.BIFIE.freq <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ...)
 	return(pars)
-		}
+}
 vcov.BIFIE.linreg <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ... )
 	return(pars)
-		}
+}
 vcov.BIFIE.logistreg <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ...)
 	return(pars)
-		}
+}
 vcov.BIFIE.univar <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ...)
 	return(pars)
-		}
+}
 vcov.BIFIE.twolevelreg <- function( object , ... ){
     if (object$se){
 		pars <- vcov.BIFIEsurvey( object=object , type= NULL , ... )
-				} else {
+	} else {
 		pars <- vcov( object$micombs )		
-				}
+	}
 	return(pars)
-		}		
+}		
 vcov.BIFIE.pathmodel <- function( object , ... ){
 	pars <- vcov.BIFIEsurvey( object=object , type= NULL , ...)
 	return(pars)
-		}
+}
 		

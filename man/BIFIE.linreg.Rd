@@ -96,28 +96,29 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bdat <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt=data.timss1[[1]]$TOTWGT,
              wgtrep=data.timssrep[, -1 ] )
 
 #**** Model 1: Linear regression for mathematics score
-mod1 <- BIFIE.linreg( bdat , dep= "ASMMAT" , pre=c("one","books","migrant") ,
+mod1 <- BIFIEsurvey::BIFIE.linreg( bdat, dep= "ASMMAT", pre=c("one","books","migrant"),
               group= "female" )
 summary(mod1)
 
 \dontrun{
 # same model but specified with R formulas 
-mod1a <- BIFIE.linreg( bdat , formula = ASMMAT ~ books + migrant ,
+mod1a <- BIFIEsurvey::BIFIE.linreg( bdat , formula = ASMMAT ~ books + migrant ,
                group= "female" , group_values = 0:1 )
 summary(mod1a)
 
 # compare result with lm function and first imputed dataset
 dat1 <- data.timss1[[1]]
-mod1b <- lm( ASMMAT ~ 0+as.factor(female)+as.factor(female):books+as.factor(female):migrant , 
-                data= dat1 ,  weights=dat1$TOTWGT )
+mod1b <- stats::lm( ASMMAT ~ 0 + as.factor(female) + as.factor(female):books +
+                              as.factor(female):migrant , 
+                         data= dat1 ,  weights=dat1$TOTWGT )
 summary(mod1b)
 
 #**** Model 2: Like Model 1, but books is now treated as a factor 
-mod2 <- BIFIE.linreg( bdat , formula = ASMMAT ~ as.factor(books) + migrant  )
+mod2 <- BIFIEsurvey::BIFIE.linreg( bdat , formula = ASMMAT ~ as.factor(books) + migrant)
 summary(mod2)
 
 #############################################################################
@@ -128,17 +129,18 @@ data(data.pisaNLD)
 data <- data.pisaNLD
 
 #--- Create BIFIEdata object immediately using BIFIE.data.jack function
-bdat <- BIFIE.data.jack( data.pisaNLD , jktype = "RW_PISA" , cdata=TRUE )
+bdat <- BIFIEsurvey::BIFIE.data.jack( data.pisaNLD, jktype = "RW_PISA", cdata=TRUE)
 summary(bdat)
 
 #****************************************************
 #*** Model 1: linear regression
-mod1 <- BIFIE.linreg( bdat , formula = MATH ~ HISEI )
+mod1 <- BIFIEsurvey::BIFIE.linreg( bdat , formula = MATH ~ HISEI )
 summary(mod1)
 
 #****************************************************
 #*** Model 2: Cubic regression
-mod2 <- BIFIE.linreg( bdat , formula = MATH ~ HISEI + I(HISEI^2) + I(HISEI^3) )
+mod2 <- BIFIEsurvey::BIFIE.linreg( bdat , 
+              formula = MATH ~ HISEI + I(HISEI^2) + I(HISEI^3) )
 summary(mod2)
 
 #****************************************************
@@ -154,11 +156,11 @@ for (vv in 2:ncol(des) ){
 }
 
 # apply B-spline regression in BIFIEsurvey::BIFIE.linreg
-mod3 <- BIFIE.linreg( bdat , formula = MATH ~ splines::bs(HISEI,df=5) )
+mod3 <- BIFIEsurvey::BIFIE.linreg( bdat , formula = MATH ~ splines::bs(HISEI,df=5) )
 summary(mod3)
 
 #*** include transformed HISEI values for B-spline matrix in bdat
-bdat2 <- BIFIE.data.transform( bdat , ~ 0 + splines::bs( HISEI , df = 5 ))
+bdat2 <- BIFIEsurvey::BIFIE.data.transform( bdat , ~ 0 + splines::bs( HISEI , df = 5 ))
 bdat2$varnames[ bdat2$varsindex.added ] <- paste0("HISEI_bsdes" , 
             seq( 1 , length( bdat2$varsindex.added ) ) )
 
@@ -179,13 +181,13 @@ mod <- stats::loess( MATH ~ HISEI , weights = w , data = X )
 # predict HISEI values
 hisei_val <- data.frame( "HISEI" = seq(16,90) )
 y_pred <- stats::predict( mod , hisei_val )
-plot( hisei_val$HISEI , y_pred , type="l")
+graphics::plot( hisei_val$HISEI , y_pred , type="l")
 
 #--- (2) define loess function
 loess_fct <- function(X,w){
     X1 <- data.frame( X , w )
     colnames(X1) <- c( vars , "wgt")
-    X1 <- na.omit(X1)  
+    X1 <- stats::na.omit(X1)  
 #    mod <- stats::lm( MATH ~ HISEI , weights = X1$wgt , data = X1 )
     mod <- stats::loess( MATH ~ HISEI , weights = X1$wgt , data = X1 )
     y_pred <- stats::predict( mod , hisei_val )
@@ -193,14 +195,14 @@ loess_fct <- function(X,w){
 }
 
 #--- (3) estimate model
-mod4 <-  BIFIE.by( bdat , vars  , userfct= loess_fct )
+mod4 <-  BIFIEsurvey::BIFIE.by( bdat , vars  , userfct= loess_fct )
 summary(mod4)
 
 # plot linear function pointwise and confidence intervals
-plot( hisei_val$HISEI , mod4$stat$est , type="l" , lwd = 2 , 
+graphics::plot( hisei_val$HISEI , mod4$stat$est , type="l" , lwd = 2 , 
         xlab="HISEI" , ylab="PVMATH" , ylim=c(430,670) ) 
-lines( hisei_val$HISEI , mod4$stat$est - 1.96* mod4$stat$SE , lty=3 )
-lines( hisei_val$HISEI , mod4$stat$est + 1.96* mod4$stat$SE , lty=3 )
+graphics::lines( hisei_val$HISEI , mod4$stat$est - 1.96* mod4$stat$SE , lty=3 )
+graphics::lines( hisei_val$HISEI , mod4$stat$est + 1.96* mod4$stat$SE , lty=3 )
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

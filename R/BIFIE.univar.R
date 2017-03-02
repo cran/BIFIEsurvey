@@ -64,13 +64,11 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#**************************************************************************#
 	#****************** no grouping variable **********************************#
 	if ( nogroup ){
-#		res <- .Call( "univar_1group" ,  datalistM , wgt_ , wgtrep , vars_index - 1 , fayfac ,  Nimp ,
-#				PACKAGE="BIFIEsurvey" ) 
 #		GG <- 1
 #		VV <- length(vars)
 
-		res <- .Call( "univar_multiple_V2group" , datalistM , wgt_ , wgtrep , vars_index - 1 , fayfac , Nimp ,
-				group_index - 1, group_values , PACKAGE="BIFIEsurvey" )								
+		res <- univar_multiple_V2group( datalistM , wgt_ , wgtrep , vars_index - 1 ,
+					fayfac , Nimp ,	group_index - 1, group_values )
 		GG <- length(group_values)
 		VV <- length(vars)					
 		dfr <- data.frame( "var" = rep(vars,each=GG) , 
@@ -128,8 +126,8 @@ BIFIE.univar <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#**************************************************************************#
 	#****************** with grouping variable ********************************#		
 	if ( ! nogroup ){
-		res <- .Call( "univar_multiple_V2group" , datalistM , wgt_ , wgtrep , vars_index - 1 , fayfac , Nimp ,
-				group_index - 1, group_values , PACKAGE="BIFIEsurvey" )	
+		res <- univar_multiple_V2group( datalistM , wgt_ , wgtrep , vars_index - 1 , fayfac , Nimp ,
+				group_index - 1, group_values )	
 		GG <- length(group_values)
 		VV <- length(vars)
 		

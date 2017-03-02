@@ -24,10 +24,10 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 			dat1 <- as.data.frame(dat1)
 			if ( ! is.null(varnames) ){	
 					dat1 <- dat1[ , varnames ]
-						}		
+			}		
 			dat1$one <- NULL
 			datalist[[ii]] <- dat1		
-					}    		
+		}    		
 		#**************
 		# read replicate weights	
 		cat(paste0( "- Read " , file.wgtrep , "\n") ); utils::flush.console() ;
@@ -36,7 +36,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 		# create BIFIEdata object
 		bifieobj <- BIFIE.data( data.list= datalist , wgt = wgt , wgtrep=wgtrep , 
                  						cdata=cdata )		
-					}	
+	}	
 	#############################################################
 	# with indicator dataset	
 	#############################################################					
@@ -47,10 +47,10 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 		dat_ind <- miceadds::load.data( file = file.ind , type=type , path = dir , ...)
 		if ( is.null(varnames) ){
 		     varnames <- setdiff( colnames(dat_ind ) , "one" )
-								}
+		}
 		if ( ! is.null(varnames) ){
 			dat_ind <- dat_ind[ , varnames ]			
-							}
+		}
 		dat_ind <- as.matrix( dat_ind )
 		# add column 1 for "one"
 		dat_ind <- cbind( dat_ind , 1 )
@@ -63,7 +63,7 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 		dat1 <- miceadds::load.data( file = files.imp[[ii]] , path = dir , type=type , ... )
 		if ( ! is.null(varnames) ){
 			dat1 <- dat1[ , varnames ]			
-							}		
+		}		
         datalist <- list( dat1 )
 		#**************
 		# read replicate weights	
@@ -77,39 +77,38 @@ load.BIFIEdata.files <- function( files.imp , wgt , file.wgtrep ,
 		Nmiss <- sum( 1 - dat_ind )
 		datalistM_imputed <- matrix( NA , nrow=Nmiss , Nimp)		
 		# datalistM_impindexL <- NULL
-		res1 <- .Call("bifie_bifiedata_stepwise" ,  as.matrix(dat1) , dat_ind , Nmiss ,
-							PACKAGE="BIFIEsurvey" )$datalistM_imputed
-		# bifieobj$datalistM_imputed <- res1		
+		res1 <- bifie_bifiedata_stepwise( as.matrix(dat1) , dat_ind , 
+						Nmiss )$datalistM_imputed
 		datalistM_imputed[,1] <- res1[,4]
 		datalistM_impindex <- res1[,2:3]
 		
 		#************************
 		# Read other imputed datasets
 		if (Nimp>1){
-		for (ii in 2:Nimp){
-			cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); utils::flush.console() ;
-			dat1 <- miceadds::load.data( file = files.imp[[ii]] , path = dir , type=type , ... )
-			if ( ! is.null(varnames) ){
-				dat1 <- dat1[ , varnames ]			
-								}		
-			res1 <- .Call("bifie_bifiedata_stepwise" ,  as.matrix(dat1) , dat_ind , Nmiss ,
-							PACKAGE="BIFIEsurvey" )$datalistM_imputed
-#			res1[,1] <- ii-1
-			datalistM_imputed[,ii] <- res1[,4]
-		    datalistM_impindex <- rbind( datalistM_impindex , res1[,2:3] )
-#			bifieobj$datalistM_imputed <- as.matrix( rbind( bifieobj$datalistM_imputed , res1 ) )
-							}						
-						}
-        bifieobj$dat1 <- cbind( as.data.frame(dat1) , "one"=1 )
+			for (ii in 2:Nimp){
+				cat(paste0( "- Read " , files.imp[[ii]] , "\n") ); utils::flush.console() ;
+				dat1 <- miceadds::load.data( file = files.imp[[ii]] , path = dir , type=type , ... )
+				if ( ! is.null(varnames) ){
+					dat1 <- dat1[ , varnames ]			
+									}		
+				res1 <- bifie_bifiedata_stepwise(  as.matrix(dat1) , dat_ind , 
+								Nmiss )$datalistM_imputed
+	#			res1[,1] <- ii-1
+				datalistM_imputed[,ii] <- res1[,4]
+				datalistM_impindex <- rbind( datalistM_impindex , res1[,2:3] )
+	#			bifieobj$datalistM_imputed <- as.matrix( rbind( bifieobj$datalistM_imputed , res1 ) )
+			}						
+		}
+		bifieobj$dat1 <- cbind( as.data.frame(dat1) , "one"=1 )
 		bifieobj$datalistM_imputed <- datalistM_imputed	
 		datalistM_imputed <- NULL
 		bifieobj$datalistM_impindex <- datalistM_impindex		
-#	    colnames(bifieobj$datalistM_imputed) <- c("_imp" , "subj" , "variable" , "value")		
-					}  # end indicator data
+	#	    colnames(bifieobj$datalistM_imputed) <- c("_imp" , "subj" , "variable" , "value")		
+	}  # end indicator data
     #####################################			
 	# return BIFIE object
 	return(bifieobj)	
-		}
+}
 ##################################################################
 ##################################################################
 ##################################################################

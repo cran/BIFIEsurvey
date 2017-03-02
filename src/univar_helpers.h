@@ -1,19 +1,10 @@
-
-
-
-// includes from the plugin
+#include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]]
 
 
 #include <RcppArmadillo.h>
-#include <Rcpp.h>
+// #include <Rcpp.h>
 
-#ifndef BEGIN_RCPP
-#define BEGIN_RCPP
-#endif
-
-#ifndef END_RCPP
-#define END_RCPP
-#endif
 
 using namespace Rcpp;
 
@@ -40,9 +31,6 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 	Rcpp::NumericMatrix sumwgt1(GG,RR);
 	int WW = wgt.ncol();
 	int NR = R.nrow();
-
-
-
 
 	// parameter vector
 	int NP = 2*NP0 + 2*NR ;
@@ -87,12 +75,8 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
         Rcpp::NumericVector residvar(NR);	
 	Rcpp::NumericVector preds_rr(VV);        
 	
-	for ( int gg=0; gg<GG;gg++){
-	
-	
-	igg=0;
-	
-	
+	for ( int gg=0; gg<GG;gg++){		
+	igg=0;		
 	int ngg = ncases[gg];
 	arma::mat X=arma::zeros(ngg,VV);
 	Rcpp::NumericMatrix wgg(ngg,WW);
@@ -115,7 +99,6 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 			}
 		 }
 
-
 	// create derived variables
 	if (NL>0){
 		for (int jj=0;jj<NL;jj++){
@@ -130,17 +113,13 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 		}		 
 	
 	// calculate means, variances and covaiances         
-	
 	double cbar=0;
 	double vbar=0;
 	double alpha=0;
 	double NItems=0;
 	int lli=0;
-
 	
-	
-	for (int ww=0;ww<WW;ww++){	
-	
+	for (int ww=0;ww<WW;ww++){		
 	for (int vv=0;vv<VV;vv++){
 		sds_gg(vv,gg)=0;
 		means_gg(vv,gg)=0;
@@ -149,8 +128,6 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 					}
 				}
 	
-// Rcpp::Rcout << "----- ww " <<  ww <<  std::flush << std::endl ;		
-		
 	weights_gg[gg] = 0;
 	arma::mat B_est_gg =arma::zeros(VV,VV);
 	arma::mat B_est_stand_gg =arma::zeros(VV,VV);
@@ -179,13 +156,7 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 			 covs_gg( xx , vv+gg*VV) = covs_gg(vv,xx+gg*VV) ;
 						}
 				}		 
-	
-
-
-//Rcpp::Rcout << "covs_gg(0,0)= " <<  covs_gg(0,0) << " " <<
-//	"(1,1) " <<  covs_gg(1,1) << " (2,2) " << covs_gg(2,2)   	<<  std::flush << std::endl ;				
-				
-				
+					
 	// calculate Cronbach's alpha for latent variables and adjust
 	// measurement error variance
 	for (int jj=0;jj<NL;jj++){
@@ -223,14 +194,8 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 				}
 			}
 
-
-// Rcpp::Rcout << "XtX_gg(0,0)= " <<  XtX_gg(0,0) << " " <<
-//	"(1,1) " <<  XtX_gg(1,1) <<  std::flush << std::endl ;		
-	
-	
 	// calculate regression coefficients
 	int nv_rr = 0 ;
-
 	
 	for (int rr=0;rr<NR;rr++){
 		// int rr=2;
@@ -247,13 +212,7 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 		arma::mat sigma_XX=arma::zeros(nv_rr,nv_rr);
 		arma::mat sigma_XY=arma::zeros(nv_rr,1);
 		arma::mat regr_coef_stand=arma::zeros(nv_rr,1);
-
-
-		
-// Rcpp::Rcout << "sigma_XX(0,0)= " <<  sigma_XX(0,0) << " " <<
-//	"(1,1) " <<  sigma_XX(1,1) 	<<  std::flush << std::endl ;		
-		
-		
+					
 		for (int vv=0;vv < nv_rr; vv++){
 		for (int xx=0;xx < nv_rr; xx++){	
 			sigma_XX( vv, xx ) = XtX_gg( preds_rr[vv] , preds_rr[xx]+gg*VV) ;
@@ -272,14 +231,10 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 		// calculate R-squared
 		arma::mat var_expl = arma::mat( arma::trans( regr_coef ) * sigma_XX * regr_coef );			   
 		rsquared[rr] = var_expl(0,0) / XtX_gg( R_row_index[rr], R_row_index[rr]+gg*VV) ;
-		residvar[rr] = XtX_gg( R_row_index[rr], R_row_index[rr]+gg*VV) * ( 1- rsquared[rr] );
-		
-	
+		residvar[rr] = XtX_gg( R_row_index[rr], R_row_index[rr]+gg*VV) * ( 1- rsquared[rr] );			
 		}
 			
-
 	//--- calculate parameter list
-
 	
 	// extract coefficients
 	for (int zz=0;zz<Nrci; zz++){ // beg zz
@@ -300,10 +255,7 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 		if ( ! ( R_IsNA( coeff_index(zz , 1 ) ) ) ){
 			parsM( coeff_index(zz , 1 ) - 1 + gg*NP  , ww ) += parsM( zz + gg*NP , ww ) ;
 		        parsM( coeff_index(zz , 1 ) - 1 + NP0 + gg*NP  , ww ) += parsM( zz + NP0+ gg*NP , ww ) ;			
-					}
-					
-					
-					
+					}															
 			}  // end zz
 	// r squared
 	for (int rr=0;rr<NR;rr++){
@@ -321,19 +273,20 @@ Rcpp::List bifie_pathmodel_helper( Rcpp::NumericMatrix dat1 ,
 	    	) ;
 	    }
 //**********************************************************
+// Rcpp::Rcout << "sigma_XX(0,0)= " <<  sigma_XX(0,0) << " " <<
+//	"(1,1) " <<  sigma_XX(1,1) 	<<  std::flush << std::endl ;		
 
-// user includes
-
-//****************************************
+//**********************************************************
 // signum function
 Rcpp::NumericVector bifie_sign( double x ){
 	Rcpp::NumericVector y1(1);	
 	if ( x > 0 ){ y1[0] = 1; }
 	if ( x < 0 ){ y1[0] = -1 ; }
-	return( wrap(y1) );
-		}
+	return( y1 );
+}
+//**********************************************************
 
-//****************************************
+//**********************************************************
 // converts a 1-column matrix into a vector
 Rcpp::NumericVector matr2vec( Rcpp::NumericMatrix matr1){
 	int N1=matr1.nrow();
@@ -341,15 +294,16 @@ Rcpp::NumericVector matr2vec( Rcpp::NumericMatrix matr1){
 	for (int zz=0;zz<N1;zz++){
 		vect1[zz] = matr1(zz,0) ;
 			}
-	return(wrap(vect1))	;
-		}
+	return(vect1)	;
+}
+//**********************************************************
 
-
-//****************************************************
+//**********************************************************
 // matrix entries form parsM into a larger matrix
 // starting from row zz in pars_full
 Rcpp::List matrix_entry( Rcpp::NumericMatrix parsM , Rcpp::NumericMatrix pars_full1 ,
-		int vv ){
+		int vv )
+{
 	int PP=parsM.nrow();
 	int WW=parsM.ncol();	
 	int zz=vv;	
@@ -368,9 +322,11 @@ Rcpp::List matrix_entry( Rcpp::NumericMatrix parsM , Rcpp::NumericMatrix pars_fu
 	    _["pars_full"] = pars_full ,
 	    _["zz2"] = zz2 
 	    	) ;
-	    }
+}
+//**********************************************************
 
-//***************************************************
+
+//**********************************************************
 // mean and SD in case of multiple groups
 Rcpp::List univar_helper_multiple_V2group( Rcpp::NumericMatrix dat1, 
      Rcpp::NumericMatrix wgt1,  Rcpp::NumericVector vars_index ,
@@ -447,14 +403,12 @@ Rcpp::List univar_helper_multiple_V2group( Rcpp::NumericMatrix dat1,
 		Rcpp::_["mean1"] = mean1 ,
 		Rcpp::_["sd1"] = sd1
 	    ) ;          	        	
-     }	
+}	
 //********************************************************************
 
      // Rcpp::Rcout << "c200 " << std::flush << std::endl ;
 
-
-
-//*************************************************
+//**********************************************************
 // compute standard errors using replicated statistics
 Rcpp::NumericVector varjack_helper( Rcpp::NumericVector pars , 
 	Rcpp::NumericMatrix pars_jack , Rcpp::NumericVector fayfac ){
@@ -484,10 +438,11 @@ Rcpp::NumericVector varjack_helper( Rcpp::NumericVector pars ,
 				}
 	   pars_var[pp] = tmp1 ;
 			}
-    return( wrap( pars_var ) ) ;
-    	}
+    return( pars_var ) ;
+}
+//**********************************************************
 
-//*************************************************
+//**********************************************************
 // compute standard errors and bias correction using replicated statistics
 Rcpp::List varjack_bias_helper( Rcpp::NumericVector pars , 
 	Rcpp::NumericMatrix pars_jack , Rcpp::NumericVector fayfac ){
@@ -525,9 +480,9 @@ Rcpp::List varjack_bias_helper( Rcpp::NumericVector pars ,
 	    _["pars_bias"] = pars_bias ,
 	    _["pars_var"] = pars_var      
 			    ) ;    
-    	}    	
+}    	
     	
-//*************************************************
+//**********************************************************
 // Rubin's rules for combining estimates
 Rcpp::List rubin_rules_univ( Rcpp::NumericMatrix parsM , Rcpp::NumericMatrix pars_varM){
 
@@ -570,9 +525,10 @@ return Rcpp::List::create(
     _["pars_varBetween"] = pars_varBetween ,
     _["pars_fmi"] = pars_fmi 
 		    ) ;  	  	  
-	 }
+}
+//**********************************************************
 
-//*******************************************************
+//**********************************************************
 // subroutine frequency calculation
 Rcpp::List bifiehelper_freq( Rcpp::NumericMatrix dat1 , Rcpp::NumericMatrix wgt ,
 	Rcpp::NumericVector group_index1 , Rcpp::NumericVector group_values ,
@@ -592,7 +548,7 @@ Rcpp::List bifiehelper_freq( Rcpp::NumericMatrix dat1 , Rcpp::NumericMatrix wgt 
 	Rcpp::NumericVector ncases(VV*GG) ;
 	Rcpp::NumericVector ncases1(VV2) ;	
 	
-        int ind=0;	
+    int ind=0;	
 	
 	//******************************************************
 	//********** count frequencies *************************
@@ -642,11 +598,12 @@ Rcpp::List bifiehelper_freq( Rcpp::NumericMatrix dat1 , Rcpp::NumericMatrix wgt 
 	    _["perc2"] = perc2   ,
 	    _["vars_values_numb_cumsum"] = vars_values_numb_cumsum
 	    ) ;  
-	}
+}
+//**********************************************************
 // Rcpp::Rcout << "c200 " << std::flush << std::endl ;  
 
 
-//******************************************************
+//**********************************************************
 // correlation
 Rcpp::List bifiehelpers_correl( Rcpp::NumericMatrix dat1 , Rcpp::NumericVector ind_cases ,
 	Rcpp::NumericVector group_values , Rcpp::NumericVector group_index1 ,
@@ -702,7 +659,6 @@ Rcpp::List bifiehelpers_correl( Rcpp::NumericMatrix dat1 , Rcpp::NumericVector i
 			} // end gg
 			  } // end if ind_cases == 1
 			}   // end nn
-	
 			
 	// calculate descriptive statistics
 	for (int ww=0;ww<WW;ww++){
@@ -757,10 +713,10 @@ Rcpp::List bifiehelpers_correl( Rcpp::NumericMatrix dat1 , Rcpp::NumericVector i
 	    _["cor1"] = cor1 ,
 	    _["ncases1"] = ncases1
 	    ) ;  
-	}
+}
+//**********************************************************
 
-
-//***********************************************************
+//**********************************************************
 // linear regression
 Rcpp::List bifiehelpers_linreg( Rcpp::NumericMatrix dat1 , 
 	Rcpp::NumericVector group_values , Rcpp::NumericVector dep_index ,
@@ -904,11 +860,11 @@ return Rcpp::List::create(
     _["sumwgt1"] = sumwgt1 ,
     _["regr_coef"] = regr_coef 
     ) ; 
-
-
 }
+//**********************************************************
 
-//********************************************
+
+//**********************************************************
 // BIFIE helpers Wald test
 Rcpp::List bifiehelpers_waldtest( int VV , Rcpp::NumericVector Ccols ,
 	Rcpp::NumericMatrix parsM , Rcpp::NumericMatrix parsrepM ,
@@ -960,11 +916,11 @@ Rcpp::List bifiehelpers_waldtest( int VV , Rcpp::NumericVector Ccols ,
 	    _["chi2"] = chi2 ,
 	    _["var_w"] = var_w
 	    ) ; 
-	}
-
+}
+//**********************************************************
 	
 
-//********************************************
+//**********************************************************
 // BIFIE helpers Wald test
 Rcpp::List bifiehelpers_waldtest_vcov( int VV , Rcpp::NumericVector Ccols ,
 	Rcpp::NumericMatrix parsM , Rcpp::NumericMatrix parsrepM ,
@@ -1012,19 +968,17 @@ Rcpp::List bifiehelpers_waldtest_vcov( int VV , Rcpp::NumericVector Ccols ,
 	arma::mat hyp_stat = arma::mat( ACdes * parm_vec - Ardes ) ;
 	arma::mat chi2 = arma::mat( trans( hyp_stat ) * var_hypinv * hyp_stat ) ; 			
 	
-	// int df=ACdes.n_rows;
-	
-	
+	// int df=ACdes.n_rows;		
 	return Rcpp::List::create( 
 	    _["chi2"] = chi2 ,
 	    _["var_w"] = var_w ,
 	    _["var_hyp"] = var_hyp ,
 	    _["hyp_stat"] = hyp_stat
 	    ) ; 
-	}
+}
+//**********************************************************	
 	
-	
-//*******************************************************
+//**********************************************************
 // etasquared and d statistics
 Rcpp::List bifiehelpers_etasquared( Rcpp::NumericMatrix mean1M ,
 	Rcpp::NumericMatrix sd1M , Rcpp::NumericMatrix sumweightM , int GG ){
@@ -1071,10 +1025,10 @@ Rcpp::List bifiehelpers_etasquared( Rcpp::NumericMatrix mean1M ,
 	    _["eta2"] = eta2 ,
 	    _["dstat"] = dstat
 	    ) ;   
-  }
+}
+//**********************************************************  
   
-  
-//***********************************************************
+//**********************************************************
 // cross tabulation
 Rcpp::List bifiehelpers_crosstab( Rcpp::NumericMatrix dat1 , Rcpp::NumericMatrix wgt ,
 	Rcpp::NumericVector group_values , Rcpp::NumericVector group_index1 , 
@@ -1422,9 +1376,11 @@ Rcpp::List bifiehelpers_crosstab( Rcpp::NumericMatrix dat1 , Rcpp::NumericMatrix
 	    _["sumwgt_gg"] = sumwgt_gg ,
 	    _["crosstab_pars"] = v10 
 	    ) ;  
-    }
+}
+//**********************************************************
+
     
-/////////////////////////////////////////////////////    
+//**********************************************************    
 // bifie_helper_ecdf
 Rcpp::NumericVector bifie_helper_ecdf( Rcpp::NumericMatrix dat1 , 
 	Rcpp::NumericVector wgt , Rcpp::NumericVector breaks ,
@@ -1493,15 +1449,12 @@ Rcpp::NumericVector bifie_helper_ecdf( Rcpp::NumericMatrix dat1 ,
 	     } // end val gg
 	   } // end gg
 	} // end nn 
-		
-		
-	
+					
 	// sort values
 	indvv = arma::sort_index( vals_temp ) ;
 	vals_tempsort =vals_temp.rows( indvv ) ;
 	wgt_tempsort =wgt_temp.rows( indvv ) ;
 	group_tempsort =group_temp.rows( indvv ) ;
-	
 	
 	for ( int gg=0;gg<GG;gg++){
 	ngg = ncasesM( gg + vv*GG , ii ) ;
@@ -1533,9 +1486,7 @@ Rcpp::NumericVector bifie_helper_ecdf( Rcpp::NumericMatrix dat1 ,
 		a1(uuu,1) = a1(uuu-1,1) + wgt_tempsort_gg(uuu,0) ;
 		a1(uuu,2) = a1(uuu-1,3);
 		a1(uuu,3) = vals_tempsort_gg(uuu,0) ;
-			}
-	
-			
+	}				
 	uu=0;		
 	bb=0;
 	MM=0;
@@ -1572,110 +1523,106 @@ Rcpp::NumericVector bifie_helper_ecdf( Rcpp::NumericMatrix dat1 ,
 	
 	} // end vv
 	
-	return ( wrap( ecdfMtemp) ) ;
-	}
+	return ( ecdfMtemp ) ;
+}
+//**********************************************************	
 	
-	
-//**************************************	
+//**********************************************************
 //**** logistic regression	
 Rcpp::List bifie_estlogistic_helper( Rcpp::NumericVector y ,
 	Rcpp::NumericMatrix X, Rcpp::NumericVector wgt ,
 	Rcpp::NumericVector beta0 , double eps , int maxiter ){
-
-int N=X.nrow();
-int P=X.ncol();
-double t1=0;
-
-//*** create matrices in Armadillo
-// design matrix X
-arma::mat Xa0(N,P);
-arma::mat Xa(N,P);
-for (int nn=0;nn<N;nn++){
-   for (int pp=0;pp<P;pp++){
-	Xa0(nn,pp) = X(nn,pp) ;
-			}
-		 }
-// outcome matrix y
-arma::colvec ya(N) ;
-for (int nn=0;nn<N;nn++){
-	ya(nn,0) = y[nn] ;
-		 }
-// regression coefficients
-arma::colvec beta_old(P);
-arma::colvec beta_new(P);
-for (int pp=0;pp<P;pp++){
-	beta_old(pp,0) = beta0[pp] ;
-			}
-
-// temporary values in iterations
-arma::colvec pred_logit(N);
-arma::colvec ypred(N);
-arma::colvec z(N);
-arma::colvec AM(N);
-arma::colvec wgta(N);
-double pardiff=100;
-
-int ii=0;
-
-while( ( pardiff > eps ) & ( ii < maxiter ) ){
-
-// within an iteration
-
-// calculate predicted logit value and probability
-for( int nn=0; nn <N; nn++){
-pred_logit(nn,0)=0;
-for ( int pp=0; pp <P; pp++){
-	pred_logit(nn,0) += Xa0(nn,pp) * beta_old(pp,0) ;
-		}
-if ( pred_logit(nn,0) < - 15 ){
-	pred_logit(nn,0) = - 15 ;
-				}	
-ypred(nn,0) = 1 / ( 1 + exp( - pred_logit(nn,0) ) ) ;
+  int N=X.nrow();
+  int P=X.ncol();
+  double t1=0;
+  
+  //*** create matrices in Armadillo
+  // design matrix X
+  arma::mat Xa0(N,P);
+  arma::mat Xa(N,P);
+  for (int nn=0;nn<N;nn++){
+     for (int pp=0;pp<P;pp++){
+  	Xa0(nn,pp) = X(nn,pp) ;
+  			}
+  		 }
+  // outcome matrix y
+  arma::colvec ya(N) ;
+  for (int nn=0;nn<N;nn++){
+  	ya(nn,0) = y[nn] ;
+  		 }
+  // regression coefficients
+  arma::colvec beta_old(P);
+  arma::colvec beta_new(P);
+  for (int pp=0;pp<P;pp++){
+  	beta_old(pp,0) = beta0[pp] ;
+  			}
+  
+  // temporary values in iterations
+  arma::colvec pred_logit(N);
+  arma::colvec ypred(N);
+  arma::colvec z(N);
+  arma::colvec AM(N);
+  arma::colvec wgta(N);
+  double pardiff=100;
+  
+  int ii=0;
+  
+  while( ( pardiff > eps ) & ( ii < maxiter ) ){
+  
+  // within an iteration
+  
+  // calculate predicted logit value and probability
+  for( int nn=0; nn <N; nn++){
+  pred_logit(nn,0)=0;
+  for ( int pp=0; pp <P; pp++){
+  	pred_logit(nn,0) += Xa0(nn,pp) * beta_old(pp,0) ;
+  		}
+  if ( pred_logit(nn,0) < - 15 ){
+  	pred_logit(nn,0) = - 15 ;
+  				}	
+  ypred(nn,0) = 1 / ( 1 + exp( - pred_logit(nn,0) ) ) ;
+  }
+  // calculate entries for A matrix and outcome z
+  for (int nn=0;nn<N;nn++){
+  	AM(nn,0) = ypred(nn,0) * ( 1 - ypred(nn,0) ) ;
+  	wgta(nn,0) = sqrt( AM(nn,0) * wgt[nn] ) ;
+  	z(nn,0) = pred_logit(nn,0) + ( ya(nn,0) - ypred(nn,0) )/AM(nn,0) ;
+  	z(nn,0) = wgta(nn,0) * z(nn,0) ;
+  		}
+  for (int nn=0;nn<N;nn++){
+     for (int pp=0;pp<P;pp++){
+     	   Xa(nn,pp)=Xa0(nn,pp)*wgta(nn,0);
+     	   		}
+     	   	}
+  // coefficient
+  beta_new = arma::solve(Xa, z);      // fit model y ~ X
+  // parameter difference
+  pardiff=0;
+  for (int pp=0;pp<P;pp++){
+  	t1 = beta_old(pp,0) - beta_new(pp,0) ;
+  	if (t1 < 0 ){ t1 = -t1 ; }
+  	if (t1 > pardiff){ pardiff = t1 ; }
+  		}
+  for (int pp=0;pp<P; pp++){
+  	beta_old(pp,0) = beta_new(pp,0);
+  		}
+     ii ++ ;		
+  	}
+  	
+  //*****************    
+  // OUTPUT                    
+  return Rcpp::List::create( 
+      _["pardiff"] = pardiff ,
+      _["beta"] = beta_new ,
+      _["iter"] = ii
+      ) ;  
 }
-// calculate entries for A matrix and outcome z
-for (int nn=0;nn<N;nn++){
-	AM(nn,0) = ypred(nn,0) * ( 1 - ypred(nn,0) ) ;
-	wgta(nn,0) = sqrt( AM(nn,0) * wgt[nn] ) ;
-	z(nn,0) = pred_logit(nn,0) + ( ya(nn,0) - ypred(nn,0) )/AM(nn,0) ;
-	z(nn,0) = wgta(nn,0) * z(nn,0) ;
-		}
-for (int nn=0;nn<N;nn++){
-   for (int pp=0;pp<P;pp++){
-   	   Xa(nn,pp)=Xa0(nn,pp)*wgta(nn,0);
-   	   		}
-   	   	}
-// coefficient
-beta_new = arma::solve(Xa, z);      // fit model y ~ X
-// parameter difference
-pardiff=0;
-for (int pp=0;pp<P;pp++){
-	t1 = beta_old(pp,0) - beta_new(pp,0) ;
-	if (t1 < 0 ){ t1 = -t1 ; }
-	if (t1 > pardiff){ pardiff = t1 ; }
-		}
-for (int pp=0;pp<P; pp++){
-	beta_old(pp,0) = beta_new(pp,0);
-		}
-ii ++ ;		
-	}
-	
-//*****************    
-// OUTPUT            
-        
-return Rcpp::List::create( 
-    _["pardiff"] = pardiff ,
-    _["beta"] = beta_new ,
-    _["iter"] = ii
-    ) ;  
-// maximal list length is 20!
-
-	}
-//*****************************************************
+//**********************************************************
 
 
 
 
-//************************************
+//**********************************************************
 // convert Rcpp matrix into Armadillo matrix
 Rcpp::List rcppmat2armamat( Rcpp::NumericMatrix matr ){
 	int N = matr.nrow();
@@ -1684,10 +1631,10 @@ Rcpp::List rcppmat2armamat( Rcpp::NumericMatrix matr ){
     return Rcpp::List::create( 
        _["armamat"] = Xa
         ) ;  
-		}
-//************************************
+}
+//**********************************************************
 
-//*****************************************************
+//**********************************************************
 // standard errors multilevel models
 Rcpp::List mla2_se_fixed( arma::mat theta , arma::mat Tmat , arma::mat sig2 ,
 	    arma::mat Var_theta_rj , arma::mat AfjArj , 
@@ -1726,15 +1673,14 @@ Rcpp::List mla2_se_fixed( arma::mat theta , arma::mat Tmat , arma::mat sig2 ,
 		fvcov(ii,hh) = sig2(0,0) * fvcov(ii,hh) ;
 				}
 			}
-//        return( wrap( fvcov) )
     return Rcpp::List::create( 
        _["fvcov"] = fvcov
         ) ;  
 }	
-//*****************************************************
+//**********************************************************
 
 
-//*************************************
+//**********************************************************
 // multilevel within-between decomposition
 Rcpp::List mla2_decomp( Rcpp::NumericMatrix V , 
 	Rcpp::NumericMatrix idcluster_table , Rcpp::NumericVector wgttot_ ){
@@ -1840,21 +1786,17 @@ Rcpp::List mla2_decomp( Rcpp::NumericMatrix V ,
 	    	    				}
 				}
 			}	
-
- // Rcpp::Rcout << "MSA(0,0)=" << MSA(0,0) <<   std::flush << std::endl ;
-			
+ // Rcpp::Rcout << "MSA(0,0)=" << MSA(0,0) <<   std::flush << std::endl ;			
     return Rcpp::List::create( 
        _["totmean"] = totmean , _["Sigma_B"] = Sigma_B ,
        _["Sigma_W"] = Sigma_W ,
        _["grmean"] = grmean , _["grwgt"] = grwgt 
         ) ;  	
-	
-	}
-
-//******************************************************
+}
+//**********************************************************
 
 
-//****************************************
+//**********************************************************
 // maximal difference of two armadillo matrices
 Rcpp::NumericVector maxabsval_arma( arma::mat Tmat , arma::mat Tmat0 ){
 	
@@ -1877,9 +1819,11 @@ Rcpp::NumericVector maxabsval_arma( arma::mat Tmat , arma::mat Tmat0 ){
 		}
 	Rcpp::NumericVector absval2(1);
 	absval2[0] = absval ;
-	return ( wrap( absval2 ) );
-	}
-//*****************************************************
+	return ( absval2  );
+}
+//**********************************************************    
+    
+//**********************************************************  
 // compute deviation between succeeding iterations
 Rcpp::NumericVector mla2_checkconv( arma::mat theta , arma::mat theta0 ,
 	arma::mat Tmat , arma::mat Tmat0 , arma::mat sig2 ,
@@ -1898,11 +1842,11 @@ Rcpp::NumericVector mla2_checkconv( arma::mat theta , arma::mat theta0 ,
 				}
 	Rcpp::NumericVector absval3(1);
 	absval3[0] = absval ;
-	return( wrap( absval3 ) ) ;				
+	return(absval3 ) ;				
 }				
-//*******************************************************
+//**********************************************************  
 
-//********************************************************
+//**********************************************************
 // variance decomposition Snijders and Bosker (2012)
 Rcpp::NumericVector mla2_vardec( arma::mat theta , arma::mat Tmat , arma::mat sig2 ,
 	Rcpp::NumericMatrix Sigma_B_yX ,Rcpp::NumericMatrix Sigma_W_yX ,
@@ -1984,14 +1928,13 @@ Rcpp::NumericVector mla2_vardec( arma::mat theta , arma::mat Tmat , arma::mat si
 	//** ICC conditional
 	ee=12;
 	vardec[ee] = ( vardec[2] ) / ( vardec[2] + vardec[5] ) ;
-	
-	
-    return( wrap( vardec ));	
+		
+    return( vardec );	
 	}
-//***************************************************************	
+//**********************************************************	
 
 
-//******************************************************
+//**********************************************************
 // post-processing variance decompositions
 Rcpp::List mla2_postproc( int N , int NX , int NZ , Rcpp::NumericVector y ,
 	Rcpp::NumericMatrix X , Rcpp::NumericMatrix Z , 
@@ -2047,9 +1990,9 @@ Rcpp::List mla2_postproc( int N , int NX , int NZ , Rcpp::NumericVector y ,
                     ) ;  
 		
 	}
-//*******************************************************	
+//**********************************************************	
 	
-//**************************************************
+//**********************************************************
 // dummy variables
 Rcpp::List create_dummies_mla2( int GG , Rcpp::NumericVector group ,
 	Rcpp::NumericMatrix X , Rcpp::NumericMatrix Z , Rcpp::NumericVector y ){ 	
@@ -2088,9 +2031,9 @@ Rcpp::List create_dummies_mla2( int GG , Rcpp::NumericVector group ,
        _["N_group"] = N_group ,  _["dummy_inds"] = dummy_inds 
                     ) ;  
         }
-//******************************************************    
+//**********************************************************    
 
-//*************************************************
+//**********************************************************
 // create cluster table
 Rcpp::NumericMatrix create_idclustertable( Rcpp::NumericVector group ,
 	Rcpp::NumericVector cluster , int NC){
@@ -2111,12 +2054,12 @@ Rcpp::NumericMatrix create_idclustertable( Rcpp::NumericVector group ,
 		idcluster_table2(jj,1) = nn ;
 				}
 			}
-	return( wrap( idcluster_table2) ) ;
+	return( idcluster_table2 ) ;
 		}
-//**************************************************************		
+//**********************************************************		
 
 
-//************************************************************
+//**********************************************************
 // rescale level 1 weights
 Rcpp::NumericVector rescale_lev1weights( Rcpp::NumericMatrix idcluster_table ,
 		Rcpp::NumericVector wgtlev1 ){
@@ -2133,12 +2076,12 @@ Rcpp::NumericVector rescale_lev1weights( Rcpp::NumericMatrix idcluster_table ,
 		   wgtlev1a[ii] = wgtlev1[ii] / wgtlev1_table(jj,1) * wgtlev1_table(jj,0) ; 	
 		}
 	}			
- 	return( wrap( wgtlev1a) ) ;
+ 	return( wgtlev1a ) ;
 }
-//***********************************************************
+//**********************************************************
 
 
-//***************************************************************
+//**********************************************************
 // E and M step of the algorithm
 Rcpp::List mla2_emsteps( Rcpp::NumericMatrix X, Rcpp::NumericMatrix Z ,
 	Rcpp::NumericMatrix idcluster_table , arma::mat Tmat ,
@@ -2318,13 +2261,11 @@ Rcpp::List mla2_emsteps( Rcpp::NumericMatrix X, Rcpp::NumericMatrix Z ,
       	      _["theta_rj"] = theta_rj , _["Var_theta_rj"] = Var_theta_rj ,
       	      _["ypred_fixed"] = ypred , _["ypred_ranef"] = ypred_ranef
         ) ;  
-
-	
-	}
-//******************************************************
+}
+//**********************************************************
 
 
-//****************************************
+//**********************************************************
 // MLA2 sufficient statistics
 Rcpp::List mla2_suffstat( Rcpp::NumericMatrix X , Rcpp::NumericMatrix Z , 
 	Rcpp::NumericVector y , 
@@ -2415,15 +2356,14 @@ Rcpp::List mla2_suffstat( Rcpp::NumericMatrix X , Rcpp::NumericMatrix Z ,
         ) ;  
 	
 		}
-//***************************************************************
+//**********************************************************
 		
-//***************************************************************
+//**********************************************************
 // MLA2 starting values
 Rcpp::List mla2_inits( arma::mat Xa , Rcpp::NumericMatrix X ,
 	Rcpp::NumericMatrix Z , 
 	Rcpp::NumericVector y , int NZ , Rcpp::NumericVector wgtlev1 ,
 	Rcpp::NumericVector wgttot ){
-
 		
 	// int NZ = Z.ncol();
 	int NX = X.ncol();
@@ -2479,26 +2419,22 @@ Rcpp::List mla2_inits( arma::mat Xa , Rcpp::NumericMatrix X ,
        _["theta"] = theta , _["Tmat"] = Tmat , _["sig2"] =sig2       
         ) ;  		
         }
-//*****************************************************************        
+//**********************************************************        
 
 
-//******************************************************************
+//**********************************************************
 Rcpp::List bifie_mla2_estimation( arma::mat theta_init , arma::mat Tmat_init ,
 		arma::mat sig2_init, int NX , int NZ , int NC , int N ,
 		Rcpp::NumericMatrix X , Rcpp::NumericMatrix Z , 
 		Rcpp::NumericVector y , Rcpp::NumericVector wgtlev2 , 
 		Rcpp::NumericVector wgtlev1 ,
-	  Rcpp::NumericVector wgttot , Rcpp::NumericMatrix idcluster_table ,
-	  double globconv , int maxiter , Rcpp::NumericMatrix recov_constraint ,
-    int is_rcov_constraint , int NRC ){
-	 
-   
-// recov_constraint , is_rcov_constraint, NRC
-	    
-  
-	int iter=0;
+	    Rcpp::NumericVector wgttot , Rcpp::NumericMatrix idcluster_table ,
+	    double globconv , int maxiter , Rcpp::NumericMatrix recov_constraint ,
+        int is_rcov_constraint , int NRC ){
 	
-	
+    
+    int iter=0;
+		
 	//**********************************************
 	// set inits
 	arma::mat theta(NX,1);
@@ -2666,9 +2602,9 @@ Rcpp::List bifie_mla2_estimation( arma::mat theta_init , arma::mat Tmat_init ,
 	    ,    _["pars_"] = pars_temp   ,
 	    	_["postproc"] = res31	    ) ;
 	}
-//*************************************************************  
+//**********************************************************  
 
-//*************************************************************
+//**********************************************************
 // estimation for replicate weights
 Rcpp::List bifie_mla2_estimation_replicates( int N__ , int NC__ ,
 	Rcpp::NumericVector wgttot__ , Rcpp::NumericMatrix wgtrep__ ,
@@ -2677,7 +2613,7 @@ Rcpp::List bifie_mla2_estimation_replicates( int N__ , int NC__ ,
 	arma::mat sig20 , int NX , int NZ ,  Rcpp::NumericMatrix X__ ,  
 	Rcpp::NumericMatrix Z__ , Rcpp::NumericVector y__ , 
 	double globconv , int maxiter , int NP ,
-  Rcpp::NumericMatrix recov_constraint , int is_rcov_constraint , int NRC
+    Rcpp::NumericMatrix recov_constraint , int is_rcov_constraint , int NRC
   ){
 
 	Rcpp::NumericVector wgttot__rr(N__);
@@ -2731,7 +2667,7 @@ Rcpp::List bifie_mla2_estimation_replicates( int N__ , int NC__ ,
 	Rcpp::List res33 = bifie_mla2_estimation( theta0 , Tmat0 ,
 		 sig20 , NX , NZ ,  NC__ ,  N__ , X__ ,  Z__ , y__ , wgtlev2__rr , 
 		 wgtlev1a , wgttot__rr , idcluster_table2 , globconv , maxiter,
-     recov_constraint, is_rcov_constraint, NRC
+         recov_constraint, is_rcov_constraint, NRC
       ) ;
 	Rcpp::NumericVector pars=res33["pars_"] ;
         for (int pp=0;pp<NP;pp++){
@@ -2755,7 +2691,7 @@ Rcpp::List bifie_mla2_estimation_replicates( int N__ , int NC__ ,
 	    _["pars_temp"] = pars_temp ,
 	    _["iter_temp"] = iter_temp
 	    	) ;
-	}
-//**************************************************************
+}
+//**********************************************************
 
 

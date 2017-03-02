@@ -66,45 +66,47 @@ library(miceadds)
 data(data.timss2)
 data(data.timssrep)
 # create BIFIEdata object
-bifieobj1 <- BIFIE.data( data.timss2 , wgt=data.timss2[[1]]$TOTWGT , 
+bifieobj1 <- BIFIEsurvey::BIFIE.data( data.timss2 , wgt=data.timss2[[1]]$TOTWGT , 
             wgtrep=data.timssrep[,-1] )
 # create BIFIEdata object in compact way (cdata=TRUE)            
-bifieobj2 <- BIFIE.data( data.timss2 , wgt=data.timss2[[1]]$TOTWGT , 
+bifieobj2 <- BIFIEsurvey::BIFIE.data( data.timss2 , wgt=data.timss2[[1]]$TOTWGT , 
             wgtrep=data.timssrep[,-1] , cdata=TRUE)
 
 #****************************            
 #*** Transformation 1: Squared and cubic book variable
 transform.formula <- ~ 0 + I( books^2 ) + I( books^3 )
 # as.character(transform.formula)
-bifieobj <- BIFIE.data.transform( bifieobj1 , transform.formula =transform.formula )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj1, 
+                  transform.formula=transform.formula)
 bifieobj$variables
 # rename added variables
 bifieobj$varnames[ bifieobj$varsindex.added ] <- c("books_sq" , "books_cub")
 
 # check descriptive statistics
-res1 <- BIFIE.univar( bifieobj , vars = c("books_sq" , "books_cub" ) )
+res1 <- BIFIEsurvey::BIFIE.univar( bifieobj , vars = c("books_sq" , "books_cub" ) )
 summary(res1)
 
 \dontrun{
 #****************************	
 #*** Transformation 2: Create dummy variables for variable book
 transform.formula <- ~ 0 + as.factor(books)
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula=transform.formula )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj, 
+                    transform.formula=transform.formula )
 ##   Included 5 variables: as.factor(books)1 as.factor(books)2 as.factor(books)3 
 ##        as.factor(books)4 as.factor(books)5
 bifieobj$varnames[ bifieobj$varsindex.added ] <- paste0("books_D" , 1:5)
 
 #****************************
 #*** Transformation 3: Discretized mathematics score
-hi3a <- BIFIE.hist( bifieobj , vars = "ASMMAT" )
+hi3a <- BIFIEsurvey::BIFIE.hist( bifieobj , vars = "ASMMAT" )
 plot(hi3a)
 transform.formula <- ~ 0 + I( as.numeric(cut( ASMMAT , breaks=seq(200,800,100) )) )
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =transform.formula ,
-                  varnames.new = "ASMMAT_discret" )
-hi3b <- BIFIE.hist( bifieobj , vars = "ASMMAT_discret" , breaks = 1:7 )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj, 
+                 transform.formula=transform.formula, varnames.new = "ASMMAT_discret")
+hi3b <- BIFIEsurvey::BIFIE.hist( bifieobj , vars = "ASMMAT_discret" , breaks = 1:7 )
 plot(hi3b)
 # check frequencies
-fr3b <- BIFIE.freq( bifieobj , vars = "ASMMAT_discret" , se=FALSE )
+fr3b <- BIFIEsurvey::BIFIE.freq( bifieobj , vars = "ASMMAT_discret" , se=FALSE )
 summary(fr3b)
 
 #****************************
@@ -112,21 +114,22 @@ summary(fr3b)
 
 # start with testing the transformation function on a single dataset
 dat1 <- bifieobj$dat1
-weighted.mean( dat1[,"books"] , dat1[,"TOTWGT"] , na.rm=TRUE)
+stats::weighted.mean( dat1[,"books"] , dat1[,"TOTWGT"] , na.rm=TRUE)
 sqrt( Hmisc::wtd.var( dat1[,"books"] , dat1[,"TOTWGT"] , na.rm=TRUE) )
 # z standardization
-transform.formula <- ~ 0 + I( ( books - weighted.mean( books , TOTWGT , na.rm=TRUE) ) /
-                                sqrt( Hmisc::wtd.var( books , TOTWGT , na.rm=TRUE) )  )
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =transform.formula ,
-                  varnames.new = "z_books" )
+transform.formula <- ~ 0 + I( ( books - weighted.mean( books, TOTWGT, na.rm=TRUE) )/
+                                sqrt( Hmisc::wtd.var( books, TOTWGT, na.rm=TRUE) ))
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj , 
+               transform.formula =transform.formula, varnames.new = "z_books" )
 # standardize variable books with M=500 and SD=100
-transform.formula <- ~ 0 + I( 500 + 100*( books - weighted.mean( books , TOTWGT , na.rm=TRUE) ) /
-                                sqrt( Hmisc::wtd.var( books , TOTWGT , na.rm=TRUE) )  )
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =transform.formula ,
-                  varnames.new = "z500_books" )
+transform.formula <- ~ 0 + I( 
+        500 + 100*( books - stats::weighted.mean( books, w=TOTWGT, na.rm=TRUE) ) /
+              sqrt( Hmisc::wtd.var( books, weights=TOTWGT, na.rm=TRUE) )  )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj , 
+             transform.formula =transform.formula, varnames.new = "z500_books" )
                   
 # standardize variable books with respect to M and SD of ALL imputed datasets
-res <- BIFIE.univar( bifieobj , vars = "books" )
+res <- BIFIEsurvey::BIFIE.univar( bifieobj , vars = "books" )
 summary(res)
 ##       var  Nweight Ncases     M M_SE M_fmi M_VarMI M_VarRep    SD SD_SE SD_fmi
 ##   1 books 76588.72   4554 2.945 0.04     0       0    0.002 1.146 0.015      0
@@ -135,11 +138,13 @@ SD <- round(res$output$sd1,5)
 transform.formula <- paste0( " ~ 0 + I( ( books - " ,  M  , " ) / " , SD  , ")"  )
 ##   > transform.formula
 ##   [1] " ~ 0 + I( ( books - 2.94496 ) / 1.14609)"
-bifieobj <- BIFIE.data.transform( bifieobj, transform.formula =as.formula(transform.formula),
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj, 
+                 transform.formula = stats::as.formula(transform.formula),
                  varnames.new = "zall_books" )                  
                   
 # check statistics
-res4 <- BIFIE.univar( bifieobj , vars = c("z_books" , "z500_books" , "zall_books") )
+res4 <- BIFIEsurvey::BIFIE.univar( bifieobj , 
+              vars = c("z_books" , "z500_books", "zall_books") )
 summary(res4)
 
 #****************************
@@ -150,16 +155,16 @@ dat1 <- bifieobj$dat1
 100 * Hmisc::wtd.rank( dat1[,"ASMMAT"] , w=dat1[,"TOTWGT"] ) / sum( dat1[,"TOTWGT"] )
 # define an auxiliary function for calculating percentage ranks
 wtd.percrank <- function( x , w ){
-        100 * Hmisc::wtd.rank( x , w , na.rm=TRUE ) / sum( w , na.rm=TRUE )
-                    }
+    100 * Hmisc::wtd.rank( x , w , na.rm=TRUE ) / sum( w , na.rm=TRUE )
+}
 wtd.percrank( dat1[,"ASMMAT"] , dat1[,"TOTWGT"] )
 # define transformation formula
 transform.formula <- ~ 0 + I( wtd.percrank( ASMMAT , TOTWGT ) )
 # add ranks to BIFIEdata object
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =transform.formula ,
-                  varnames.new = "ASMMAT_rk" )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj , 
+               transform.formula =transform.formula,  varnames.new = "ASMMAT_rk")
 # check statistic
-res5 <- BIFIE.univar( bifieobj , vars = c("ASMMAT_rk" ) )
+res5 <- BIFIEsurvey::BIFIE.univar( bifieobj , vars = c("ASMMAT_rk" ) )
 summary(res5)
 
 #****************************
@@ -172,9 +177,9 @@ dat1 <- bifieobj$dat1
 car::Recode( dat1[,"books"], "1:2='0'; c(3,4)='1';5='2'")
 # define transformation formula
 transform.formula <- ~ 0 + I( car::Recode( books, "1:2='0'; c(3,4)='1';5='2'") )
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =transform.formula ,
-                  varnames.new = "book_rec" )
-res6 <- BIFIE.freq( bifieobj , vars = c("book_rec" ) )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj, 
+               transform.formula =transform.formula,  varnames.new = "book_rec" )
+res6 <- BIFIEsurvey::BIFIE.freq( bifieobj , vars = c("book_rec" ) )
 summary(res6)
             
 #****************************
@@ -184,8 +189,8 @@ dat1 <- as.data.frame(bifieobj$dat1)
 # at first, create school ID in the dataset by transforming the student ID
 dat1$idschool <- as.numeric(substring( dat1$IDSTUD , 1 , 5 ))
 transform.formula <- ~ 0 +I( as.numeric( substring( IDSTUD  , 1 , 5 ) ) )
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula = transform.formula  ,
-               varnames.new = "idschool" )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj, 
+               transform.formula = transform.formula, varnames.new = "idschool" )
                           
 #*** test function for a single dataset bifieobj$dat1
 dat1 <- as.data.frame(bifieobj$dat1)
@@ -193,15 +198,15 @@ gm <- miceadds::GroupMean( data=dat1$ASMMAT , group=dat1$idschool , extend=TRUE)
 
 # add school mean ASMMAT
 tformula <- ~ 0 + I( miceadds::GroupMean( ASMMAT , group=idschool , extend=TRUE)[,2] )
-bifieobj <- BIFIE.data.transform( bifieobj , transform.formula =  tformula , 
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj , transform.formula =  tformula , 
                 varnames.new = "M_ASMMAT" )
 # add within group centered mathematics values of ASMMAT                
-bifieobj <- BIFIE.data.transform( bifieobj , 
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj , 
                 transform.formula =  ~ 0 + I( ASMMAT - M_ASMMAT ) , 
                 varnames.new = "WC_ASMMAT" )
                 
 # add school mean books
-bifieobj <- BIFIE.data.transform( bifieobj , 
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj , 
                 transform.formula = ~ 0 + I( add.groupmean( books , idschool ) ) , 
                 varnames.new = "M_books" )      
 
@@ -209,15 +214,16 @@ bifieobj <- BIFIE.data.transform( bifieobj ,
 #*** Transformation 8: include fitted values and residuals from a linear model
 # create new BIFIEdata object
 data(data.timss1)
-bifieobj3 <- BIFIE.data( data.timss1 , wgt=data.timss1[[1]]$TOTWGT , 
+bifieobj3 <- BIFIEsurvey::BIFIE.data( data.timss1 , wgt=data.timss1[[1]]$TOTWGT , 
             wgtrep=data.timssrep[,-1] )
 
 # specify transformation
-transform.formula <- ~ 0 + I( fitted( lm( ASMMAT ~ migrant + female ) ) ) +
-                             I( residuals( lm( ASMMAT ~ migrant + female ) ) )
+transform.formula <- ~ 0 + I( fitted( stats::lm( ASMMAT ~ migrant + female ) ) ) +
+                             I( residuals( stats::lm( ASMMAT ~ migrant + female ) ) )
   # Note that lm omits cases in regression by listwise deletion.                             
 # add fitted values and residual to BIFIEdata object                             
-bifieobj <- BIFIE.data.transform( bifieobj3 , transform.formula =transform.formula )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj3, 
+                  transform.formula =transform.formula )
 bifieobj$varnames[ bifieobj$varsindex.added ] <- c("math_fitted1" , "math_resid1")   
 
 #****************************
@@ -225,18 +231,19 @@ bifieobj$varnames[ bifieobj$varsindex.added ] <- c("math_fitted1" , "math_resid1
 
 # define auxiliary function for extracting PCA scores
 BIFIE.princomp <- function( formula , Ncomp ){
-          X <- princomp( formula , cor=TRUE)
-          Xp <- X$scores[ , 1:Ncomp ] 
-          return(Xp)
-                }
+    X <- stats::princomp( formula , cor=TRUE)
+    Xp <- X$scores[ , 1:Ncomp ] 
+    return(Xp)
+}
 # define transformation formula                
 transform.formula <- ~ 0 +
         I( BIFIE.princomp( ~ migrant + female + books + lang + ASMMAT , 3 ) )
 # apply transformation        
-bifieobj <- BIFIE.data.transform( bifieobj3 , transform.formula =transform.formula )
+bifieobj <- BIFIEsurvey::BIFIE.data.transform( bifieobj3, 
+                transform.formula =transform.formula )
 bifieobj$varnames[ bifieobj$varsindex.added ] <- c("pca_sc1" , "pca_sc2","pca_sc3")
 # check descriptive statistics
-res9 <- BIFIE.univar( bifieobj, vars="pca_sc1", se=FALSE)
+res9 <- BIFIEsurvey::BIFIE.univar( bifieobj, vars="pca_sc1", se=FALSE)
 summary(res9)
 res9$output$mean1M
 
@@ -249,7 +256,7 @@ transform.formula2 <- as.formula( paste0( "~ 0 + I ( BIFIE.princomp( ~ " ,
   
 #****************************
 #*** Transformation 10: Overwriting variables books and migrant 
-bifieobj4 <-  BIFIE.data.transform( bifieobj3 , 
+bifieobj4 <-  BIFIEsurvey::BIFIE.data.transform( bifieobj3 , 
 	        transform.formula = ~ 0 + I( 1*(books >= 1 ) ) + I(2*migrant) ,
                 varnames.new= c("books","migrant") )  
 summary(bifieobj4)  

@@ -1,55 +1,29 @@
-
-
-
-// includes from the plugin
-
-
 #include <RcppArmadillo.h>
-#include <Rcpp.h>
+// [[Rcpp::depends(RcppArmadillo)]]
 
-#ifndef BEGIN_RCPP
-#define BEGIN_RCPP
-#endif
 
-#ifndef END_RCPP
-#define END_RCPP
-#endif
+// #include <Rcpp.h>
+// #include <Rmath.h>
+
 
 using namespace Rcpp;
 
 #include "univar_helpers.h"
-// user includes
+// #include "p:/Eigene_Projekte/R-Routinen/IRT-Functions/BIFIEsurvey/1.13/BIFIEsurvey_work/src/univar_helpers__7.13.h"
 
-
-
-// declarations
-extern "C" {
-SEXP univar_multiple_V2group( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, 
-	  SEXP vars_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_) ;
-}
-
-// definition
-
-SEXP univar_multiple_V2group( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, 
-	  SEXP vars_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_index(vars_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-       
+//*************************************************************************
+//  univar_multiple_V2group
+// [[Rcpp::export]]
+Rcpp::List univar_multiple_V2group( Rcpp::NumericMatrix datalist, Rcpp::NumericMatrix wgt1, 
+      Rcpp::NumericMatrix wgtrep , Rcpp::NumericVector vars_index, Rcpp::NumericVector fayfac, 
+      Rcpp::NumericVector NI , Rcpp::NumericVector group_index1, 
+      Rcpp::NumericVector group_values ){
+                
      int Nimp = NI[0] ;  
      int RR = wgtrep.ncol() ;   
      int N = wgt1.nrow() ;  
      int VV = vars_index.size() ;  
      int NV = datalist.ncol();  
-     // int group_index = group_index1[0] ;  
      int GG=group_values.size() ;  
      int VV1=VV*GG ;  
        
@@ -63,7 +37,6 @@ BEGIN_RCPP
      Rcpp::NumericVector sumweights(1);  
      Rcpp::NumericVector mean1(VV1);  
      Rcpp::NumericVector sd1(VV1);  
-     // int NP=mean1M.nrow();  
      Rcpp::NumericVector sumwgt1(VV);  
      Rcpp::NumericVector ncases1(VV*GG);  
      Rcpp::NumericVector mean1_var(VV1);   
@@ -121,25 +94,21 @@ BEGIN_RCPP
             	      for (int vv=0;vv<VV;vv++){
             	         ncasesM(gg+vv*GG,ii) = ncases1[gg+vv*GG] ;
             	         		}
-            	       			}			  
-       
-        Rcpp::Rcout << "-" <<  std::flush ;   
-        	// << std::endl ;       	       			  
-            	       			  
+            	       			}			         
+           Rcpp::Rcout << "-" <<  std::flush ;   
+        	// << std::endl ;       	       			              	       			  
      	} // end loop ii | imputed datasets	  
        
         Rcpp::Rcout << "|" << std::endl ;  	  
      	  
      //----  
-     // inference multiply imputed datasets  
-       
+     // inference multiply imputed datasets         
      Rcpp::List res3 = rubin_rules_univ( mean1M , mean1_varM ) ;  
      mean1=res3["pars"] ;  
      Rcpp::NumericVector mean1_se=res3["pars_se"] ;  
      Rcpp::NumericVector mean1_varWithin=res3["pars_varWithin"] ;  
      Rcpp::NumericVector mean1_varBetween=res3["pars_varBetween"] ;  
-     Rcpp::NumericVector mean1_fmi=res3["pars_fmi"] ;  
-       
+     Rcpp::NumericVector mean1_fmi=res3["pars_fmi"] ;         
      res3 = rubin_rules_univ( sd1M , sd1_varM ) ;  
      sd1=res3["pars"] ;  
      Rcpp::NumericVector sd1_se=res3["pars_se"] ;  
@@ -147,18 +116,11 @@ BEGIN_RCPP
      Rcpp::NumericVector sd1_varBetween=res3["pars_varBetween"] ;  
      Rcpp::NumericVector sd1_fmi=res3["pars_fmi"] ;	  
      	  
-//     res3 = rubin_rules_univ( sumweightM , sumweightM ) ;  
-//     Rcpp::NumericVector sumweight =res3["pars"] ;  
-       
      res3 = rubin_rules_univ( ncasesM , ncasesM ) ;  
      Rcpp::NumericVector ncases =res3["pars"] ;  
-       
-     // Rcpp::Rcout << "m1repM " <<  mean1repM(3,10) <<  std::endl ;  
-       
+                    
      //*************************************************      
-     // OUTPUT              
-       
-                
+     // OUTPUT                                     
      return Rcpp::List::create(   
          Rcpp::_["mean1"] = mean1 ,  
          Rcpp::_["mean1_se"] = mean1_se ,  
@@ -181,42 +143,19 @@ BEGIN_RCPP
          Rcpp::_["ncases"] = ncases  ,  
          Rcpp::_["ncasesM"] = ncasesM    
          ) ;    
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;
-END_RCPP
 }
 
+//*************************************************************************
 
 
-
-
-
-// declarations
-extern "C" {
-SEXP bifie_freq( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-   SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP vars_values_, SEXP vars_values_numb_) ;
-}
-
-// definition
-
-SEXP bifie_freq( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP vars_values_, SEXP vars_values_numb_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_index(vars_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-     Rcpp::NumericMatrix vars_values(vars_values_) ;  
-     Rcpp::NumericVector vars_values_numb(vars_values_numb_) ;  
-       
+//*************************************************************************
+//  bifie_freq
+// [[Rcpp::export]]
+Rcpp::List bifie_freq( Rcpp::NumericMatrix datalist , Rcpp::NumericMatrix wgt1, 
+    Rcpp::NumericMatrix wgtrep , Rcpp::NumericVector vars_index , 
+	Rcpp::NumericVector fayfac, Rcpp::NumericVector NI , Rcpp::NumericVector group_index1 , 
+    Rcpp::NumericVector group_values , Rcpp::NumericMatrix vars_values , 
+    Rcpp::NumericVector vars_values_numb ){
        
      int Nimp = NI[0] ;  
      int RR = wgtrep.ncol() ;   
@@ -238,33 +177,27 @@ BEGIN_RCPP
      // matrices for output  
      int WW = wgt1.ncol();   
        
-     Rcpp::NumericMatrix dat1(N,NV) ;  
-     Rcpp::NumericMatrix perc1(VV2,WW) ;  
-     Rcpp::NumericMatrix perc2(VV2,WW) ;  
-     Rcpp::NumericVector sumwgt(VV*GG) ;  
-     Rcpp::NumericVector ncases(VV*GG) ;  
-     Rcpp::NumericVector ncases1(VV2) ;  
-       
-     Rcpp::NumericVector perc1a(VV2) ;  
-     Rcpp::NumericVector perc2a(VV2) ;  
-       
+     Rcpp::NumericMatrix dat1(N,NV);  
+     Rcpp::NumericMatrix perc1(VV2,WW);  
+     Rcpp::NumericMatrix perc2(VV2,WW);  
+     Rcpp::NumericVector sumwgt(VV*GG);  
+     Rcpp::NumericVector ncases(VV*GG);  
+     Rcpp::NumericVector ncases1(VV2);         
+     Rcpp::NumericVector perc1a(VV2);  
+     Rcpp::NumericVector perc2a(VV2);         
      Rcpp::NumericMatrix perc1M(VV2,Nimp);  
-     Rcpp::NumericMatrix perc2M(VV2,Nimp);  
-       
+     Rcpp::NumericMatrix perc2M(VV2,Nimp);         
      Rcpp::NumericMatrix perc1_varM(VV2,Nimp);  
      Rcpp::NumericMatrix perc2_varM(VV2,Nimp);  
-     Rcpp::NumericMatrix ncases1M(VV2,Nimp);  
-       
+     Rcpp::NumericMatrix ncases1M(VV2,Nimp);         
      Rcpp::NumericMatrix perc1repM(VV2,RR*Nimp);  
      Rcpp::NumericMatrix perc2repM(VV2,RR*Nimp);  
-       
-       
+              
      Rcpp::Rcout << "|"  ;  
        
      // loop over imputed datasets  
      for (int ii = 0 ;ii<Nimp; ii++ ){   
-       
-       
+              
      dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;   
        
      //****** statistics single data  
@@ -297,8 +230,8 @@ BEGIN_RCPP
           for (int rr=0;rr<RR;rr++){  
      	    perc1repM( zz , rr+ii*RR ) = perc1rep(zz,rr) ;  
      	    perc2repM( zz , rr+ii*RR ) = perc2rep(zz,rr) ;  	      
-     	   			   }       
-               }  
+     	  }       
+     }  
        
      Rcpp::Rcout << "-" <<  std::flush ;             
        
@@ -314,14 +247,9 @@ BEGIN_RCPP
      Rcpp::List out1 = Rcpp::List::create(   
          Rcpp::_["GG"] = GG ,  
          Rcpp::_["VV2"] = VV2  
-     		)    ;  
-       
-       
-       
+     		)    ;                       
      //*************************************************      
-     // OUTPUT              
-       
-                
+     // OUTPUT                                     
      return Rcpp::List::create(   
          Rcpp::_["ncases1M"] = ncases1M ,  
          Rcpp::_["ncases"] = ncases   ,  
@@ -335,38 +263,19 @@ BEGIN_RCPP
          Rcpp::_["perc2repM"] = perc2repM    ,  
          Rcpp::_["outlist"] = out1  
          ) ;    
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;
-END_RCPP
 }
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Correlations and covariances
+//*************************************************************************
 
 
-// declarations
-extern "C" {
-SEXP bifie_correl( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_) ;
-}
 
-// definition
-SEXP bifie_correl( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_index(vars_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-       
+//*************************************************************************
+//  bifie_correl
+// [[Rcpp::export]]
+Rcpp::List bifie_correl( Rcpp::NumericMatrix datalist, Rcpp::NumericMatrix wgt1 , 
+    Rcpp::NumericMatrix wgtrep, Rcpp::NumericVector vars_index, 
+	Rcpp::NumericVector fayfac, Rcpp::NumericVector NI , Rcpp::NumericVector group_index1, 
+    Rcpp::NumericVector group_values ){   
+              
      int Nimp = NI[0] ;  
      // int RR = wgtrep.ncol() ;   
        
@@ -376,20 +285,15 @@ BEGIN_RCPP
      // int group_index = group_index1[0] ;  
      int GG=group_values.size() ;  
        
-     Rcpp::NumericMatrix dat1(N,NV) ;  
-       
-       
+     Rcpp::NumericMatrix dat1(N,NV) ;                
      int WW = wgtrep.ncol() ;  
-     int RR = WW ;   
-       
+     int RR = WW ;          
      Rcpp::NumericMatrix mean1(VV*GG,WW) ;  
      Rcpp::NumericMatrix sd1(VV*GG,WW) ;  
      Rcpp::NumericVector sumwgt1(GG) ;  
      Rcpp::NumericVector ncases1(GG) ;  
      Rcpp::NumericMatrix ncases1M(GG,Nimp) ;  
-     Rcpp::NumericMatrix sumwgt1M(GG,Nimp) ;  
-       
-       
+     Rcpp::NumericMatrix sumwgt1M(GG,Nimp) ;                
      // create index matrix for covariances and correlations  
      int ZZ = VV*(VV-1) / 2 + VV ;  
      Rcpp::NumericMatrix itempair_index( ZZ , 2 ) ;  
@@ -402,9 +306,8 @@ BEGIN_RCPP
           itempair_index(zz,0) = vv1 ;  
           itempair_index(zz,1) = vv2 ;  
           zz++ ;  
-        			}  
-                }  
-       
+       }  
+    }         
                   
      int VV2 = ZZ*GG ;             
      Rcpp::NumericMatrix cov1M(VV2,Nimp);  
@@ -412,9 +315,7 @@ BEGIN_RCPP
      Rcpp::NumericMatrix cov1repM(VV2,RR*Nimp);  
      Rcpp::NumericMatrix cor1M(VV2,Nimp);  
      Rcpp::NumericMatrix cor1_varM(VV2,Nimp);  
-     Rcpp::NumericMatrix cor1repM(VV2,RR*Nimp);  
-                  
-       
+     Rcpp::NumericMatrix cor1repM(VV2,RR*Nimp);                           
      Rcpp::Rcout << "|"  ;  
        
      ///***************** loop imputed datasets  
@@ -509,13 +410,10 @@ BEGIN_RCPP
        	 matr1( vv2 , vv1 + gg*VV ) = vec_pars[zz*GG + gg] ;  	    	    	    
             }	  
      }  
-     Rcpp::NumericMatrix cov1_matrix = matr1 ;  
-          		  
+     Rcpp::NumericMatrix cov1_matrix = matr1 ;            		  
           		  
      //*************************************************      
-     // OUTPUT              
-       
-                
+     // OUTPUT                                     
      return Rcpp::List::create(   
          Rcpp::_["itempair_index"] = itempair_index ,  
          Rcpp::_["sumwgt1M"] = sumwgt1M ,  
@@ -531,54 +429,25 @@ BEGIN_RCPP
          Rcpp::_["cor1_matrix"] = cor1_matrix ,  
          Rcpp::_["cov1_matrix"] = cov1_matrix  
          ) ;    
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-       
-       
-     
-END_RCPP
 }
+//*************************************************************************
 
 
 
-// declarations
-extern "C" {
-SEXP bifie_linreg( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP dep_index_, 
-	SEXP pre_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_) ;
-}
+//*************************************************************************
+//  bifie_linreg
+// [[Rcpp::export]]
+Rcpp::List bifie_linreg( Rcpp::NumericMatrix datalist, Rcpp::NumericMatrix wgt1, 
+    Rcpp::NumericMatrix wgtrep, Rcpp::NumericVector dep_index, 
+	Rcpp::NumericVector pre_index, Rcpp::NumericVector fayfac, Rcpp::NumericVector NI, 
+    Rcpp::NumericVector group_index1 , Rcpp::NumericVector group_values ){  
 
-// definition
-
-SEXP bifie_linreg( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP dep_index_, 
-	SEXP pre_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_);  
-     Rcpp::NumericMatrix wgtrep(wgtrep_);  
-     Rcpp::NumericVector dep_index(dep_index_);  
-     Rcpp::NumericVector pre_index(pre_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-       
-     int Nimp = NI[0] ;  
-     // int RR = wgtrep.ncol() ;   
-       
+     int Nimp = NI[0] ;          
      int N = wgt1.nrow() ;  
      int VV = pre_index.size();  
-     int NV = datalist.ncol();  
-     // int group_index = group_index1[0] ;  
-     int GG=group_values.size();  
-       
-     Rcpp::NumericMatrix dat1(N,NV) ;  
-       
-       
-       
+     int NV = datalist.ncol();   
+     int GG=group_values.size();         
+     Rcpp::NumericMatrix dat1(N,NV) ;                       
      int VV2=(2*VV+2)*GG;  
      Rcpp::NumericMatrix ncasesM(GG,Nimp) ;  
      Rcpp::NumericMatrix sumwgtM(GG,Nimp) ;  
@@ -594,18 +463,18 @@ BEGIN_RCPP
      for (int ii = 0 ; ii < Nimp ; ii++){  
        
      // extract dataset  
-     dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;   
+     dat1 = datalist( Rcpp::Range( ii*N+0 , ii*N+ (N-1) ) , Rcpp::Range(0,NV-1) ) ;   
        
      //** apply linear regression to one dataset;  
      Rcpp::List res1 = bifiehelpers_linreg( dat1 , group_values ,  dep_index , pre_index ,   
-     	wgt1 , group_index1 )  ;      
+     	           wgt1 , group_index1 )  ;      
      Rcpp::NumericVector ncases = res1["ncases"] ;    
      Rcpp::NumericVector sumwgt0 = matr2vec(res1["sumwgt1"]) ;  
      Rcpp::NumericVector regrcoef0 = matr2vec(res1["regr_coef"]) ;  
        
      //*** apply linear regression to replicated datasets  
      Rcpp::List res2 = bifiehelpers_linreg( dat1 , group_values ,  dep_index , pre_index ,   
-     	wgtrep , group_index1 )  ;      
+       	       wgtrep , group_index1 )  ;      
      Rcpp::NumericMatrix sumwgtrep = res2["sumwgt1"] ;  
      Rcpp::NumericMatrix regrcoefrep = res2["regr_coef"] ;  
        
@@ -626,19 +495,14 @@ BEGIN_RCPP
        
      Rcpp::Rcout << "-" <<  std::flush ;            		  
           		  
-          }  // end ii ;  end multiple imputations  
-       
-       
-       
+          }  // end ii ;  end multiple imputations                       
      Rcpp::Rcout << "|" << std::endl ;  	       
        
      ///*** Rubin inference  
-     Rcpp::List regrcoefL = rubin_rules_univ( regrcoefM , regrcoef_varM ) ;       
-            
+     Rcpp::List regrcoefL = rubin_rules_univ( regrcoefM , regrcoef_varM ) ;                   
             
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(   
          Rcpp::_["ncasesM"] = ncasesM ,  
          Rcpp::_["sumwgtM"] = sumwgtM ,  
@@ -646,40 +510,17 @@ BEGIN_RCPP
          Rcpp::_["regrcoefL"] = regrcoefL ,  
          Rcpp::_["regrcoefM"] = regrcoefM ,      
          Rcpp::_["regrcoef_varM"] = regrcoef_varM   
-         ) ;    
-       
-     // maximal list length is 20!  
-              
-     
-END_RCPP
+         ) ;           
 }
 
-//************************************************
-// BIFIE Wald test
+//*************************************************************************
 
-
-// declarations
-extern "C" {
-SEXP bifie_waldtest( SEXP parsM_, SEXP parsrepM_, SEXP Cdes_, SEXP rdes_, SEXP Ccols_, SEXP fayfac_) ;
-}
-
-// definition
-
-SEXP bifie_waldtest( SEXP parsM_, SEXP parsrepM_, SEXP Cdes_, SEXP rdes_, SEXP Ccols_, SEXP fayfac_ ){
-BEGIN_RCPP
-   
-     //            parsM_ = "matrix" , parsrepM_="matrix" , Cdes_="matrix" ,   
-     //			rdes_ = "vector" , Ccols_ = "vector"   
-        
-  
-     Rcpp::NumericMatrix parsM(parsM_);          
-     Rcpp::NumericMatrix parsrepM(parsrepM_);  
-     Rcpp::NumericMatrix Cdes(Cdes_);  
-     Rcpp::NumericVector rdes(rdes_);  
-     Rcpp::NumericVector Ccols(Ccols_);  
-     Rcpp::NumericVector fayfac(fayfac_);  
-       
-       
+//*************************************************************************
+//  bifie_waldtest
+// [[Rcpp::export]]
+Rcpp::List bifie_waldtest( Rcpp::NumericMatrix parsM , Rcpp::NumericMatrix parsrepM, 
+     Rcpp::NumericMatrix Cdes , Rcpp::NumericVector rdes , Rcpp::NumericVector Ccols, 
+     Rcpp::NumericVector fayfac ){
      // number of involved variables in the test  
      int VV = Ccols.size() ;  
      int Nimp = parsM.ncol() ;  
@@ -713,23 +554,13 @@ BEGIN_RCPP
          			}  
          	    	  
      double tmp1=0;  
-     double tmp2=0;  
-     
+     double tmp2=0;       
      
      for ( int ii=0 ; ii < Nimp ; ii++){  
     	     
-//     	Rcpp::List res1 = bifiehelpers_waldtest(  VV ,  Ccols , parsM , parsrepM ,  
-//     		 ii ,  RR , fayfac , ACdes ,  Ardes ) ; 
      	Rcpp::List res1 = bifiehelpers_waldtest_vcov(  VV ,  Ccols , parsM , parsrepM ,  
      		 ii ,  RR , fayfac , ACdes ,  Ardes ) ; 
-     	
- 
-//	    _["var_hyp"] = var_hyp ,
-//	    _["hyp_stat"] = hyp_stat     	
-     	
-	Rcpp::NumericMatrix chi2a=res1["chi2"] ;		
-//     	arma::mat var_hyp1=res1["var_hyp"] ;
-//     	arma::mat hyp_stat1=res1["hyp_stat"] ;
+    	Rcpp::NumericMatrix chi2a=res1["chi2"] ;		
      	Rcpp::NumericMatrix var_hyp1=res1["var_hyp"] ;
      	Rcpp::NumericMatrix hyp_stat1=res1["hyp_stat"] ;
 
@@ -739,7 +570,7 @@ BEGIN_RCPP
 		for (int ee=0;ee<df;ee++){
 			var_wM(dd,ee+ii*df) = var_hyp1(dd,ee);
 					}
-				}
+	}
 
 
      		  
@@ -786,12 +617,10 @@ BEGIN_RCPP
      // means of all parameters	         	  
      for (int vv=0;vv<VV;vv++){  
         for (int ii=0;ii<Nimp;ii++){  
-     	parsM_sel[vv] += parsM( Ccols[vv] , ii ) ;  
-     				}  
+        	parsM_sel[vv] += parsM( Ccols[vv] , ii ) ;  
+     	}  
      	parsM_sel[vv] = parsM_sel[vv] / Nimp2 ;  
-     			}  
-       
-       
+     }                
      // between matrix  
      // parsM( Ccols[vv1] , ii ) )  
        
@@ -814,7 +643,7 @@ BEGIN_RCPP
      arma::mat var_t1 = arma::mat( (1+ariv_D1) * var_w ) ;  
          			  
      // hypothesis matrix  
-     arma::mat var_hyp = arma::mat( ACdes * var_t1 * trans( ACdes) ) ;  
+     arma::mat var_hyp = arma::mat( ACdes * var_t1 * arma::trans( ACdes) ) ;  
      // compute inverse of variance matrix of hypothesis  
      arma::mat var_hypinv = arma::inv( var_hyp ) ;  
      // parameter vector  
@@ -824,7 +653,7 @@ BEGIN_RCPP
      				}  
      // hypothesis statistic  
      arma::mat hyp_stat = arma::mat( ACdes * parm_vec - Ardes ) ;  
-     arma::mat D1 = arma::mat( trans( hyp_stat ) * var_hypinv * hyp_stat ) ; 			  
+     arma::mat D1 = arma::mat( arma::trans( hyp_stat ) * var_hypinv * hyp_stat ) ; 			  
      // D1(0,0) = D1(0,0) / df ;  
      // according to Enders (2010, p. 236), D1 must be divided by df,  
      // but this is (could be) an error?  
@@ -837,11 +666,10 @@ BEGIN_RCPP
      
      double tmp11 = D1(0,0);
      
-     double p_D1 = Rf_pf( tmp11 , df , nu2 , FALSE  , FALSE );     
-       
+     double p_D1 = Rf_pf( tmp11 , df , nu2 , FALSE  , FALSE );
+                 
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(   
          Rcpp::_["chi2M"] = chi2M ,  
          Rcpp::_["ariv"] = ariv ,  
@@ -862,43 +690,20 @@ BEGIN_RCPP
          Rcpp::_["var_wM"] = var_wM , 
          Rcpp::_["hyp_statM"] = hyp_statM
          ) ;    
-     // maximal list length is 20!  
-              
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-       
-       
-     
-END_RCPP
 }
 
+//*************************************************************************
 
-//********************************************
-// within covariance matrices
+//*************************************************************************
+//  bifie_comp_vcov_within
+// [[Rcpp::export]]
+Rcpp::List bifie_comp_vcov_within( Rcpp::NumericMatrix parsM, 
+      Rcpp::NumericMatrix parsrepM, Rcpp::NumericVector fayfac , int RR ,
+	int Nimp ){
 
-// declarations
-extern "C" {
-SEXP bifie_comp_vcov_within( SEXP parsM_, SEXP parsrepM_, SEXP fayfac_ , SEXP RR_ ,
-	SEXP Nimp_ ) ;
-}
-
-// definition
-
-SEXP bifie_comp_vcov_within( SEXP parsM_, SEXP parsrepM_, SEXP fayfac_ , SEXP RR_ ,
-	SEXP Nimp_ ){
-BEGIN_RCPP
-
-	Rcpp::NumericMatrix parsM(parsM_);
-	Rcpp::NumericMatrix parsrepM(parsrepM_);
-	Rcpp::NumericVector fayfac(fayfac_);
-	int RR = as<int>(RR_);
-	int Nimp = as<int>(Nimp_);
-	
 	int VV = parsM.nrow();
-
-	//@@fayfac 
 	int NF = fayfac.size();
 	double f1=0;
-        //--
 
 	//*** calculate covariance matrix for imputations
 	arma::mat var_w = arma::zeros(VV,VV);
@@ -908,12 +713,11 @@ BEGIN_RCPP
 	for (int ii=0;ii<Nimp;ii++){
 	
 	for (int vv1=0;vv1<VV;vv1++){
-	for (int vv2=0;vv2<VV;vv2++){
+	   for (int vv2=0;vv2<VV;vv2++){
                   var_w(vv1,vv2) = 0 ;
-                  		}
-                  	}
-		
-		
+       }
+    }
+				
 	for (int vv1=0;vv1<VV;vv1++){
 	for (int vv2=vv1;vv2<VV;vv2++){
 	   //@@fayfac
@@ -942,43 +746,22 @@ BEGIN_RCPP
                   	}			
 			
 	
-	}  // end imputed dataset ii		
-		
-	
+	}  // end imputed dataset ii					
 	return Rcpp::List::create( 
-	    Rcpp::_["u"] = var_wf , 
+	        Rcpp::_["u"] = var_wf , 
             Rcpp::_["u_diag"] = u_diag
 	    ) ;
-
-END_RCPP	
-	}
-
-
-//************************************************
-// BIFIE Wald test
-
-
-// declarations
-extern "C" {
-SEXP bifie_comp_vcov( SEXP parsM_, SEXP parsrepM_, SEXP Cdes_, SEXP rdes_, SEXP Ccols_, SEXP fayfac_) ;
 }
+//*************************************************************************
 
-// definition
 
-SEXP bifie_comp_vcov( SEXP parsM_, SEXP parsrepM_, SEXP Cdes_, SEXP rdes_, SEXP Ccols_, SEXP fayfac_ ){
-BEGIN_RCPP
-   
-     //            parsM_ = "matrix" , parsrepM_="matrix" , Cdes_="matrix" ,   
-     //			rdes_ = "vector" , Ccols_ = "vector"   
-        
-        
-     Rcpp::NumericMatrix parsM(parsM_);          
-     Rcpp::NumericMatrix parsrepM(parsrepM_) ;  
-     Rcpp::NumericMatrix Cdes(Cdes_) ;  
-     Rcpp::NumericVector rdes(rdes_);  
-     Rcpp::NumericVector Ccols(Ccols_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-       
+
+//*************************************************************************
+//  bifie_comp_vcov
+// [[Rcpp::export]]
+Rcpp::List bifie_comp_vcov( Rcpp::NumericMatrix parsM , Rcpp::NumericMatrix parsrepM, 
+     Rcpp::NumericMatrix Cdes , Rcpp::NumericVector rdes , Rcpp::NumericVector Ccols, 
+     Rcpp::NumericVector fayfac ){
        
      // number of involved variables in the test  
      int VV = Ccols.size() ;  
@@ -989,13 +772,9 @@ BEGIN_RCPP
      int df = Cdes.nrow() ;  
        
      Rcpp::NumericMatrix chi2M(Nimp,2);  
-     // Rcpp::NumericMatrix var_w(VV,VV);  
      arma::mat var_w = arma::zeros(VV,VV);  
-     arma::mat var_b = arma::zeros(VV,VV);  
-     // Rcpp::NumericMatrix var_b(VV,VV);  
-     Rcpp::NumericVector parsM_sel(VV) ;  
-       
-     // Rcpp::NumericMatrix var_w(VV,VV);  
+     arma::mat var_b = arma::zeros(VV,VV);    
+     Rcpp::NumericVector parsM_sel(VV);  
        
      // arma form of the design matrix Cdes  
      arma::mat ACdes = arma::zeros(df,VV);  
@@ -1087,7 +866,7 @@ BEGIN_RCPP
      arma::mat var_t1 = arma::mat( (1+ariv_D1) * var_w ) ;  
          			  
      // hypothesis matrix  
-     arma::mat var_hyp = arma::mat( ACdes * var_t1 * trans( ACdes) ) ;  
+     arma::mat var_hyp = arma::mat( ACdes * var_t1 * arma::trans( ACdes) ) ;  
      // compute inverse of variance matrix of hypothesis  
      arma::mat var_hypinv = arma::mat( var_hyp ) ;  
      // parameter vector  
@@ -1097,7 +876,7 @@ BEGIN_RCPP
      				}  
      // hypothesis statistic  
      arma::mat hyp_stat = arma::mat( ACdes * parm_vec - Ardes ) ;  
-     arma::mat D1 = arma::mat( trans( hyp_stat ) * var_hypinv * hyp_stat ) ; 			  
+     arma::mat D1 = arma::mat( arma::trans( hyp_stat ) * var_hypinv * hyp_stat ) ; 			  
      // D1(0,0) = D1(0,0) / df ;  
      // according to Enders (2010, p. 236), D1 must be divided by df,  
      // but this is (could be) an error?  
@@ -1129,61 +908,30 @@ BEGIN_RCPP
          Rcpp::_["Ccols"] = Ccols , 
          Rcpp::_["parsM_sel"] = parsM_sel  
          ) ;    
-     // maximal list length is 20!  
-              
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-       
-       
-     
-END_RCPP
 }
 
+//*************************************************************************
 
-
-
-//*************************************************
-// statistical test means
-
-
-// declarations
-extern "C" {
-SEXP bifie_test_univar( SEXP mean1M_, SEXP sd1M_, SEXP sumweightM_, SEXP GG_, 
-	SEXP group_values_, SEXP mean1repM_, SEXP sd1repM_, SEXP sumweightrepM_, SEXP fayfac_) ;
-}
-
-// definition
-
-SEXP bifie_test_univar( SEXP mean1M_, SEXP sd1M_, SEXP sumweightM_, SEXP GG_, 
-	SEXP group_values_, SEXP mean1repM_, SEXP sd1repM_, SEXP sumweightrepM_, SEXP fayfac_ ){
-BEGIN_RCPP
-   
+//*************************************************************************
+//  bifie_test_univar
+// [[Rcpp::export]]
+Rcpp::List bifie_test_univar( Rcpp::NumericMatrix mean1M , Rcpp::NumericMatrix sd1M , 
+          Rcpp::NumericMatrix sumweightM , int GG , Rcpp::NumericVector group_values , 
+          Rcpp::NumericMatrix mean1repM , Rcpp::NumericMatrix sd1repM , 
+          Rcpp::NumericMatrix sumweightrepM , Rcpp::NumericVector fayfac  ){
        
-     Rcpp::NumericMatrix mean1M(mean1M_);  
-     Rcpp::NumericMatrix sd1M(sd1M_);  
-     Rcpp::NumericMatrix sumweightM(sumweightM_);  
-     int GG = as<int>(GG_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-     Rcpp::NumericMatrix mean1repM(mean1repM_);  
-     Rcpp::NumericMatrix sd1repM(sd1repM_);  
-     Rcpp::NumericMatrix sumweightrepM(sumweightrepM_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-       
-       
-     int HH = mean1M.nrow() ;  
-     int VV = HH / GG ;   
+     int HH = mean1M.nrow();  
+     int VV = HH / GG;   
      int GG2 = GG * (GG-1) / 2 ;  
-     int Nimp = sd1M.ncol() ;  
-     
-     int RR = sd1repM.ncol() / Nimp ;  
-     
-       
-     Rcpp::NumericMatrix dstatM(VV*GG2,Nimp) ;
-     Rcpp::NumericMatrix dstatrepM1(VV*GG2,Nimp*RR) ; 
-     Rcpp::NumericMatrix dstat_varM(VV*GG2,Nimp) ;  
-     Rcpp::NumericMatrix eta2M(VV,Nimp) ;
-     Rcpp::NumericMatrix eta2repM1(VV,Nimp*RR) ;
-     Rcpp::NumericMatrix eta2_varM(VV,Nimp) ;  
-     Rcpp::NumericVector eta2V(1) ;  
+     int Nimp = sd1M.ncol();       
+     int RR = sd1repM.ncol() / Nimp;         
+     Rcpp::NumericMatrix dstatM(VV*GG2,Nimp);
+     Rcpp::NumericMatrix dstatrepM1(VV*GG2,Nimp*RR); 
+     Rcpp::NumericMatrix dstat_varM(VV*GG2,Nimp);  
+     Rcpp::NumericMatrix eta2M(VV,Nimp);
+     Rcpp::NumericMatrix eta2repM1(VV,Nimp*RR);
+     Rcpp::NumericMatrix eta2_varM(VV,Nimp);  
+     Rcpp::NumericVector eta2V(1);  
        
      // matrix of group values  
      Rcpp::NumericMatrix group_values_matrix(GG2,2);  
@@ -1195,35 +943,20 @@ BEGIN_RCPP
      		   ii++ ;  
      			}  
      		}  
-       
-       
-       
-    
-       
      Rcpp::Rcout << "|"  ;  
        
-     // loop over imputations  
-       
-     for ( int ii=0; ii < Nimp ; ii++){  
-       
+     // loop over imputations         
+     for ( int ii=0; ii < Nimp ; ii++){         
      for (int vv=0; vv < VV ; vv++){  
-       
-       
+              
      // dataset ii  
      Rcpp::NumericMatrix mean1M_ii = mean1M( Range(vv*GG,vv*GG+GG-1) , Range(ii,ii) ) ;  
      Rcpp::NumericMatrix sd1M_ii = sd1M( Range(vv*GG,vv*GG+GG-1) , Range(ii,ii) ) ;  
      Rcpp::NumericMatrix sumweightM_ii = sumweightM( Range(0,GG-1) , Range(ii,ii) ) ;  
-       
-       
+              
      Rcpp::List res = bifiehelpers_etasquared( mean1M_ii , sd1M_ii , sumweightM_ii ,  GG ) ;  
      eta2V = matr2vec( res["eta2"] ) ;  
      Rcpp::NumericVector dstatV = matr2vec( res["dstat"] ) ;  
-       
-       
-     // Rcpp::NumericMatrix eta2_temp = res["eta2"]  ;  
-     // Rcpp::Rcout << "res['eta2']" << eta2_temp(0,0) << std::flush << std::endl ;  
-       
-       
        
      // analysis replicate weights  
      Rcpp::NumericMatrix mean1M_rr = mean1repM( Range(vv*GG,vv*GG+GG-1) , Range(ii*RR,ii*RR + RR-1) ) ;  
@@ -1232,8 +965,7 @@ BEGIN_RCPP
      Rcpp::List res1 = bifiehelpers_etasquared( mean1M_rr , sd1M_rr , sumweightM_rr ,  GG ) ;  
      Rcpp::NumericMatrix eta2repM = res1["eta2"] ;      
      Rcpp::NumericMatrix dstatrepM = res1["dstat"] ;
-     
-       
+            
      // compute standard errors  
      // eta squared  
      Rcpp::NumericVector eta2_var = varjack_helper( eta2V , eta2repM , fayfac ) ;  
@@ -1276,8 +1008,7 @@ BEGIN_RCPP
      Rcpp::List dstatL = rubin_rules_univ( dstatM , dstat_varM ) ;     
        
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(   
          Rcpp::_["eta2L"] = eta2L ,   
          Rcpp::_["eta2M"] = eta2M ,
@@ -1289,62 +1020,28 @@ BEGIN_RCPP
          Rcpp::_["dstat_varM"] = dstat_varM    ,  
          Rcpp::_["group_values_matrix"] = group_values_matrix  
          ) ;    
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-       
-       
-     
-END_RCPP
 }
+//*************************************************************************
 
-
-
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// bifie_crosstab
-
-// declarations
-extern "C" {
-SEXP bifie_crosstab( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_values1_, 
-	SEXP vars_index1_, SEXP vars_values2_, SEXP vars_index2_, SEXP fayfac_, 
-	SEXP Nimp_, SEXP group_index_, SEXP group_values_) ;
-}
-
-// definition
-
-SEXP bifie_crosstab( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_values1_, 
-	SEXP vars_index1_, SEXP vars_values2_, SEXP vars_index2_, SEXP fayfac_, 
-	SEXP Nimp_, SEXP group_index_, SEXP group_values_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_values1(vars_values1_) ;  
-     Rcpp::NumericVector vars_index1(vars_index1_);  
-     Rcpp::NumericVector vars_values2(vars_values2_) ;  
-     Rcpp::NumericVector vars_index2(vars_index2_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-       
-       
+//*************************************************************************
+//  bifie_crosstab
+// [[Rcpp::export]]
+Rcpp::List bifie_crosstab( Rcpp::NumericMatrix datalist, Rcpp::NumericMatrix wgt1, 
+     Rcpp::NumericMatrix wgtrep, Rcpp::NumericVector vars_values1, 
+	 Rcpp::NumericVector vars_index1, Rcpp::NumericVector vars_values2, 
+     Rcpp::NumericVector vars_index2, Rcpp::NumericVector fayfac, 
+	 Rcpp::NumericVector NI, Rcpp::NumericVector group_index1, 
+     Rcpp::NumericVector group_values ){
+          
      int Nimp = NI[0] ;  
      int RR = wgtrep.ncol() ;   
      int N = wgt1.nrow() ;  
      int VV1 = vars_values1.size() ;  
      int VV2 = vars_values2.size() ;  
      int NV = datalist.ncol();  
-     // int group_index = group_index1[0] ;  
      int GG=group_values.size() ;  
        
-     Rcpp::NumericMatrix dat1(N,NV) ;  
-       
-     // int WW=1;  
+     Rcpp::NumericMatrix dat1(N,NV) ;          
      int ZZ = VV1*VV2*GG ;  
        
      // design matrix  
@@ -1361,11 +1058,9 @@ BEGIN_RCPP
          zz++;  
          }  // end vv2  
      }  // end vv1  
-     }  // end gg  
+     }  // end gg         
        
-       
-     int CTP = 3*ZZ + VV1*GG + VV2*GG + 2*GG + GG + 3*GG + 3*GG ;  
-       
+     int CTP = 3*ZZ + VV1*GG + VV2*GG + 2*GG + GG + 3*GG + 3*GG ;         
      Rcpp::NumericMatrix ncasesM( ZZ , Nimp ) ;  
      Rcpp::NumericMatrix ncases_ggM( GG , Nimp ) ;  
      Rcpp::NumericMatrix sumwgtM( ZZ , Nimp) ;  
@@ -1389,8 +1084,7 @@ BEGIN_RCPP
      	Rcpp::NumericMatrix sumwgt = res20[ "sumwgt"] ;  
      	Rcpp::NumericMatrix sumwgt_gg = res20["sumwgt_gg"] ;  
      	Rcpp::NumericVector ctpars = matr2vec(res20["crosstab_pars"]);   
-     	  
-     	  
+     	       	  
      	//*** analysis for replicated datasets  
      	Rcpp::List res3 = bifiehelpers_crosstab( dat1 ,  wgtrep , group_values , group_index1 ,   
      		vars_values1 ,  vars_index1 , vars_values2 , vars_index2 , design_pars ) ;   
@@ -1416,13 +1110,9 @@ BEGIN_RCPP
        
      ///*** Rubin inference  
      Rcpp::List ctparsL = rubin_rules_univ( ctparsM , ctpars_varM ) ;  
-       
-       
-     			  
-     			  
+                   			       			
      //*************************************************      
-     // OUTPUT              
-                
+     // OUTPUT                              
      return Rcpp::List::create(   
          Rcpp::_["design_pars"] = design_pars ,  
          Rcpp::_["ncases_ggM"] = ncases_ggM ,   
@@ -1433,60 +1123,27 @@ BEGIN_RCPP
          Rcpp::_["ctparsrepM"] = ctparsrepM ,  
          Rcpp::_["ctpars_varM"] = ctpars_varM  
          ) ;    
-     // maximal list length is 20!  
-       
-     // Rcpp::Rcout << "(zzi,zzj) " <<  zzi << " " << zzj <<  " vv1=" << vv1 << " vv2=" << vv2 <<   
-     //			" h3 =" << h3 << std::flush << std::endl ;  
-       
-     // Rcpp::Rcout << "(l1x l1y " <<  l1x  << l1y << std::flush << std::endl ;  
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;
-END_RCPP
 }
+//*************************************************************************
 
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//* syvby
-
-
-// declarations
-extern "C" {
-SEXP bifie_by( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP userfct_) ;
-}
-
-// definition
-
-SEXP bifie_by( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP userfct_ ){
-BEGIN_RCPP
-          
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_index(vars_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-       
-     Rcpp::Function userfct(userfct_);  
-       
-       
+//*************************************************************************
+//  bifie_by
+// [[Rcpp::export]]
+Rcpp::List bifie_by( Rcpp::NumericMatrix datalist , Rcpp::NumericMatrix wgt1 , 
+         Rcpp::NumericMatrix wgtrep , Rcpp::NumericVector vars_index , 
+	     Rcpp::NumericVector fayfac , Rcpp::NumericVector NI , 
+         Rcpp::NumericVector group_index1 , Rcpp::NumericVector group_values, 
+         Rcpp::Function userfct ){
+              
      int Nimp = NI[0] ;  
-     // int RR = wgtrep.ncol() ;   
-       
      int N = wgt1.nrow() ;  
      int VV = vars_index.size() ;  
      int NV = datalist.ncol();  
      int group_index = group_index1[0] ;  
-     int GG=group_values.size() ;  
-       
+     int GG=group_values.size() ;         
      Rcpp::NumericMatrix dat1(N,NV) ;  
-       
-       
      int WW = wgtrep.ncol() ;  
-       
-       
+              
      // start with a calculation to compute the number of parameters  
      Rcpp::NumericVector w = wgt1(_,0) ;    
      int ii=0;  
@@ -1576,14 +1233,9 @@ BEGIN_RCPP
      Rcpp::Rcout << "|" << std::endl ;    
        
      ///*** Rubin inference  
-     Rcpp::List parsL = rubin_rules_univ( parsM , pars_varM ) ;  
-       
-     	  
-     	  
+     Rcpp::List parsL = rubin_rules_univ( parsM , pars_varM ) ;         
      //*************************************************      
      // OUTPUT              
-       
-                
      return Rcpp::List::create(   
          Rcpp::_["WW"] = WW ,  
          Rcpp::_["N"] = N ,  
@@ -1596,52 +1248,25 @@ BEGIN_RCPP
          Rcpp::_["ncasesM"] = ncasesM  ,  
          Rcpp::_["parsL"] = parsL  
          ) ;    
-     // maximal list length is 20!  
- 
-END_RCPP
 }
+//*************************************************************************
 
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// histogram
-
-
-// declarations
-extern "C" {
-SEXP bifie_hist( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP breaks_) ;
-}
-
-// definition
-
-SEXP bifie_hist( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP breaks_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_index(vars_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-     Rcpp::NumericVector breaks(breaks_) ;  
-       
+//*************************************************************************
+//  bifie_hist
+// [[Rcpp::export]]
+Rcpp::List bifie_hist( Rcpp::NumericMatrix datalist , Rcpp::NumericMatrix wgt1 , 
+          Rcpp::NumericMatrix wgtrep, Rcpp::NumericVector vars_index , 
+	      Rcpp::NumericVector fayfac , Rcpp::NumericVector NI , 
+          Rcpp::NumericVector group_index1 , Rcpp::NumericVector group_values, 
+          Rcpp::NumericVector breaks ){
+         
      int Nimp = NI[0] ;  
-     // int RR = wgtrep.ncol() ;   
-       
-     int N = wgt1.nrow() ;  
-     // int VV = vars_index.size() ;  
+     int N = wgt1.nrow() ;   
      int NV = datalist.ncol();  
      int group_index = group_index1[0] ;  
      int GG=group_values.size() ;  
-     int BB=breaks.size() - 1 ;  
-       
-     Rcpp::NumericMatrix dat1(N,NV) ;  
-       
-       
+     int BB=breaks.size() - 1 ;         
+     Rcpp::NumericMatrix dat1(N,NV) ;                
      Rcpp::NumericMatrix countsM(BB*GG,Nimp) ;  
      Rcpp::NumericMatrix sumwgtM(BB*GG,Nimp) ;  
      Rcpp::NumericMatrix ncasesM(GG,Nimp) ;  
@@ -1695,34 +1320,31 @@ BEGIN_RCPP
        
        
      //*********************************  
-     // compute statistics  
-       
+     // compute statistics         
      for (int hh=0; hh < BB*GG ; hh++){  
      	counts[hh] = counts[hh] / Nimp ;   
      	sumwgt[hh] = sumwgt[hh] / Nimp ;  
-     				}  
+     }  
      for (int hh=0; hh < GG ; hh++){  
      	sumwgt_gg[hh] = sumwgt_gg[hh] / Nimp ;  
-     				}  
+     }  
      				  
      // mid points  
      Rcpp::NumericVector mids(BB-1);  
      for (int bb=0;bb<BB-1;bb++){  
      	mids[bb] = ( breaks[bb] + breaks[bb+1] ) / 2.0 ;  
-     			}  
+     }  
        
      // density  
      Rcpp::NumericVector density_vec(BB*GG) ;  
      Rcpp::NumericVector relfreq(BB*GG) ;  
        
      for (int gg=0;gg<GG; gg++){  
-     for (int bb=0;bb<BB;bb++){  
+        for (int bb=0;bb<BB;bb++){  
            relfreq[bb+gg*BB] = sumwgt[bb+gg*BB] / sumwgt_gg[gg] ;  
            density_vec[bb+gg*BB] = relfreq[bb+gg*BB] / ( breaks[bb+1] - breaks[bb] ) ;  
-           			}  
-           		}  
-     			  
-          		  
+        }  
+     }       			            		  
      //*************************************************      
      // OUTPUT                                     
      return Rcpp::List::create(   
@@ -1739,67 +1361,31 @@ BEGIN_RCPP
          Rcpp::_["relfreq"] = relfreq ,  
          Rcpp::_["density_vec"] = density_vec  
          ) ;    
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-       
-       
-     
-END_RCPP
 }
+//*************************************************************************
 
-
-//*+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// empirical distribution function
-
-
-// declarations
-extern "C" {
-SEXP bifie_ecdf( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, 
-	SEXP breaks_, SEXP quanttype_, SEXP maxval_) ;
-}
-
-// definition
-
-SEXP bifie_ecdf( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, 
-	SEXP breaks_, SEXP quanttype_, SEXP maxval_ ){
-BEGIN_RCPP
+//*************************************************************************
+//  bifie_ecdf
+// [[Rcpp::export]]
+Rcpp::List bifie_ecdf( Rcpp::NumericMatrix datalist , Rcpp::NumericMatrix wgt1 , 
+       Rcpp::NumericMatrix wgtrep , Rcpp::NumericVector vars_index , 
+	   Rcpp::NumericVector fayfac , Rcpp::NumericVector NI , 
+       Rcpp::NumericVector group_index1 , Rcpp::NumericVector group_values, 
+	   Rcpp::NumericVector breaks, int quanttype , int maxval ){
           
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_index(vars_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-     Rcpp::NumericVector breaks(breaks_) ;  
-     int quanttype = as<int>(quanttype_) ;  
-     int maxval = as<int>(maxval_) ;  
-       
-       
      int Nimp = NI[0] ;  
-     // int RR = wgtrep.ncol() ;   
-       
      int N = wgt1.nrow() ;  
      int VV = vars_index.size() ;  
      int NV = datalist.ncol();  
-     // int group_index = group_index1[0] ;  
      int GG=group_values.size() ;  
-     int BB=breaks.size() ;  
-       
+     int BB=breaks.size() ;         
      int ZZ=VV*GG*BB ;  
      Rcpp::NumericMatrix ecdfM(ZZ,Nimp) ;  
      Rcpp::NumericVector ecdfMtemp(ZZ) ;  
      Rcpp::NumericMatrix ncasesM(VV*GG,Nimp) ;  
      Rcpp::NumericMatrix sumwgtM(VV*GG,Nimp) ;  
      Rcpp::NumericMatrix dat1(N,NV) ;  
-       
-       
-       
+     
      for (int ii=0;ii<Nimp;ii++){ // beg dataset ii  
        
      // int ii=0;  
@@ -1816,17 +1402,14 @@ BEGIN_RCPP
      	} // end dataset ii  
        
      //********************************	       	  
-     // average ecdf  
-       
-     // Rcpp::Rcout << "before average ecdf" << std::flush << std::endl ;  
+     // average ecdf                
      Rcpp::NumericVector ecdf(ZZ);  
      for (int zz=0;zz<ZZ;zz++){  
        for (int ii=0;ii<Nimp;ii++){  
      	ecdf[zz] += ecdfM(zz,ii) ;  
      			}  
      	ecdf[zz] = ecdf[zz] / Nimp ;  
-         }  
-     // Rcpp::Rcout << "after average ecdf" << std::flush << std::endl ;     	  
+         }      	  
        
      //*************************************************      
      // OUTPUT                                     
@@ -1837,45 +1420,21 @@ BEGIN_RCPP
      	Rcpp::_["ncasesM"] = ncasesM ,   
      	Rcpp::_["ecdfM"] = ecdfM  ,  
      	Rcpp::_["ecdf"] = ecdf   
-     	) ;  
-             
-     
-END_RCPP
+     	) ;               
 }
+//*************************************************************************
 
-//**************************************************************
-// logistic regression
-
-
-// declarations
-extern "C" {
-SEXP bifie_logistreg( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP dep_index_, 
-	SEXP pre_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, 
-	SEXP group_values_, SEXP eps_, SEXP maxiter_) ;
-}
-
-// definition
-SEXP bifie_logistreg( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP dep_index_, 
-	SEXP pre_index_, SEXP fayfac_, SEXP Nimp_, SEXP group_index_, 
-	SEXP group_values_, SEXP eps_, SEXP maxiter_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector dep_index(dep_index_);  
-     Rcpp::NumericVector pre_index(pre_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-     double eps=as<double>(eps_) ;  
-     int maxiter=as<int>(maxiter_);  
-       
+//*************************************************************************
+//  bifie_logistreg
+// [[Rcpp::export]]
+Rcpp::List bifie_logistreg( Rcpp::NumericMatrix datalist , Rcpp::NumericMatrix wgt1 , 
+    Rcpp::NumericMatrix wgtrep , Rcpp::NumericVector dep_index , 
+	Rcpp::NumericVector pre_index , Rcpp::NumericVector fayfac , 
+    Rcpp::NumericVector NI , Rcpp::NumericVector group_index1, 
+	Rcpp::NumericVector group_values , double eps , int maxiter ){
+  
      int Nimp = NI[0] ;  
-     int RR = wgtrep.ncol() ;  
-       
+     int RR = wgtrep.ncol() ;         
      int N = wgt1.nrow() ;  
      int VV = pre_index.size() ;  
      int NV = datalist.ncol();  
@@ -1895,23 +1454,16 @@ BEGIN_RCPP
      Rcpp::NumericMatrix regrcoefrepM(VV2,Nimp*WW) ;  
      Rcpp::NumericMatrix tempcoefrepM(VV2,WW) ;  
      Rcpp::NumericVector regrcoef0(VV2) ;  
-       
      Rcpp::NumericVector beta0(VV);  
-       
      Rcpp::Rcout << "|"  ;  
        
-       
      // loop over imputed datasets  
-     for ( int ii=0; ii < Nimp ; ii ++ ){  
-       
-       
+     for ( int ii=0; ii < Nimp ; ii ++ ){                
      // extract dataset  
      dat1 = datalist( Range( ii*N+0 , ii*N+ (N-1) ) , Range(0,NV-1) ) ;   
        
      // loop over group values gg  
-     int ind=1;  
-       
-       
+     int ind=1;                
      for (int gg=0; gg < GG ; gg ++ ){  
      uu=0;  
      for (int nn=0;nn<N;nn++){  
@@ -1953,12 +1505,9 @@ BEGIN_RCPP
      		Xt(tt,vv)=dat1( tempvec[tt] , pre_index[vv] ) ;  
      				}  
      			} // end cases tt  
-       
-     			  
      // logistic regression original dataset  
      Rcpp::List res1 = bifie_estlogistic_helper(  yt ,  
-     	Xt , wgtt , beta0 , eps , maxiter ) ;  
-       
+     	Xt , wgtt , beta0 , eps , maxiter ) ;         
      Rcpp::NumericVector tempcoef=res1["beta"] ;  
      for (int vv=0;vv<VV;vv++){       
      	regrcoefM(vv+gg*VV,ii) = tempcoef[vv] ;  
@@ -1994,26 +1543,14 @@ BEGIN_RCPP
          for (int ww=0;ww<WW;ww++){  
          	   regrcoefrepM(zz, ww + ii*WW ) = tempcoefrepM(zz,ww) ;  
          	   		}  
-     }  
-       
-       
-     Rcpp::Rcout << "-" <<  std::flush ;            		  
-          		  
+     }                
+        Rcpp::Rcout << "-" <<  std::flush ;            		            		  
           }  // end ii ;  end multiple imputations  
-       
-       
-       
      Rcpp::Rcout << "|" << std::endl ;  	       
-       
-       
      ///*** Rubin inference  
      Rcpp::List regrcoefL = rubin_rules_univ( regrcoefM , regrcoef_varM ) ;       
-            
-       
-       
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(   
          Rcpp::_["ncasesM"] = ncasesM ,  
          Rcpp::_["sumwgtM"] = sumwgtM ,  
@@ -2021,37 +1558,17 @@ BEGIN_RCPP
          Rcpp::_["regrcoefL"] = regrcoefL ,  
          Rcpp::_["regrcoefM"] = regrcoefM ,      
          Rcpp::_["regrcoef_varM"] = regrcoef_varM       
-         ) ;    
-       
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-       
-       
-     
-END_RCPP
+         ) ;           
 }
 
+//*************************************************************************
 
-//***********************************************************
-// fasttable function
-
-
-// declarations
-extern "C" {
-SEXP bifie_fasttable( SEXP datavec_) ;
-}
-
-// definition
-SEXP bifie_fasttable( SEXP datavec_ ){
-BEGIN_RCPP   
+//*************************************************************************
+//  bifie_fasttable
+// [[Rcpp::export]]
+Rcpp::List bifie_fasttable( Rcpp::NumericMatrix datavec ){
        
-     Rcpp::NumericMatrix datavec(datavec_);          
-       
-     int N = datavec.nrow() ;  
-       
-       
+     int N = datavec.nrow() ;                
      arma::colvec vals_temp(N) ;  
      int ii=0;  
      for (int nn=0;nn<N;nn++){  
@@ -2080,120 +1597,54 @@ BEGIN_RCPP
      	        tableM(ii,0) = vec_sort(nn,0) ;  
      	        tableM(ii,1) = 1 ;  
      	        	}  
-     	        }  
-       
-       
+	 }  
+
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(  
          Rcpp::_["vec_sort"] = vec_sort ,   
          Rcpp::_["tableM"] = tableM ,  
          Rcpp::_["N_unique"] = ii+1  
          ) ;    
-       
-     // maximal list length is 20!                
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;       
-       
-     
-END_RCPP
 }
 
+//*************************************************************************
 
-//***********************
-// table function for characters
+//*************************************************************************
+//  bifie_table1_character
+// [[Rcpp::export]]
+Rcpp::List bifie_table1_character( Rcpp::CharacterVector datavec ){
 
-// declarations
-extern "C" {
-SEXP bifie_table1_character( SEXP datavec_) ;
-}
-
-// definition
-
-SEXP bifie_table1_character( SEXP datavec_ ){
-BEGIN_RCPP
-   
-       
-     Rcpp::CharacterVector datavec(datavec_);                 
-     int N = datavec.size() ;  
-       
-     			  
-     Rcpp::CharacterVector uii = Rcpp::unique( datavec ) ; 			  
-     Rcpp::IntegerVector indii = Rcpp::match( datavec , uii ) ;  
-       
-     int Nval = uii.size() ;  
-       
+     int N = datavec.size() ;              			  
+     Rcpp::CharacterVector uii = Rcpp::unique( datavec ); 			  
+     Rcpp::IntegerVector indii = Rcpp::match( datavec , uii );         
+     int Nval = uii.size() ;         
      Rcpp::NumericVector tableM(Nval);  
        
      for (int nn=0;nn<N;nn++){  
      	tableM[ indii[nn] - 1 ] ++ ; 	  
-     }  
-       
-       
+     }                
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(   
          Rcpp::_["table_names"] = uii ,  
          Rcpp::_["tableM"] = tableM  
          ) ;    
-
-END_RCPP
 }
 
+//*************************************************************************
 
-
-
-
-     // maximal list length is 20!                
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;                
-     // Rcpp::Rcout << "datavec[nn] " <<  datavec[nn] <<  std::flush << std::endl ;  
-
-
-//////////////////////////////////////////////////////////
-// multilevel regression
-     
-     
-
-// declarations
-extern "C" {
-SEXP bifie_mla2( SEXP X_list_, SEXP Z_list_, SEXP y_list_, SEXP wgttot_, SEXP wgtlev2_, 
-	SEXP wgtlev1_, SEXP globconv_, SEXP maxiter_, SEXP group_, SEXP group_values_, 
-	SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_ ,
-  SEXP recov_constraint_	, SEXP is_rcov_constraint_ ) ;
-}
-
-// definition
-
-SEXP bifie_mla2( SEXP X_list_, SEXP Z_list_, SEXP y_list_, SEXP wgttot_, 
-	SEXP wgtlev2_, SEXP wgtlev1_, SEXP globconv_, SEXP maxiter_, SEXP group_, 
-	SEXP group_values_, SEXP cluster_, SEXP wgtrep_, SEXP Nimp_, SEXP fayfac_,
-  SEXP recov_constraint_ , SEXP is_rcov_constraint_ ){
-BEGIN_RCPP
+//*************************************************************************
+//  bifie_mla2
+// [[Rcpp::export]]
+Rcpp::List bifie_mla2( Rcpp::NumericMatrix X_list , Rcpp::NumericMatrix Z_list , 
+       Rcpp::NumericVector y_list , Rcpp::NumericVector wgttot , 
+	   Rcpp::NumericVector wgtlev2 , Rcpp::NumericVector wgtlev1 , double globconv , 
+       int maxiter , Rcpp::NumericVector group , Rcpp::NumericVector group_values , 
+       Rcpp::NumericVector cluster , Rcpp::NumericMatrix wgtrep , 
+       int Nimp , Rcpp::NumericVector fayfac ,
+       Rcpp::NumericMatrix recov_constraint , int is_rcov_constraint ){
    
-       
-       
-     // inputs   
-     Rcpp::NumericMatrix X_list(X_list_);          
-     Rcpp::NumericMatrix Z_list(Z_list_);  
-     Rcpp::NumericVector y_list(y_list_);  
-     Rcpp::NumericVector wgttot(wgttot_);    // length N  
-     Rcpp::NumericVector wgtlev2(wgtlev2_);  // length NC, number of clusters  
-     Rcpp::NumericVector wgtlev1(wgtlev1_); // length N  
-     double globconv = as<double>(globconv_);   
-     int maxiter = as<int>(maxiter_);  
-     Rcpp::NumericVector group(group_);   // length N  
-     Rcpp::NumericVector group_values(group_values_); // length GG  
-     Rcpp::NumericVector cluster(cluster_);  // vector of length N  
-     Rcpp::NumericMatrix wgtrep(wgtrep_);    // length N  
-     int Nimp = as<int>(Nimp_);  
-     Rcpp::NumericVector fayfac(fayfac_);   
-     Rcpp::NumericMatrix recov_constraint(recov_constraint_);
-     int is_rcov_constraint = as<int>(is_rcov_constraint_);     
-       
-     // recov_constraint
-     // is_rcov_constraint       
-       
      // new declarations  
      int NZ = Z_list.ncol();  
      int NX = X_list.ncol();  
@@ -2209,10 +1660,6 @@ BEGIN_RCPP
      Rcpp::NumericMatrix idcluster_table2;  
      Rcpp::NumericVector pars;  
        
-       
-     //    Rcpp::Rcout << "a100" <<    std::flush << std::endl ;  
-       
-          
      // estimated parameters  
      int NP = NX + NZ*NZ + 1 + 13 ;  
      int NPtot = NP * GG ;  
@@ -2262,9 +1709,6 @@ BEGIN_RCPP
          	    		   }    	    		     
      			}  
        
-       
-       
-       
      //************************************  
      // group-wise analysis and missings (first imputed dataset)  
      Rcpp::List res41 = create_dummies_mla2( GG , group , X , Z , y ) ;  
@@ -2277,21 +1721,18 @@ BEGIN_RCPP
      		}  
      	  
      // collect data for group gg  
-     // X , Z , y , wgtlev1 , wgttot , wgtlev2 , cluster, group  
-       
+     // X , Z , y , wgtlev1 , wgttot , wgtlev2 , cluster, group         
      //Rcpp::NumericMatrix pars2;  
      Rcpp::NumericVector iter3;  
      Rcpp::List res36 ;  
-       
-       
+              
      //--- loop group  
      for (int gg=0 ;gg<GG;gg++){  
        
      Rcpp::NumericVector pars;  
      //Rcpp::NumericMatrix fvcov;  
      int iter2=0;  
-       
-       
+              
      int N__ = N_group[gg] ;   
      Rcpp::NumericMatrix X__(N__,NX);  
      Rcpp::NumericMatrix Z__(N__,NZ);  
@@ -2391,27 +1832,18 @@ BEGIN_RCPP
      	 }  
         // sig2 inits  
         sig2_init(0,0) = parsM(vv+gg*NP,0) ;  
-    }  
-     	  
-       
-       
-       
-     //    Rcpp::Rcout << "a300" <<    std::flush << std::endl ;  
-       
+    }       	  
      //-------------- DATASET ORIGINAL --------------------------  
        
      // print progress  
      Rcpp::Rcout << " " << std::endl ;  
      Rcpp::Rcout << "Imputation " <<  imp+1 <<  
-        " | Group " << gg+1 <<   " |" << std::flush  ;  
-     // Rcpp::Rcout << "-" <<  std::flush ;   
+        " | Group " << gg+1 <<   " |" << std::flush  ;    
        
      //**********************************  
      // rescaling weights  
      Rcpp::NumericVector wgtlev1a = rescale_lev1weights( idcluster_table2 ,   
      	                 wgtlev1__ );  
-       
-     //     Rcpp::Rcout << "a400" <<    std::flush << std::endl ;  
        
      //*********************************  
      // estimate model (FIML)  
@@ -2452,8 +1884,6 @@ BEGIN_RCPP
          			}  
          totmean_yZM(imp,ii) = totmean_yZ[ii] ;
      		   }		  
-
-     		   
      		   
      arma::mat theta0 = res32["theta"] ;  
      arma::mat Tmat0 = res32["Tmat"] ;  
@@ -2464,13 +1894,12 @@ BEGIN_RCPP
      // Rcpp::Rcout << "a450" <<    std::flush << std::endl ;  
        
      //-------------- DATASET REPLICATE WEIGHTS --------------------------  
-       
-       
+              
      Rcpp::List res35=bifie_mla2_estimation_replicates( N__ , NC__ ,  
      	wgttot__ , wgtrep__ , wgtlev1__ , wgtlev2__ ,  
      	idcluster_table2 , theta0 , Tmat0 , sig20 , NX , NZ ,  X__ ,    
      	Z__ , y__ ,  globconv ,  maxiter_rep , NP,
-       recov_constraint, is_rcov_constraint, NRC ) ;  
+        recov_constraint, is_rcov_constraint, NRC ) ;  
        
      Rcpp::NumericMatrix pars2 = res35["pars_temp"] ; // extract estimated parameters  
      for (int pp=0;pp<NP;pp++){  
@@ -2483,10 +1912,8 @@ BEGIN_RCPP
      for (int rr=0;rr<RR;rr++){  
      	iterMrep(gg,rr+RR*imp) = iter3[rr] ;  
      			}  
-     			  
-       
-     // compute standard errors  
-       
+     			         
+     // compute standard errors         
      for (int pp=0;pp<NP;pp++){  
         pars0[pp] = parsM( pp + gg*NP , imp ) ;  
           
@@ -2501,49 +1928,31 @@ BEGIN_RCPP
      for (int pp=0;pp<NP;pp++){  
      	parsVar( pp + gg*NP , imp ) = pars_var[ pp ] ;	  
      		}  
-     			  
-     			  
      } // end loop groups  
      //----------  
-       
-       
      }  
-     /////////////////////// end imputations  
-       
+     /////////////////////// end imputations        
        
      //////////////////////////////////////////////////////  
      //*** post-processing  
        
      ///*** Rubin inference    
      Rcpp::List parsL = rubin_rules_univ( parsM , parsVar ) ;    
-       
-       
-       
      Rcpp::Rcout << " " << std::endl ;  
-       
-     //	Rcpp::Rcout << "a700" <<  std::flush << std::endl ;  
-       
-       
-       
-       
-         		  
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(  
              Rcpp::_["parsM"] = parsM , 
              Rcpp::_["parsrepM"] = parsMrep ,  
              Rcpp::_["parsVar"] = parsVar , 
              Rcpp::_["parsL"] = parsL ,   
-     	       Rcpp::_["GG"] = GG , 
+   	         Rcpp::_["GG"] = GG , 
              Rcpp::_["iterM"] = iterM ,  
-     	       Rcpp::_["iterMrep"] = iterMrep , 
+     	     Rcpp::_["iterMrep"] = iterMrep , 
              Rcpp::_["fvcovM"] = fvcovM ,  
-     	       Rcpp::_["Npers"] = Npers , 
+     	     Rcpp::_["Npers"] = Npers , 
              Rcpp::_["Nclusters"] = Nclusters ,  
-     	       Rcpp::_["NP"] = NP , 
-             // Rcpp::_["NX"] = NX , 
-             // Rcpp::_["NZ"] = NZ ,  
+     	     Rcpp::_["NP"] = NP , 
              Rcpp::_["idcluster_table"] = idcluster_table2 , 
              Rcpp::_["Sigma_W_yXM"] = Sigma_W_yXM , 
              Rcpp::_["Sigma_B_yXM"] = Sigma_B_yXM ,  
@@ -2552,59 +1961,26 @@ BEGIN_RCPP
              Rcpp::_["totmean_yXM"] = totmean_yXM , 
              Rcpp::_["totmean_yZM"] = totmean_yZM
               ) ;    
-       
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-     
-END_RCPP
 }
 
+//*************************************************************************
 
-//*********************************************************
-// path model
-
-// declarations
-extern "C" {
-SEXP bifie_pathmodel( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP L_, 
-	SEXP L_row_index_, SEXP NL_, SEXP E_, SEXP R_, SEXP R_row_index_, 
-	SEXP coeff_index_, SEXP NP0_, SEXP unreliability_) ;
-}
-
-// definition
-
-SEXP bifie_pathmodel( SEXP datalist_, SEXP wgt_, SEXP wgtrep_, SEXP vars_index_, 
-	SEXP fayfac_, SEXP Nimp_, SEXP group_index_, SEXP group_values_, SEXP L_, 
-	SEXP L_row_index_, SEXP NL_, SEXP E_, SEXP R_, SEXP R_row_index_, 
-	SEXP coeff_index_, SEXP NP0_, SEXP unreliability_ ){
-BEGIN_RCPP
+//*************************************************************************
+//  bifie_pathmodel
+// [[Rcpp::export]]
+Rcpp::List bifie_pathmodel( Rcpp::NumericMatrix datalist , Rcpp::NumericMatrix wgt1 , 
+      Rcpp::NumericMatrix wgtrep , Rcpp::NumericVector vars_index , 
+	  Rcpp::NumericVector fayfac , Rcpp::NumericVector NI , 
+      Rcpp::NumericVector group_index1 , Rcpp::NumericVector group_values , 
+      Rcpp::NumericMatrix L , Rcpp::NumericVector L_row_index , 
+      int NL , Rcpp::NumericMatrix E , 
+      Rcpp::NumericMatrix R , Rcpp::NumericVector R_row_index , 
+	  Rcpp::NumericMatrix coeff_index , int NP0 , 
+      Rcpp::NumericVector unreliability ){
    
-       
-     Rcpp::NumericMatrix datalist(datalist_);          
-     Rcpp::NumericMatrix wgt1(wgt_) ;  
-     Rcpp::NumericMatrix wgtrep(wgtrep_) ;  
-     Rcpp::NumericVector vars_index(vars_index_);  
-     Rcpp::NumericVector fayfac(fayfac_) ;  
-     Rcpp::NumericVector NI(Nimp_);  
-     Rcpp::NumericVector group_index1(group_index_) ;  
-     Rcpp::NumericVector group_values(group_values_) ;  
-     Rcpp::NumericMatrix L(L_);  
-     Rcpp::NumericVector L_row_index(L_row_index_) ;  
-     int NL = as<int>(NL_);  
-     Rcpp::NumericMatrix E(E_);  
-     Rcpp::NumericMatrix R(R_);  
-     Rcpp::NumericVector R_row_index(R_row_index_) ;  
-     Rcpp::NumericMatrix coeff_index(coeff_index_);  
-     int NP0 = as<int>(NP0_);  
-     Rcpp::NumericVector unreliability(unreliability_) ;  
-       
-       
      int Nimp = NI[0] ;  
      int RR = wgtrep.ncol() ;   
-     int N = wgt1.nrow() ;  
-     // int VV = vars_index.size() ;  
+     int N = wgt1.nrow() ;   
      int NV = datalist.ncol();  
      int GG=group_values.size() ;  
        
@@ -2612,8 +1988,7 @@ BEGIN_RCPP
      int NR = R.nrow();  
      int NP = 2*NP0 + 2*NR ;  
        
-     Rcpp::NumericMatrix dat1(N,NV) ;  
-       
+     Rcpp::NumericMatrix dat1(N,NV) ;         
      Rcpp::NumericMatrix parsM( NP*GG , Nimp );  
      Rcpp::NumericMatrix ncases( GG , 1 );  
      Rcpp::NumericMatrix sumwgt( GG , 1 );  
@@ -2662,19 +2037,13 @@ BEGIN_RCPP
      				} // end ii (imputations)  
        
        
-     //*** post-processing	  
-       
+     //*** post-processing	         
           //*** Rubin inference      
-          Rcpp::List parsL = rubin_rules_univ( parsM , parsVar ) ;      
-                            
+          Rcpp::List parsL = rubin_rules_univ( parsM , parsVar ) ;                                  
           Rcpp::Rcout << "|" << std::endl ;  				  
-     				  
-     // Rcpp::Rcout << "var_expl " <<  var_expl(0,0) <<  std::flush << std::endl ;  
-     			     
-                
+          
      //*************************************************      
-     // OUTPUT              
-               
+     // OUTPUT                             
      return Rcpp::List::create(  
          Rcpp::_["parsL"] = parsL , 	  
          Rcpp::_["parsM"] = parsM ,  
@@ -2683,17 +2052,16 @@ BEGIN_RCPP
          Rcpp::_["parsrepM"] = parsrepM ,  
          Rcpp::_["parsVar"] = parsVar  
          ) ;    
-       
-     // maximal list length is 20!  
-       
-       
-     // Rcpp::Rcout << "tmp1 " <<  tmp1 <<  std::flush << std::endl ;  
-       
-       
-     
-END_RCPP
 }
 
 
 
      
+
+
+
+
+
+
+
+

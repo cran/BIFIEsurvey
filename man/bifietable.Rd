@@ -48,7 +48,7 @@ Same output like \code{\link[base:table]{base::table}}
 \examples{
 data(data.timss1)
 table( data.timss1[[1]][,"books"] )
-bifietable( data.timss1[[1]][,"books"] )	
+BIFIEsurvey::bifietable( data.timss1[[1]][,"books"] )	
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

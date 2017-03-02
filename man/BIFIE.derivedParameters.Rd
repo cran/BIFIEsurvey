@@ -97,11 +97,12 @@ data(data.timss1)
 data(data.timssrep)
 
 # create BIFIE.dat object
-bdat <- BIFIE.data( data.list=data.timss1 , wgt=  data.timss1[[1]]$TOTWGT ,
+bdat <- BIFIEsurvey::BIFIE.data( data.list=data.timss1, wgt=data.timss1[[1]]$TOTWGT,
            wgtrep=data.timssrep[, -1 ] )
 
 # compute correlations
-res1 <- BIFIE.correl( bdat , vars=c("ASSSCI" , "ASMMAT" , "books" , "migrant" )  )
+res1 <- BIFIEsurvey::BIFIE.correl( bdat , 
+            vars=c("ASSSCI" , "ASMMAT" , "books" , "migrant" )  )
 summary(res1)
 res1$parnames
   ##    [1] "ASSSCI_ASSSCI"   "ASSSCI_ASMMAT"   "ASSSCI_books"    "ASSSCI_migrant" 
@@ -122,7 +123,7 @@ derived.parameters <- list(
         )
 
 # statistical inference for derived parameters
-res2 <- BIFIE.derivedParameters( res1 , derived.parameters )
+res2 <- BIFIEsurvey::BIFIE.derivedParameters( res1 , derived.parameters )
 summary(res2)                      
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -71,9 +71,9 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 				
 	#**************************************************************************#
 	# Rcpp call
-	res <- .Call("bifie_hist" ,  datalistM , wgt_ , wgtrep , 
+	res <- bifie_hist(  datalistM , wgt_ , wgtrep , 
 				vars_index - 1,    fayfac ,
-				Nimp , group_index - 1 , group_values , breaks , PACKAGE="BIFIEsurvey")				
+				Nimp , group_index - 1 , group_values , breaks )				
 	
 	# create histogram objects
 	GG <- length(group_values)
@@ -92,11 +92,7 @@ BIFIE.hist <- function( BIFIEobj , vars , breaks=NULL ,
 		histobj[[gg]] <- h1
 		# histobj[[gg]] <- h1$xname
 					}
-	names(histobj) <- paste0( vars , "_" , group , group_values )	
-	
-	
-	
-	
+	names(histobj) <- paste0( vars , "_" , group , group_values )				
 	#*************************** OUTPUT ***************************************
 	s2 <- Sys.time()
 	timediff <- c( s1 , s2 ) # , paste(s2-s1 ) )

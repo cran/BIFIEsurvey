@@ -61,8 +61,8 @@ for (vv in 1:VV){
       ind.vv1 <- which( colnames(data) \%in\% paste0("PV" , 1:Nimp , vv1) )      
       dfr2 <- data.frame( "variable" = paste0("PV" , vv1) , "var_index" = vv , 
           "data_index" = ind.vv1 , "impdata_index"=1:Nimp )           
-       dfr <- rbind( dfr , dfr2 )
-       }
+      dfr <- rbind( dfr , dfr2 )
+}
        
 sel_ind <- setdiff( 1:( ncol(data) ) , dfr$data_index )
 data0 <- data[ , sel_ind ]
@@ -73,7 +73,7 @@ for (ii in 1:Nimp ){
     dat1 <- data.frame( data0 , data[ , dfr[ dfr$impdata_index == ii , "data_index" ]])
     colnames(dat1)[ newvars ] <- paste0("PV",pv_vars)
     datalist[[ii]] <- dat1 
-                 }
+}
 
 # dataset with replicate weights
 datarep <- data[ , grep( "W_FSTR" , colnames(data) ) ]
@@ -93,7 +93,7 @@ summary(bifieobj1)
 datL <- mitools::imputationList(list( datalist[[1]],datalist[[2]],
                   datalist[[3]],datalist[[4]],datalist[[5]]) )
 pisades <- survey::svrepdesign(ids = ~ 1, weights = ~W_FSTUWT, data = datL ,
-                    repweights = "W_FSTR[0-9]+", type = "Fay", rho = 0.5)
+                    repweights = "W_FSTR[0-9]+", type = "Fay", rho = 0.5, mse=TRUE)
 print(pisades)
 
 #++++++++++++++ some comparisons with other packages +++++++++++++++++++++++++++++++

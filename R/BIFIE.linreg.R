@@ -110,14 +110,11 @@ BIFIE.linreg <- function( BIFIEobj , dep=NULL , pre=NULL  ,
 	             }							 
 	dfr$Ncases <- rep( rowMeans( res$ncasesM ) , each=ZZ )
 	dfr$Nweight <- rep( rowMeans( res$sumwgtM ) , each=ZZ )	
-
 	dfr <- create_summary_table( res_pars=res$regrcoefL , 
 				     parsM=res$regrcoefM   , parsrepM=res$regrcoefrepM , 
 					 dfr=dfr , BIFIEobj=BIFIEobj )				
 	dfr <- clean_summary_table( dfr=dfr , RR=RR , se=se , Nimp=Nimp )					
-				
-				
-				
+												
 	# create vector of parameter names
 	nogroupL <- rep( nogroup , nrow(dfr) )
 	parnames <- paste0( dfr$parameter   , "_" , dfr$var , 

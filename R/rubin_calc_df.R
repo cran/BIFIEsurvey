@@ -19,7 +19,7 @@ rubin_calc_df2 <- function( B , W , Nimp , indices=NULL , digits=2){
 	B <- B + W * 1E-15
     df <- ( 1 + Nimp / ( Nimp + 1 ) * W / B  )^2 * (Nimp - 1 )
 	df <- round( df , digits )
-	df <- ifelse( df > 1000 , Inf , df )
+	df <- ifelse( ( df > 1000 ) | ( Nimp == 1 ), Inf , df )	
     return(df)
 }
 ######################################################	

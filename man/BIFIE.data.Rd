@@ -105,6 +105,9 @@ For saving and loading \code{BIFIEdata} objects see
 
 For converting PIRLS/TIMSS or PISA datasets into \code{BIFIEdata}
 objects see \code{\link{BIFIE.data.jack}}.
+
+See the \code{\link{BIFIEdata2svrepdesign}} function for converting 
+\code{BIFIEdata} objects to objects used in the \pkg{survey} package.
 }
 
 \examples{

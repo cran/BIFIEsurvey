@@ -32,7 +32,8 @@ An optional vector of plausible values which define multiply-imputed datasets.
 }
   \item{jktype}{
 Type of jackknife procedure for creating the \code{BIFIE.data} object.
-\code{jktype="JK_TIMSS"} refers to TIMSS/PIRLS datasets. The type
+\code{jktype="JK_TIMSS"} refers to TIMSS/PIRLS datasets up to 2011 data,
+\code{jktype="JK_TIMSS2"} refers to TIMSS/PIRLS datasets starting from 2015 data. The type
 \code{"JK_GROUP"} creates jackknife weights based on a user defined
 grouping, the type \code{"JK_RANDOM"} creates random groups. The number
 of random groups can be defined in \code{ngr}. The argument \code{type="RW_PISA"}

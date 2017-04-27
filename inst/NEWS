@@ -38,7 +38,7 @@ Development of the Austrian School System (BIFIE)
 Salzburg (Austria)
 https://www.bifie.at/
 
-Questions or suggestions about BIFIEsurvey can be sent to
+Questions or suggestions about BIFIEsurvey should be sent to
 robitzsch@ipn.uni-kiel.de
 
 
@@ -46,6 +46,23 @@ robitzsch@ipn.uni-kiel.de
 CHANGELOG BIFIEsurvey
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+--------------------------------------------------------------------------
+VERSIONS BIFIEsurvey 2.0  |  2017-04-27  |  Last: BIFIEsurvey 2.0-7
+--------------------------------------------------------------------------
+ 
+NOTE  * changed degrees of freedom ('df') for model estimation to df=Inf
+        in case of only one (imputed) dataset
+ADDED * included argument jktype="JK_TIMSS2" in 'BIFIE.data.jack' for
+        TIMSS 2015 replication method
+NOTE  * included argument 'mse=TRUE' in examples with survey::svrepdesign
+        which now provides equivalent results of the BIFIEsurvey package
+        and survey package
+ADDED * included function 'BIFIEdata2svrepdesign' which converts objects
+        of class 'BIFIEdata' to objects in the survey package 
+
+DATA  * ---
+EXAMP * data.timss1 (1), data.pisaNLD (1), BIFIEdata2svrepdesign (1,2)
 
 --------------------------------------------------------------------------
 VERSIONS BIFIEsurvey 1.13  |  2017-03-02  |  Last: BIFIEsurvey 1.13-24

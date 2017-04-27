@@ -91,8 +91,8 @@ summary(bdat4)
 #--- create object in survey package
 dat3a <- as.data.frame( cbind( data.timss2[[1]] , data.timssrep ) )
 RR <- ncol(data.timssrep) - 1       # number of jackknife zones
-svydes3 <- survey::svrepdesign(data=dat3a,weights=~TOTWGT ,type="JKn",
-                 repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
+svydes3 <- survey::svrepdesign(data=dat3a, weights=~TOTWGT, type="JKn",
+                 repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR), mse=TRUE)
 summary(svydes3)
 
 #--- create object with imputed datasets in survey
@@ -102,10 +102,10 @@ for (ii in 1:5){
     dat1 <- datL[[ii]]
     dat1 <- cbind(  dat1 , data.timssrep[,-1] ) 
     datL[[ii]] <- dat1 
-                }
+}
 datL <- mitools::imputationList(list( datL[[1]],datL[[2]],datL[[3]],datL[[4]],datL[[5]]))
-svydes4 <- survey::svrepdesign(data=datL,weights=~TOTWGT ,type="JKn",
-                   repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR))
+svydes4 <- survey::svrepdesign(data=datL, weights=~TOTWGT, type="JKn",
+                   repweights='w_fstr[0-9]', scale=1,  rscales=rep(1,RR), mse=TRUE)
 summary(svydes4)
 
 #--- reconstruct data.timss3 for intsvy package. Plausible values must be labeled

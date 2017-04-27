@@ -4,8 +4,8 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	jkzone=NULL , jkrep=NULL  ,	jkfac=NULL , fayfac = NULL , 
 	wgtrep = "W_FSTR" , pvpre = paste0("PV",1:5) , ngr = 100 , 
 	seed = .Random.seed ,
-	cdata=FALSE 
-		){	
+	cdata=FALSE )
+{	
 	cl <- match.call()	
 	
 	# subroutine for preparation of nested multiple imputations
@@ -17,16 +17,15 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	
 	if ( ( ! is.null(wgtrep) ) & ( is.null(fayfac) ) ){
 		fayfac <- 1 
-				}
-				
-	
+	}
+					
 	#*** list of multiply imputed datasets
 	if ( ( is.list(data) ) & ( ! is.data.frame(data) ) ){
 		dataL <- data
 		data <- dataL[[1]]
-				}  else {
+	} else {
 		dataL <- data
-				}					
+	}					
     data <- as.data.frame( data )		
 	#*********************************************************
 	# using fixed jackknife zones
@@ -35,12 +34,12 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		if ( is.null(wgt) ){
 			data$wgt <- rep(1,N)
 			wgt <- "wgt"
-				}
+		}
 		data$jkrep <- rep(0,N)
 		jkrep <- "jkrep"
 		fayfac <- ngr / ( ngr - 1 )
         jkfac <- 0	 						
-							}
+	}
 
 	
 	#**********************************************************	
@@ -50,13 +49,13 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		if ( is.null(wgt) ){
 			data$wgt <- rep(1,N)
 			wgt <- "wgt"
-				}
+		}
 		if ( ! is.null(seed) ){
 			set.seed( seed )
 			indzone <- sample(1:N) 
-					} else {
+		} else {
 			indzone <- 1:N
-				}
+		}
 		jkzone <- 1:N
 		N1 <- N / ngr
 		jkzone <- floor( jkzone / ( N1 + 1E-5  ) ) + 1
@@ -68,47 +67,44 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		jkrep <- "jkrep"
 		fayfac <- ngr / ( ngr - 1 )
         jkfac <- 0	     
-				}
+	}
 							
 	#**********************************************************
 	#**** defaults for TIMSS	
-	if (jktype == "JK_TIMSS"){
-	      if ( is.null( jkrep) ){
+	if (jktype %in% c("JK_TIMSS","JK_TIMSS2") ){
+		if ( is.null( jkrep) ){
 			jkrep <- "JKREP"
-						}
-		  if ( is.null( jkzone ) ){ 
-				jkzone <- "JKZONE"
-							}
-		  if ( is.null( wgt ) ){ 							
+		}
+		if ( is.null( jkzone ) ){ 
+			jkzone <- "JKZONE"
+		}
+		if ( is.null( wgt ) ){ 							
 			wgt <- "TOTWGT"
-					}
-		  jkfac <- 2
-				}
+		}
+		jkfac <- 2
+	}
 	#***********************************************************
 	#**** defaults for PISA
 	if (jktype == "RW_PISA"){
-	      jkrep <- NULL
-	      jkzone <- NULL
-		  if ( is.null(wgt)){
+	    jkrep <- NULL
+	    jkzone <- NULL
+		if ( is.null(wgt)){
 			wgt <- "W_FSTUWT"
-					}				
-		  jkfac <- NULL
-		  repvars <- grep( wgtrep , colnames( data ) )
-		  RR <- length(repvars)
-		  # select variables with plausible values
-		  nc1 <- nchar( pvpre[1] )
-		  pv_vars <- which( substring( colnames(data) , 1 , nc1 ) == pvpre[1] )
-		  pv_vars <- gsub( pvpre[1] , "" , colnames(data)[ pv_vars ] )
-#		  cdata <- FALSE
+		}				
+		jkfac <- NULL
+		repvars <- grep( wgtrep , colnames( data ) )
+		RR <- length(repvars)
+		# select variables with plausible values
+		nc1 <- nchar( pvpre[1] )
+		pv_vars <- which( substring( colnames(data) , 1 , nc1 ) == pvpre[1] )
+		pv_vars <- gsub( pvpre[1] , "" , colnames(data)[ pv_vars ] )
 		datarep <- data[ , repvars ]
         RR <- ncol(datarep)		
 		fayfac <- 1 /  RR / ( 1 - .5)^2
         data <- data[ , - repvars ]	
-
-				}								
+	}								
 	#******** generate replicate weights
-	if ( jktype != "RW_PISA") {
-	    #**** bug fix ARb 2014-12-11
+	if ( jktype %in% c("JK_TIMSS", "JK_GROUP", "JK_RANDOM", "JK_TIMSS2") ) {
 		# redefine jackknife zones
 		jkzones1 <- unique( data[,jkzone] )
 		data[,jkzone] <- match( data[,jkzone] , jkzones1)
@@ -117,19 +113,34 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		prblen <- 10
 		prbar <- BIFIE.progressbar( ops = RR , prblen = prblen )
 		cat("+++ Generate replicate weights\n")
-		cat(paste0("|" , paste0(rep("*",prblen), collapse="") , "|\n|")) ; utils::flush.console()	
+		cat(paste0("|" , paste0(rep("*",prblen), collapse="") , "|\n|"))
+		utils::flush.console()	
 		addname <- 10^( floor( log( RR+.5 , 10 ) )  + 1 )
 		data[ , jkzone ] <- match( data[ , jkzone ] , unique( data[ , jkzone] ) )		
-		datarep <- bifie_jack_timss( data[,wgt] , data[,jkzone]-1 , data[,jkrep] , 
-						RR , jkfac ,  prbar )
+		datarep <- bifie_jack_timss( wgt=data[,wgt] , jkzone=data[,jkzone]-1 , 
+		                jkrep=data[,jkrep] , RR=RR , jkfac=jkfac ,  prbar=prbar )
 		colnames(datarep) <- paste0("w_fstr" , substring( paste0(addname +1:RR),2) )		
+		# adjustments for JK_TIMSS2 type
+		if (jktype=="JK_TIMSS2"){
+			datarep0 <- bifie_jack_timss( wgt=data[,wgt] , jkzone=data[,jkzone]-1 , 
+		                  jkrep= 1 - data[,jkrep] , RR=RR , jkfac=jkfac ,  prbar=prbar )
+			colnames(datarep0) <- paste0("w_fstr" , substring( paste0(addname +1:RR),2) )		
+			datarep <- cbind( datarep , datarep0 )
+			ind_rep <- unlist( sapply( 1:RR , FUN = function(rr){ rr + c(0,RR) }  ,
+								simplify=FALSE) )
+			datarep <- datarep[, ind_rep ]					
+			addname <- 10^( floor( log( 2*RR+.5 , 10 ) )  + 1 )
+			colnames(datarep) <- paste0("w_fstr" , substring( paste0(addname +1:(2*RR)),2) )	
+			RR <- 2*RR
+			fayfac <- .5			
+		}				
 		cat("|\n")
-					}
+	}
 
 	#******** generate replicated datasets for datasets
 	if ( is.null( pv_vars) ){ 
-				datalist <- dataL  
-							}						
+		datalist <- dataL  
+	}						
 	if ( ! is.null( pv_vars )){
 		dfr <- NULL
 		VV <- length(pv_vars)
@@ -137,16 +148,15 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 			vv1 <- pv_vars[vv]
 			if (jktype != "RW_PISA"){ 
 				ind.vv1 <- which( substring( colnames(data) , 1 , nchar( vv1 ) ) == pv_vars[vv] )
-									}  else {
+			} else {
 				varsel <- paste0( pvpre , vv1	)
 				ind.vv1 <- which( colnames(data) %in% varsel )									
-									}
-									
+			}									
 			Nimp <- length(ind.vv1)
 			dfr2 <- data.frame( "variable" = vv1 , "var_index" = vv , "data_index" = ind.vv1 ,
 							 "impdata_index"=1:Nimp ) 				 
 			dfr <- rbind( dfr , dfr2 )
-			}
+		}
 		sel_ind <- setdiff( 1:( ncol(data) ) , dfr$data_index )
 		data0 <- data[ , sel_ind ]	
 		V0 <- ncol(data0)

@@ -1,4 +1,4 @@
-af1412430c33933b266a085d7bbbcfc7 *DESCRIPTION
+0f5fcbbfb306242fc78305660baaf969 *DESCRIPTION
 15500196709d5627c1a0163b416acbc3 *NAMESPACE
 111cec7d844381b7b0ec901cd8702b4b *R/BIFIE.BIFIEdata2datalist.R
 1b9f8367b22f4b113dbc93a99dafc6f8 *R/BIFIE.bifiedata2bifiecdata.R
@@ -8,7 +8,7 @@ af1412430c33933b266a085d7bbbcfc7 *DESCRIPTION
 5cd8132fea0281e9f2ec36d18c48c18c *R/BIFIE.crosstab.R
 68c2c752f5ced4eb323baa0b73f3e90b *R/BIFIE.data.R
 d048ab8cca60810878366cc1b4e2b55e *R/BIFIE.data.boot.R
-36e5eb03d91b6719cbf37675e6d83031 *R/BIFIE.data.jack.R
+6b8249cc21e6abf343dda5458b928b1b *R/BIFIE.data.jack.R
 9ea418938860fe377e35176c47723650 *R/BIFIE.data.select.R
 c7adbadea38e7d7a5c6d19a56dafab1f *R/BIFIE.data.transform.R
 6cb3e85c75596b36ac95b679167a212b *R/BIFIE.derivedParameters.R
@@ -60,7 +60,7 @@ c12db5d7bb00837485788729c6959834 *data/data.timss3.rda
 f369de8ca532dc8c3bfb5621f9f8c447 *data/data.timssrep.rda
 75c019ab99e5c9d8e282bcfcd38f4b91 *data/datalist
 bdb45046d21c81c38a3c93eb8aa76602 *inst/CITATION
-8756c93f1554783d484ecfe892333d8d *inst/NEWS
+930279d14a29dced6b3df3dfddd9df40 *inst/NEWS
 083d8bff00ab123061cd09e34cac3811 *man/BIFIE.BIFIEdata2BIFIEcdata.Rd
 6032f3c26cb3988577e2bd43268e367a *man/BIFIE.by.Rd
 e5d2b3b839d09a971eb3b26c9e9ab166 *man/BIFIE.correl.Rd

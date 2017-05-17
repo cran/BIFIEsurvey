@@ -92,12 +92,23 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 			wgt <- "W_FSTUWT"
 		}				
 		jkfac <- NULL
-		repvars <- grep( wgtrep , colnames( data ) )
+		cn_data <- colnames(data)
+		repvars <- grep( wgtrep , cn_data )
 		RR <- length(repvars)
 		# select variables with plausible values
 		nc1 <- nchar( pvpre[1] )
-		pv_vars <- which( substring( colnames(data) , 1 , nc1 ) == pvpre[1] )
-		pv_vars <- gsub( pvpre[1] , "" , colnames(data)[ pv_vars ] )
+		pv_vars <- which( substring( cn_data , 1 , nc1 ) == pvpre[1] )
+		#-- deselect all duplicated variables
+		pv_elim <- NULL
+		LP <- length(pvpre)
+		for (pp in 2:LP){		
+			pvpre_pp <- pvpre[pp]
+			pv1 <- which( substring( cn_data , 1 , nchar(pvpre_pp) ) == pvpre_pp )
+			pv_elim <- c( pv_elim , pv1 )
+		}
+		pv_vars <- setdiff(pv_vars, pv_elim)
+		#---
+		pv_vars <- gsub( pvpre[1] , "" , cn_data[ pv_vars ] )
 		datarep <- data[ , repvars ]
         RR <- ncol(datarep)		
 		fayfac <- 1 /  RR / ( 1 - .5)^2

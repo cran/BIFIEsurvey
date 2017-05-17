@@ -48,6 +48,17 @@ CHANGELOG BIFIEsurvey
 
 
 --------------------------------------------------------------------------
+VERSIONS BIFIEsurvey 2.1  |  2017-05-17  |  Last: BIFIEsurvey 2.1-6
+--------------------------------------------------------------------------
+ 
+FIXED * fixed a bug in 'BIFIE.data.jack' for replication designs in PISA which
+        was not able to handle more than 9 plausible values (for example,
+        10 plausible values as in PISA 2015)
+
+DATA  * ---
+EXAMP * ---
+
+--------------------------------------------------------------------------
 VERSIONS BIFIEsurvey 2.0  |  2017-04-27  |  Last: BIFIEsurvey 2.0-7
 --------------------------------------------------------------------------
  

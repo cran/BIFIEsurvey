@@ -5,8 +5,7 @@
 BIFIE_NMI_inference_parameters <- function( parsM , parsrepM , fayfac ,
 	RR , Nimp , Nimp_NMI , comp_cov = FALSE ){
 	
-    res0 <- bifie_comp_vcov_within( parsM , parsrepM , fayfac , 
-				RR , Nimp )
+    res0 <- bifie_comp_vcov_within( parsM , parsrepM , fayfac , RR , Nimp )
 	u_diag <- res0$u_diag
 
 	NV <- length(u_diag) / Nimp 
@@ -16,14 +15,14 @@ BIFIE_NMI_inference_parameters <- function( parsM , parsrepM , fayfac ,
 	
 	for (ii in seq( 1 , Nimp_NMI[1] ) ){
 		for (jj in seq( 1 , Nimp_NMI[2] ) ){
-			  if (NV>1){	
-					diag(u[ii,jj,,]) <- u_diag[ii,jj,]		
-						}
-			   if (NV==1){
-					u[ii,jj,1,1] <- u_diag[ii,jj,1]
-							}
-										}
-								}								
+			if (NV>1){	
+				diag(u[ii,jj,,]) <- u_diag[ii,jj,]		
+			}
+			if (NV==1){
+				u[ii,jj,1,1] <- u_diag[ii,jj,1]
+			}
+		}
+	}								
 	qhat <- array( parsM , dim=c(NV , Nimp_NMI[2] , Nimp_NMI[1] ) )
 	qhat <- aperm( qhat , c(3,2,1) )								
 	# inference using miceadds package

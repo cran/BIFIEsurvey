@@ -15,7 +15,8 @@ conducted by specifying appropriate input in the \code{fayfac}
 argument.
 }
 \usage{
-BIFIE.data(data.list, wgt = NULL, wgtrep = NULL , fayfac = 1, cdata=FALSE, NMI=FALSE)
+BIFIE.data(data.list, wgt = NULL, wgtrep = NULL , fayfac = 1, pv_vars = NULL, 
+     pvpre = NULL, cdata=FALSE, NMI=FALSE)
 
 \method{summary}{BIFIEdata}(object,...)
 
@@ -39,6 +40,10 @@ Optional vector of replicate weights
 	If finite sampling correction
 	is requested, an appropriate vector input can be used (see Example 3).
 }
+\item{pv_vars}{Optional vector for names of plausible values, see
+\code{\link{BIFIE.data.jack}}.}
+\item{pvpre}{Optional vector for prefixes of plausible values, see
+\code{\link{BIFIE.data.jack}}.}
 \item{cdata}{An optional logical indicating whether the \code{BIFIEdata}
 object should be compactly saved. The default is \code{FALSE}.}
 \item{NMI}{Optional logical indicating whether \code{data.list} is obtained

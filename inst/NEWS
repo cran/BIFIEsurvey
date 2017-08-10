@@ -48,6 +48,19 @@ CHANGELOG BIFIEsurvey
 
 
 --------------------------------------------------------------------------
+VERSIONS BIFIEsurvey 2.2  |  2017-08-10  |  Last: BIFIEsurvey 2.2-22
+--------------------------------------------------------------------------
+ 
+ADDED * included arguments 'pvpre' and 'pv_vars' in 'BIFIE.data' function
+NOTE  * reformatted summary output for all analyses in BIFIEsurvey 
+        to digits in scientific notation
+NOTE  * exported utility functions 'bifie_rubin_rules',
+        'bifie_replication_variance' and 'BIFIE_NMI_inference_parameters'
+
+DATA  * ---
+EXAMP * ---
+
+--------------------------------------------------------------------------
 VERSIONS BIFIEsurvey 2.1  |  2017-05-17  |  Last: BIFIEsurvey 2.1-6
 --------------------------------------------------------------------------
  

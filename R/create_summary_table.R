@@ -31,9 +31,8 @@ create_summary_table <- function( res_pars , parsM , parsrepM , dfr , BIFIEobj){
 		dfr$VarMI_St2 <- res1$pars_varBetween2
 		dfr$VarRep <- res1$pars_varWithin
 	    dfr$VarMI <- res1$pars_varBetween1 + res1$pars_varBetween2		
-						}	
-	
+	}		
 	
     return(dfr)
-		}
+}
 ##################################################################		

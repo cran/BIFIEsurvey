@@ -2,10 +2,26 @@
 ##################################################################
 # Convert a list of multiply imputed datasets into an object
 #      of class BIFIEdata
-BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FALSE ,
-                   NMI=FALSE ){
+BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 ,
+		pv_vars = NULL , pvpre = NULL, cdata=FALSE, NMI=FALSE ){
 	
-	cl <- match.call()		
+	cl <- match.call()
+
+	#**** handling pv_vars
+	if ( ! is.null(pv_vars) ){
+		if ( is.null(pvpre) ){
+			jktype <- "JK_TIMSS"
+		} else {
+			jktype <- "RW_PISA"
+		}
+		if (!is.null(pvpre)){
+			cn_data <- colnames(data.list)
+			pv_vars <- bifie_data_select_pv_vars(pvpre=pvpre, cn_data=cn_data)
+		}		
+		data.list <- bifie_data_pv_vars_create_datlist(pvpre=pvpre, pv_vars=pv_vars, 
+				jktype=jktype, data=data.list)
+	}
+
 	# subroutine for preparation of nested multiple imputations
 	res0 <- BIFIE_data_nested_MI( data.list=data.list , NMI=NMI )
 	data.list <- res0$data.list
@@ -15,18 +31,17 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
 	    h1 <- data.list
 		data.list <- list( 1 )
 		data.list[[1]] <- h1
-				}	
+	}	
 				
     FF <- length( data.list)
     Nimp <- FF
 	if ( sum( colnames(data.list[[1]]) %in% "one" ) > 0 ){	
-			cat("Variable 'one' in datasets is replaced by a constant variable")
-			cat(" containing only ones!\n" )
-			for (ii in 1:Nimp){
-			     data.list[[ii]][ , "one"] <- NULL 
-							}
-							
-			}	
+		cat("Variable 'one' in datasets is replaced by a constant variable")
+		cat(" containing only ones!\n" )
+		for (ii in 1:Nimp){
+			data.list[[ii]][ , "one"] <- NULL 
+		}							
+	}	
     N <- nrow( data.list[[1]] )
     V <- ncol( data.list[[1]] )	
     dat1 <- data.list[[1]]
@@ -43,7 +58,7 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
 	# weights
 	if ( is.character(wgt) & ( length(wgt) == 1 ) ){
 		wgt <- data.list[[1]][ , wgt ]
-				}
+	}
 	
 	if ( is.null(wgt) ){ wgt <- rep(1,N) }	
 	wgt <- as.numeric( wgt )
@@ -52,14 +67,13 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
     for (ff in 1:FF){  # imputed dataset ff
         dat1 <- data.list[[ff]] 
         for (vv in notnum){ 		
-#			dat1[,vv] <- as.numeric(paste( dat1[,vv] ) ) 			
 			dat1[,vv] <- as.numeric( dat1[,vv] ) 			
 		}
 		dat1$one <- 1		
         dat1 <- as.matrix( dat1) 	
         datalistM[ 1:N + N*(ff-1) , ] <- dat1 
 		cat("-") ; flush.console()
-                }
+    }
 	cat("|\n")	
     res <- list( "datalistM" = datalistM , "wgt" = wgt , "wgtrep" = wgtrep ,
         "Nimp" = Nimp , "N"= N , "dat1" = dat1  , "varnames" = cn , "fayfac"= fayfac ,
@@ -80,25 +94,25 @@ BIFIE.data <- function( data.list , wgt=NULL , wgtrep=NULL , fayfac=1 , cdata=FA
     return(res)
     }            
 ########################################################################
+
 #**************** print method ***********************			
 print.BIFIEdata <- function(x,...){
-  cat("Object of class 'BIFIEdata'\nCall: ")
-  print( x$CALL )
-  #*** multiply imputed data  
-  if ( ! x$NMI ){
-	  cat("MI data with", x$Nimp ,"datasets\n")
-				}
-  #*** nested multiply imputed data				
-  if ( x$NMI ){
-	  v1 <- paste0( "NMI data with ", x$Nimp_NMI[1] ," between datasets and " ,
+	cat("Object of class 'BIFIEdata'\nCall: ")
+	print( x$CALL )
+	#*** multiply imputed data  
+	if ( ! x$NMI ){
+		cat("MI data with", x$Nimp ,"datasets\n")
+	}
+	#*** nested multiply imputed data				
+	if ( x$NMI ){
+		v1 <- paste0( "NMI data with ", x$Nimp_NMI[1] ," between datasets and " ,
 			  x$Nimp_NMI[2], " within datasets\n")
-	  cat(v1)  
-		}
-  v1 <- paste0( x$RR , " replication weights with fayfac=" ,
+		cat(v1)  
+	}
+	v1 <- paste0( x$RR , " replication weights with fayfac=" ,
 					round(x$fayfac,3) , " \n" )
-  cat(v1)
-  v1 <- paste0( x$N , " cases and " ,
-	 x$Nvars , " variables \n" )
-  cat(v1)
+	cat(v1)
+	v1 <- paste0( x$N , " cases and " ,	x$Nvars , " variables \n" )
+	cat(v1)
 }
 ########################################################

@@ -61,6 +61,9 @@ importFrom(TAM, lavaanify.IRT)
 ########### EXPORTS ##################
 
 
+export(bifie_rubin_rules)
+export(bifie_replication_variance)
+export(BIFIE_NMI_inference_parameters)
 export(BIFIE.BIFIEcdata2BIFIEdata)
 export(BIFIE.BIFIEdata2BIFIEcdata)
 export(BIFIE.BIFIEdata2datalist)

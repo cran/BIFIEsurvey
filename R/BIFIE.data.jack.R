@@ -72,13 +72,13 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	#**********************************************************
 	#**** defaults for TIMSS	
 	if (jktype %in% c("JK_TIMSS","JK_TIMSS2") ){
-		if ( is.null( jkrep) ){
+		if ( is.null(jkrep) ){
 			jkrep <- "JKREP"
 		}
-		if ( is.null( jkzone ) ){ 
+		if ( is.null(jkzone) ){ 
 			jkzone <- "JKZONE"
 		}
-		if ( is.null( wgt ) ){ 							
+		if ( is.null(wgt) ){ 							
 			wgt <- "TOTWGT"
 		}
 		jkfac <- 2
@@ -95,20 +95,8 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 		cn_data <- colnames(data)
 		repvars <- grep( wgtrep , cn_data )
 		RR <- length(repvars)
-		# select variables with plausible values
-		nc1 <- nchar( pvpre[1] )
-		pv_vars <- which( substring( cn_data , 1 , nc1 ) == pvpre[1] )
-		#-- deselect all duplicated variables
-		pv_elim <- NULL
-		LP <- length(pvpre)
-		for (pp in 2:LP){		
-			pvpre_pp <- pvpre[pp]
-			pv1 <- which( substring( cn_data , 1 , nchar(pvpre_pp) ) == pvpre_pp )
-			pv_elim <- c( pv_elim , pv1 )
-		}
-		pv_vars <- setdiff(pv_vars, pv_elim)
-		#---
-		pv_vars <- gsub( pvpre[1] , "" , cn_data[ pv_vars ] )
+				
+		pv_vars <- bifie_data_select_pv_vars(pvpre, cn_data )
 		datarep <- data[ , repvars ]
         RR <- ncol(datarep)		
 		fayfac <- 1 /  RR / ( 1 - .5)^2
@@ -152,33 +140,14 @@ BIFIE.data.jack <- function( data , wgt=NULL , jktype="JK_TIMSS" , pv_vars = NUL
 	if ( is.null( pv_vars) ){ 
 		datalist <- dataL  
 	}						
+	
+	#--------------------------------------------------	
 	if ( ! is.null( pv_vars )){
-		dfr <- NULL
-		VV <- length(pv_vars)
-		for (vv in 1:VV){
-			vv1 <- pv_vars[vv]
-			if (jktype != "RW_PISA"){ 
-				ind.vv1 <- which( substring( colnames(data) , 1 , nchar( vv1 ) ) == pv_vars[vv] )
-			} else {
-				varsel <- paste0( pvpre , vv1	)
-				ind.vv1 <- which( colnames(data) %in% varsel )									
-			}									
-			Nimp <- length(ind.vv1)
-			dfr2 <- data.frame( "variable" = vv1 , "var_index" = vv , "data_index" = ind.vv1 ,
-							 "impdata_index"=1:Nimp ) 				 
-			dfr <- rbind( dfr , dfr2 )
-		}
-		sel_ind <- setdiff( 1:( ncol(data) ) , dfr$data_index )
-		data0 <- data[ , sel_ind ]	
-		V0 <- ncol(data0)
-		newvars <- seq( V0+1 , V0+VV )
-		datalist <- as.list( 1:Nimp )
-		for (ii in 1:Nimp ){
-			dat1 <- data.frame( data0 , data[ , dfr[ dfr$impdata_index == ii  , "data_index" ] ] )
-			colnames(dat1)[ newvars ] <- pv_vars
-			datalist[[ii]] <- dat1 
-		}  # end imputations						
+		datalist <- bifie_data_pv_vars_create_datlist( pvpre=pvpre, pv_vars=pv_vars, 
+							jktype=jktype, data=data ) 
 	}  # end pv_vars		
+	#--------------------------------------------------
+	
 	if ( ! is.null(fayfac0) ){
 		fayfac <- fayfac0	
 	}

@@ -38,4 +38,4 @@ BIFIE.summary <- function(object , print.time=TRUE){
 							
     cat( "Number of Jackknife zones per dataset =" , object$RR , "\n" ) 
     cat( "Fay factor =" , round( object$fayfac , 5 ) , "\n\n" ) 	
-						}
+}

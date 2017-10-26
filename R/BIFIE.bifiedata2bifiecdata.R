@@ -1,3 +1,6 @@
+## File Name: BIFIE.bifiedata2bifiecdata.R
+## File Version: 2.09
+## File Last Change: 2017-08-10 13:24:44
 
 #######################################################
 # conversion of BIFIEdata to BIFIEcdata

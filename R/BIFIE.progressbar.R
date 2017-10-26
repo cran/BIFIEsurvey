@@ -1,3 +1,6 @@
+## File Name: BIFIE.progressbar.R
+## File Version: 0.03
+## File Last Change: 2017-08-10 13:24:44
 
 ################################################
 # Computation of a progress bar

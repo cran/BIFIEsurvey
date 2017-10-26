@@ -1,3 +1,6 @@
+## File Name: BIFIE.correl.R
+## File Version: 0.36
+## File Last Change: 2017-10-26 14:28:47
 
 
 #######################################################################
@@ -48,7 +51,7 @@ BIFIE.correl <- function( BIFIEobj , vars , group=NULL , group_values=NULL , se=
 	#@@@@***
 
     if ( is.null(group_values ) ){ 
-		t1 <- fasttable( datalistM[ , group_index ] )				  
+		t1 <- bifietable( datalistM[ , group_index ] )				  
 	    group_values <- sort( as.numeric( paste( names(t1) ) ))
 				}
 	

@@ -1,8 +1,8 @@
 Package: BIFIEsurvey
 Type: Package
 Title: Tools for Survey Statistics in Educational Assessment
-Version: 2.2-22
-Date: 2017-08-10 11:31:29
+Version: 2.3-18
+Date: 2017-10-26 15:36:05
 Author: BIFIE
 Maintainer: Alexander Robitzsch <robitzsch@ipn.uni-kiel.de>
 Description: 
@@ -26,6 +26,6 @@ License: GPL (>= 2)
 URL: http://www.bifie.at,
         https://github.com/alexanderrobitzsch/BIFIEsurvey
 NeedsCompilation: yes
-Packaged: 2017-08-10 09:31:50 UTC; sunpn563
+Packaged: 2017-10-26 13:36:45 UTC; sunpn563
 Repository: CRAN
-Date/Publication: 2017-08-10 09:54:38 UTC
+Date/Publication: 2017-10-26 13:48:14 UTC

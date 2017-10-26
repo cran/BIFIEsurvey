@@ -1,3 +1,6 @@
+## File Name: extract.replicated.pars.R
+## File Version: 0.10
+## File Last Change: 2017-08-10 13:24:44
 
 ########################################################
 # extract replicated parameters for BIFIE method

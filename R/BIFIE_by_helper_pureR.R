@@ -1,6 +1,5 @@
 ## File Name: BIFIE_by_helper_pureR.R
 ## File Version: 0.09
-## File Last Change: 2017-08-10 13:24:45
 
 ############################################################
 BIFIE_by_helper_pureR <- function( 

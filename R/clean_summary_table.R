@@ -1,6 +1,5 @@
 ## File Name: clean_summary_table.R
 ## File Version: 0.03
-## File Last Change: 2017-08-10 13:24:44
 
 
 clean_summary_table <- function( dfr , RR , se , Nimp ){

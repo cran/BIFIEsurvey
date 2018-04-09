@@ -1,6 +1,5 @@
 ## File Name: BIFIE_NMI_inference_parameters.R
 ## File Version: 0.12
-## File Last Change: 2017-08-10 13:24:45
 
 
 ###########################################################

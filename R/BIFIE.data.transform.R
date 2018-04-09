@@ -1,6 +1,5 @@
 ## File Name: BIFIE.data.transform.R
 ## File Version: 1.17
-## File Last Change: 2017-08-10 13:24:44
 
 #################################################################
 # transforming data in BIFIE.data object

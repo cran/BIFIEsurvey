@@ -10,7 +10,7 @@ The official version of `BIFIEsurvey` is hosted on CRAN and may be found [here](
 The CRAN version can be installed from within R using:
 
 ```r
-install.packages("BIFIEsurvey")
+utils::install.packages("BIFIEsurvey")
 ```
 
 #### GitHub version
@@ -19,6 +19,5 @@ The version hosted [here](https://github.com/alexanderrobitzsch/BIFIEsurvey) is 
 The GitHub version can be installed using `devtools` as:
 
 ```r
-install.packages("devtools")
 devtools::install_github("alexanderrobitzsch/BIFIEsurvey")
 ```

@@ -6,6 +6,11 @@ If you use `BIFIEsurvey` and have suggestions for improvement or have found bugs
 
 #### CRAN version
 
+<!---
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/BIFIEsurvey)](https://cran.r-project.org/package=BIFIEsurvey)
+&#160;&#160;
+-->
+
 The official version of `BIFIEsurvey` is hosted on CRAN and may be found [here](https://cran.r-project.org/package=BIFIEsurvey). 
 The CRAN version can be installed from within R using:
 

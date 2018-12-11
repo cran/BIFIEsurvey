@@ -1,4 +1,4 @@
-17902c82e82b862c90e2bf25f7833022 *DESCRIPTION
+804f424aed82f0b2555cfa439da368f4 *DESCRIPTION
 00a90da432225ca969a5b3aef7f4c048 *NAMESPACE
 98c6a53a68fc9fce8c05d3d3676c07d1 *R/BIFIE.BIFIEcdata2BIFIEdata.R
 20012be06833ca3cada15def5526cad3 *R/BIFIE.BIFIEdata2datalist.R
@@ -6,7 +6,7 @@
 103d14a0198696be74a1e59a6018b07f *R/BIFIE.by.R
 101f2c142a4a5df3d5edcc65ecf8429f *R/BIFIE.cdata.select.R
 dc1c75e26cd990f9f1fb757fc32de9b0 *R/BIFIE.correl.R
-49ef80a57199f85e8795973f77e5158b *R/BIFIE.crosstab.R
+4632ad7bddbe1a62790e8a6694af21c0 *R/BIFIE.crosstab.R
 d3e50bcb235e43ec4fcbd3acb34627d3 *R/BIFIE.data.R
 1cc3670625b6b1fcacad906debd92b73 *R/BIFIE.data.boot.R
 3d77c0754ed84cd8629762c151f6b1b8 *R/BIFIE.data.jack.R
@@ -21,8 +21,8 @@ d5487110060df8b053e0eaef6129b010 *R/BIFIE.linreg.R
 7c008f5318ae7a7c1ba8557c45f1b335 *R/BIFIE.mva.R
 13865ecea000085935227104f8ffaf54 *R/BIFIE.pathmodel.R
 d2582c580f426312f8aae0c3376c29ed *R/BIFIE.progressbar.R
-72137c80ec5dabf0800789bc627a1a16 *R/BIFIE.summary.R
-d9147f831e057d3993cda41dab330ede *R/BIFIE.twolevelreg.R
+4f52f21642fa07c67f03fb61bfdf2860 *R/BIFIE.summary.R
+dd316e8faef675e83efcbd584f33b3b1 *R/BIFIE.twolevelreg.R
 4c00552df9a8b6585acf5243bf0805c0 *R/BIFIE.univar.R
 16e7212fdefb5f1c755985fd3b0cd6bc *R/BIFIE.univar.test.R
 b6bfd79d5d6820d4b173f0e034dba9e2 *R/BIFIE.waldtest.R
@@ -35,7 +35,7 @@ e3bd2f32eea8cbd8ade265cfee6ba743 *R/BIFIE_object_size.R
 cf93e939788c271d547ad6b84b298dca *R/BIFIE_table_multiple_groupings.R
 1464e703b422ee5f4d906d248a83adc2 *R/BIFIEdata.select.R
 15422bf578aefa329b029af5d63946d6 *R/BIFIEdata2svrepdesign.R
-6853579d596ec9c3c097dccd35b45b37 *R/RcppExports.R
+30b198ac9e8f57e401b1b8f42320e5df *R/RcppExports.R
 82d7e8698461988cbc68c26675a04b13 *R/bifie_data_pv_vars_create_datlist.R
 bbb40129b0324a93950d85fa4519cd09 *R/bifie_data_select_pv_vars.R
 04639dd07d728e88235f760d4bdaa084 *R/bifie_ecdf_postproc_output.R
@@ -57,7 +57,8 @@ e0250ed45a8c898c564f3767041d7e9c *R/summary.BIFIE.data.R
 a3acc364ecc775fec029d95c8c116d6e *R/vcov.BIFIE.survey.R
 5ec316dfa4300b587641966432e298cf *R/write.BIFIE.data.R
 d717b29eaf861c7c19196cd5615764f1 *R/zzz.R
-6faa2ba4b540ea0e74a2f40b620e3854 *README.md
+a16664eb1e2ef931226d5f5dbf5c6297 *README.md
+c046ca77f7ad3b7b51d52cd4fbf6868a *build/partial.rdb
 9cbbd5f342d6f982098d8edd361587d8 *data/data.bifie01.rda
 be676d69430ff6c45761d6a56f7e8457 *data/data.pisaNLD.rda
 7bff89e4380de35bb572380084bfcda7 *data/data.test1.rda
@@ -69,13 +70,13 @@ e066dbe76cf8faf556d6f68f059c3674 *data/data.timss1.rda
 f4a67945416cc1f2c210a538cd8e75f2 *data/data.timssrep.rda
 75c019ab99e5c9d8e282bcfcd38f4b91 *data/datalist
 bdb45046d21c81c38a3c93eb8aa76602 *inst/CITATION
-d8eff592debe2616993ca6c2cc30503f *inst/NEWS
+be50ba384dff05c86d27807ae8a09b9b *inst/NEWS
 eb82eeb9f50a4632671c50f3d6e37ae6 *inst/include/BIFIEsurvey.h
 eb211f938350226c7381845c1691ac39 *inst/include/BIFIEsurvey_RcppExports.h
 05ace9e168e7bc07f7e44a2cccb17993 *man/BIFIE.BIFIEdata2BIFIEcdata.Rd
 1bbf2e459781bce2b22a7b011b6cc1ea *man/BIFIE.by.Rd
 75cb4d2074485c79c3e249f68cb06833 *man/BIFIE.correl.Rd
-b04dc3e0bf087d493c87b61b812d214a *man/BIFIE.crosstab.Rd
+b33d6e16ad6befbff6ead65f038f3cf2 *man/BIFIE.crosstab.Rd
 e836cffce6450c2c74b4e5b09566aadf *man/BIFIE.data.Rd
 5564eaf69638721432655066bb41528e *man/BIFIE.data.boot.Rd
 bbae8614b367716d9e2c390bf77f3e69 *man/BIFIE.data.jack.Rd
@@ -94,7 +95,7 @@ ef75dfa3eadcd7bb21ddbc0874afff5d *man/BIFIE.univar.Rd
 3019ae089bc860c7e7fc222bb504fb97 *man/BIFIE.univar.test.Rd
 935427455f8db5b994e2367c133780a6 *man/BIFIE.waldtest.Rd
 ad7afc7bdca46b813591fad05d0a964e *man/BIFIEdata2svrepdesign.Rd
-52945b7883624ebc892e6ead0ea2f677 *man/BIFIEsurvey-package.Rd
+3416e8aa395946be05f901d265292d79 *man/BIFIEsurvey-package.Rd
 0d3f73a337970ed28904e799f7848575 *man/BIFIEsurvey-utilities.Rd
 ad9498b00f465dcefb5a3cfb9a165bde *man/bifietable.Rd
 5cd1b7eb54e08fe50d784f232606dc0c *man/data.bifie.Rd
@@ -104,7 +105,7 @@ c95bcb474fc81c6cd77fb51131112689 *man/data.timss1.Rd
 ab6d3117ee1b41083c3b0403a0c5f3a4 *man/save.BIFIEdata.Rd
 3900e4e4b505787e0f3cb83ad8ba2138 *src/Makevars
 36dc26a5d3e080089104b503a783361f *src/Makevars.win
-cad6ed3291992cea05d554ed8675ba8e *src/RcppExports.cpp
+eaf3c2e29bb38f7b66d8110d4ee9de90 *src/RcppExports.cpp
 5ebe67681b35558e960af59ce1bf11d6 *src/bifiesurvey_rcpp_helper.cpp
 781126179c873fcbbdb37756be790c4f *src/bifiesurvey_rcpp_helper.h
 beb601ff977ad66995bd2eaf15ed1570 *src/bifiesurvey_rcpp_jack_data_prep.cpp

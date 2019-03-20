@@ -1,7 +1,8 @@
 ## File Name: BIFIEdata2svrepdesign.R
-## File Version: 0.09
+## File Version: 0.26
 
-BIFIEdata2svrepdesign <- function(bifieobj)
+BIFIEdata2svrepdesign <- function(bifieobj, varnames=NULL,
+        impdata.index=NULL )
 {
     CALL <- match.call()
     Nimp <- bifieobj$Nimp
@@ -11,18 +12,27 @@ BIFIEdata2svrepdesign <- function(bifieobj)
     scale <- bifieobj$fayfac
     rscales <- rep(1,RR)
     if (bifieobj$NMI){
-        h1 <- paste0( "Nested multiply imputed datasets cannot be converted \n",
+        mess <- paste0( "Nested multiply imputed datasets cannot be converted \n",
                     " into objects for the survey package.\n")
-        stop(h1)
+        stop(mess)
     }
 
     #**** create datasets
     if (Nimp==1){
         data <- as.data.frame(bifieobj$dat1)
+        if (! is.null(varnames)){
+            data <- data[,varnames, drop=FALSE]
+        }
     }
     if (Nimp>1){
-        data <- BIFIE.BIFIEdata2datalist(bifieobj=bifieobj)
-        data <- mitools::imputationList(data)
+        data <- BIFIE.BIFIEdata2datalist(bifieobj=bifieobj, varnames=varnames,
+                        impdata.index=impdata.index, as_data_frame=FALSE)
+        Nimp <- length(data)
+        if (Nimp==1){
+            data <- data[[1]]
+        } else {
+            data <- mitools::imputationList(datasets=data)
+        }
     }
     #*** adjust scale factor in case of finite sampling correction
     if ( length(scale) > 1){

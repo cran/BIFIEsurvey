@@ -1,5 +1,5 @@
 %% File Name: BIFIE.derivedParameters.Rd
-%% File Version: 0.19
+%% File Version: 0.22
 
 \name{BIFIE.derivedParameters}
 \alias{BIFIE.derivedParameters}
@@ -44,7 +44,7 @@ parameters (see Examples for specification)}
 \item{type}{Only applies to \code{BIFIE.correl}. In case of \code{type="cov"}
  covariances instead of correlations are used for derived parameters.}
 \item{object}{Object of class \code{BIFIE.derivedParameters}}
-\item{digits}{Number of digits for rounding output}
+\item{digits}{Number of digits for rounding decimals in output}
 \item{\dots}{Further arguments to be passed}
 
 }
@@ -61,6 +61,7 @@ A list with following entries
  \item{coef}{Estimates of derived parameters}
  \item{vcov}{Covariance matrix of derived parameters}
  \item{parnames}{Parameter names}
+ \item{res_wald}{Output of Wald test (global test regarding all parameters)}
  \item{\dots}{More values}
 }
 
@@ -131,8 +132,8 @@ summary(res2)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{Derived parameters}
-\keyword{summary}
-\keyword{coef}
-\keyword{vcov}
+%% \keyword{Derived parameters}
+%% \keyword{summary}
+%% \keyword{coef}
+%% \keyword{vcov}
 

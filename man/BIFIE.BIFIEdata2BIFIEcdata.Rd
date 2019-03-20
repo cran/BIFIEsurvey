@@ -1,5 +1,5 @@
 %% File Name: BIFIE.BIFIEdata2BIFIEcdata.Rd
-%% File Version: 0.19
+%% File Version: 0.23
 
 \name{BIFIE.BIFIEdata2BIFIEcdata}
 \alias{BIFIE.BIFIEdata2BIFIEcdata}
@@ -28,7 +28,8 @@ BIFIE.BIFIEdata2BIFIEcdata(bifieobj, varnames=NULL, impdata.index=NULL)
 
 BIFIE.BIFIEcdata2BIFIEdata(bifieobj, varnames=NULL, impdata.index=NULL)
 
-BIFIE.BIFIEdata2datalist(bifieobj, varnames=NULL, impdata.index=NULL)
+BIFIE.BIFIEdata2datalist(bifieobj, varnames=NULL, impdata.index=NULL,
+    as_data_frame=FALSE)
 }
 
 
@@ -43,6 +44,8 @@ Variables chosen for the selection
   \item{impdata.index}{
 Selected indices of imputed datasets
 }
+\item{as_data_frame}{Logical indicating whether list of length one should
+be converted into a data frame}
 }
 
 %\details{
@@ -133,5 +136,5 @@ Nvalues2 <- lapply( vars, FUN=function(vv){
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{BIFIEdata}
+%% \keyword{BIFIEdata}
 %% \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

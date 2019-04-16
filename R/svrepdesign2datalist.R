@@ -1,5 +1,5 @@
 ## File Name: svrepdesign2datalist.R
-## File Version: 0.06
+## File Version: 0.07
 
 svrepdesign2datalist <- function(svrepdesign, varnames=NULL)
 {
@@ -13,15 +13,15 @@ svrepdesign2datalist <- function(svrepdesign, varnames=NULL)
         for (ii in 1:Nimp){
             data_ii <- designs[[ii]]$variables
             datalist[[ii]] <- data_ii[,varnames, drop=FALSE]
-        }                
-    }        
-    if (class(svrepdesign)=="svyrep.design"){    
+        }
+    }
+    if (class(svrepdesign)=="svyrep.design"){
         if (is.null(varnames)){
             varnames <- setdiff( colnames(svrepdesign$variables), "one")
         }
         datalist <- list()
         data1 <- svrepdesign$variables
-        datalist[[1]] <- data1[,varnames, drop=FALSE]                
+        datalist[[1]] <- data1[,varnames, drop=FALSE]
     }
     return(datalist)
 }

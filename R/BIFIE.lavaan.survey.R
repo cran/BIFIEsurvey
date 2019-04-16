@@ -1,5 +1,5 @@
 ## File Name: BIFIE.lavaan.survey.R
-## File Version: 0.565
+## File Version: 0.624
 
 
 BIFIE.lavaan.survey <- function(lavmodel, svyrepdes, lavaan_fun="sem",
@@ -38,11 +38,19 @@ BIFIE.lavaan.survey <- function(lavmodel, svyrepdes, lavaan_fun="sem",
         Nimp <- svyrepdes$Nimp
         fayfac <- svyrepdes$fayfac
         NMI <- svyrepdes$NMI
+        if (NMI){
+            lavaan_survey_default <- FALSE
+        }
+        Nimp_NMI <- svyrepdes$Nimp_NMI
+        svyrepdes$NMI <- FALSE
         RR <- svyrepdes$RR
-        bifie_nmi_error_message(fun="BIFIE.lavaan.survey", NMI=NMI)        
-        variables <- BIFIE_lavaan_survey_define_variables(lavmodel=lavmodel,
-                            svyrepdes=svyrepdes)
-        datalist <- BIFIE.BIFIEdata2datalist(bifieobj=svyrepdes, varnames=variables)                            
+        if (lavaan_survey_default){
+            svyrepdes <- BIFIEdata2svrepdesign(bifieobj=svyrepdes)
+        } else {
+            variables <- BIFIE_lavaan_survey_define_variables(lavmodel=lavmodel,
+                                svyrepdes=svyrepdes)
+            datalist <- BIFIE.BIFIEdata2datalist(bifieobj=svyrepdes, varnames=variables)
+        }
     }
     N <- nrow(data0)
 
@@ -50,15 +58,15 @@ BIFIE.lavaan.survey <- function(lavmodel, svyrepdes, lavaan_fun="sem",
     lav_fun <- BIFIE_lavaan_survey_define_lavaan_function(lavaan_fun=lavaan_fun)
     lavfit <- lav_fun(lavmodel, data=data0, ...)
     class_lav <- class(lavfit)
-    npar <- length(coef(lavfit))
+    lavfit_coef <- BIFIE_lavaan_coef(object=lavfit)
+    npar <- length(lavfit_coef)
 
     #* wrapper to lavaan.survey
     if (lavaan_survey_default){
-        res <- bifiesurvey_lavaan_survey_lavaan_survey(lavaan.fit=lavfit,
-                            survey.design=svyrepdes)
-        fitstat <- bifiesurvey_lavaan_fitMeasures(object=res, fit.measures=fit.measures)
-        results <- coef(res)
-        variances <- vcov(res)
+        res <- BIFIE_lavaan_survey_lavaan_survey(lavaan.fit=lavfit, survey.design=svyrepdes)
+        fitstat <- BIFIE_lavaan_fitMeasures(object=res, fit.measures=fit.measures)
+        results <- BIFIE_lavaan_coef(object=res)
+        variances <- BIFIE_lavaan_vcov(object=res)
     } else {
         results <- list()
         variances <- list()
@@ -69,24 +77,34 @@ BIFIE.lavaan.survey <- function(lavmodel, svyrepdes, lavaan_fun="sem",
             svyrepdes0 <- BIFIE_lavaan_survey_extract_dataset(svyrepdes=svyrepdes,
                                     ii=ii, variables=variables, svyrepdes0=svyrepdes0,
                                     datalist=datalist)
-            res <- bifiesurvey_lavaan_survey_lavaan_survey(lavaan.fit=lavfit,
+            res <- BIFIE_lavaan_survey_lavaan_survey(lavaan.fit=lavfit,
                             survey.design=svyrepdes0)
-            results[[ii]] <- coef(res)
-            variances[[ii]] <- vcov(res)
-            fitstat[[ii]] <- bifiesurvey_lavaan_fitMeasures(object=res, fit.measures=fit.measures)
+            results[[ii]] <- BIFIE_lavaan_coef(object=res)
+            variances[[ii]] <- BIFIE_lavaan_vcov(object=res)
+            fitstat[[ii]] <- BIFIE_lavaan_fitMeasures(object=res, fit.measures=fit.measures)
             partable[[ii]] <- res@ParTable
         }
 
-        # combine fit statistics
-        fitstat <- BIFIE_lavaan_survey_combine_fit_measures(fitstat=fitstat, Nimp=Nimp)
+        results <- bifie_extend_list_length2(x=results)
+        variances <- bifie_extend_list_length2(x=variances)
 
-        # inference parameters
-        inf_res <- mitools::MIcombine(results=results, variances=variances)
+        # combine fit statistics
+        fitstat <- bifie_lavaan_survey_combine_fit_measures(fitstat=fitstat, Nimp=Nimp)
+
+        if (! NMI){
+            # inference parameters for multiply imputed datasets
+            inf_res <- BIFIE_mitools_MIcombine(results=results, variances=variances)
+        } else {
+            # nested multiply imputed datasets
+            inf_res <- bifie_lavaan_survey_NMIcombine(results=results,
+                            variances=variances, Nimp_NMI=Nimp_NMI)
+        }
 
         #--- include merged parameters
         res@Fit@x <- as.vector(inf_res$coefficients)
-        res@vcov$vcov <- as.matrix(inf_res$variance)
-
+        vcov1 <- res@vcov
+        vcov1$vcov <- as.matrix(inf_res$variance)
+        res@vcov <- vcov1
         # combine results for lavaan parameter table
         partable <- BIFIE_lavaan_survey_combine_partable(partable=partable,
                             Nimp=Nimp, inf_res=inf_res)
@@ -96,7 +114,7 @@ BIFIE.lavaan.survey <- function(lavmodel, svyrepdes, lavaan_fun="sem",
     s2 <- Sys.time()
     time <- c(s1, s2)
     res1 <- list(lavfit=res, fitstat=fitstat, CALL=CALL, time=time,
-                    NMI=NMI, fayfac=fayfac, N=N, Nimp=Nimp, RR=RR,
+                    NMI=NMI, fayfac=fayfac, N=N, Nimp=Nimp, Nimp_NMI=Nimp_NMI, RR=RR,
                     results=results, variances=variances, partable=partable )
     class(res1) <- "BIFIE.lavaan.survey"
     return(res1)

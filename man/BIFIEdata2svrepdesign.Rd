@@ -1,5 +1,5 @@
 %% File Name: BIFIEdata2svrepdesign.Rd
-%% File Version: 0.185
+%% File Version: 0.186
 
 \name{BIFIEdata2svrepdesign}
 \alias{BIFIEdata2svrepdesign}
@@ -12,10 +12,10 @@ Conversion of a \code{BIFIEdata} Object into a \code{svyrep} Object in the
 }
 
 \description{
-The function \code{BIFIEdata2svrepdesign} converts of a \code{BIFIEdata} object into a 
+The function \code{BIFIEdata2svrepdesign} converts of a \code{BIFIEdata} object into a
 \code{svyrep} object in the \pkg{survey} package.
 
-The function \code{svrepdesign2BIFIEdata} converts a 
+The function \code{svrepdesign2BIFIEdata} converts a
 \code{svyrep} object in the \pkg{survey} package into an object of class \code{BIFIEdata}.
 }
 
@@ -45,7 +45,7 @@ saved in compact format}
 
 \value{
 Function \code{BIFIEdata2svrepdesign}:
-Object of class \code{svyrep.design} or \code{svyimputationList} \cr 
+Object of class \code{svyrep.design} or \code{svyimputationList} \cr
 
 Function \code{svrepdesign2BIFIEdata}: Object of class \code{BIFIEdata}
 }

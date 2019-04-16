@@ -1,5 +1,5 @@
 %% File Name: se.Rd
-%% File Version: 0.03
+%% File Version: 0.05
 
 \name{se}
 \alias{se}
@@ -10,7 +10,7 @@ Standard Errors of Estimated Parameters
 }
 
 \description{
-Outputs vector of standard errors of an estimated parameter vector. 
+Outputs vector of standard errors of an estimated parameter vector.
 }
 
 \usage{
@@ -53,7 +53,7 @@ Vector
 set.seed(906)
 N <- 100
 x <- seq(0,1,length=N)
-y <- .6*x + stats::rnorm(N, sd =1)
+y <- .6*x + stats::rnorm(N, sd=1)
 mod <- stats::lm( y ~ x )
 coef(mod)
 vcov(mod)

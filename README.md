@@ -2,7 +2,7 @@
 #### Tools for Survey Statistics in Educational Assessment
 
 
-If you use `BIFIEsurvey` and have suggestions for improvement or have found bugs, please email me at robitzsch@ipn.uni-kiel.de.
+If you use `BIFIEsurvey` and have suggestions for improvement or have found bugs, please email me at robitzsch@leibniz-ipn.de.
 
 #### Manual
 

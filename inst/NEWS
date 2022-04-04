@@ -38,8 +38,9 @@ Development of the Austrian School System (BIFIE)
 Salzburg (Austria)
 https://www.bifie.at/
 
+
 Questions or suggestions about BIFIEsurvey should be sent to
-robitzsch@ipn.uni-kiel.de
+robitzsch@leibniz-ipn.de
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,6 +49,17 @@ CHANGELOG BIFIEsurvey
 
 
 
+
+
+--------------------------------------------------------------------------
+VERSIONS BIFIEsurvey 3.4  |  2022-04-04  |  Last: BIFIEsurvey 3.4-15
+--------------------------------------------------------------------------
+ 
+FIXED * fixed numerical instabilities in BIFIE.logistreg()
+        (thanks to Franck Petrucci)
+
+DATA  * ---
+EXAMP * ---
 
 --------------------------------------------------------------------------
 VERSIONS BIFIEsurvey 3.3  |  2019-06-12  |  Last: BIFIEsurvey 3.3-12

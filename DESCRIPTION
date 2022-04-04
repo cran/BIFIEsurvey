@@ -1,8 +1,8 @@
 Package: BIFIEsurvey
 Type: Package
 Title: Tools for Survey Statistics in Educational Assessment
-Version: 3.3-12
-Date: 2019-06-12 15:10:04
+Version: 3.4-15
+Date: 2022-04-04 10:33:42
 Author: BIFIE [aut], Alexander Robitzsch [aut, cre], 
         Konrad Oberwimmer [aut]
 Maintainer: Alexander Robitzsch <robitzsch@ipn.uni-kiel.de>
@@ -21,23 +21,19 @@ Description:
     and is in particularly suited for the analysis of plausible values
     (for details see George, Oberwimmer & Itzlinger-Bruneforth, 2016; 
     Bruneforth, Oberwimmer & Robitzsch, 2016; Robitzsch, Pham &
-    Yanagida, 2016; <doi:10.17888/fdb-demo:bistE813I-16a>).    
-    The package development was supported by BIFIE (Federal Institute for 
-    Educational Research, Innovation and Development of the Austrian 
-    School System; Salzburg, Austria).
+    Yanagida, 2016). The package development was supported by BIFIE 
+    (Federal Institute for Educational Research, Innovation and Development 
+    of the Austrian School System; Salzburg, Austria).
 Depends: R (>= 3.1)
 Imports: methods, miceadds, Rcpp, stats, utils
 Suggests: graphics, grDevices, lavaan, lavaan.survey, mitools, survey,
         TAM
-Enhances: Hmisc, intsvy, LSAmitR, svyPVpack
+Enhances: Hmisc, intsvy, LSAmitR
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
-URL: http://www.bifie.at,
-        https://www.bifie.at/bildungsforschung/forschungsdatenbibliothek,
-        https://www.bifie.at/large-scale-assessment-mit-r-methodische-grundlagen-der-oesterreichischen-bildungsstandardueberpruefung,
-        https://github.com/alexanderrobitzsch/BIFIEsurvey,
+URL: https://github.com/alexanderrobitzsch/BIFIEsurvey,
         https://sites.google.com/site/alexanderrobitzsch2/software
 NeedsCompilation: yes
-Packaged: 2019-06-12 13:12:39 UTC; sunpn563
+Packaged: 2022-04-04 08:36:11 UTC; sunpn563
 Repository: CRAN
-Date/Publication: 2019-06-12 14:10:03 UTC
+Date/Publication: 2022-04-04 22:30:05 UTC

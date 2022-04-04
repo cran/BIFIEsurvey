@@ -1,5 +1,5 @@
 //// File Name: bifiesurvey_rcpp_logistreg.cpp
-//// File Version: 0.23
+//// File Version: 0.28
 
 
 #include <RcppArmadillo.h>
@@ -28,6 +28,7 @@ Rcpp::List bifiesurvey_rcpp_logistreg_compute( Rcpp::NumericVector y, Rcpp::Nume
     int P=X.ncol();
     double t1=0;
     double minval_logit = -15; // minimum value for logit computation
+    double eps1=1e-8;
 
     //*** create matrices in Armadillo
     // design matrix X
@@ -65,17 +66,18 @@ Rcpp::List bifiesurvey_rcpp_logistreg_compute( Rcpp::NumericVector y, Rcpp::Nume
         // calculate predicted logit value and probability
         for( int nn=0; nn<N; nn++){
             pred_logit(nn,0)=0;
-            for ( int pp=0; pp <P; pp++){
+            for ( int pp=0; pp<P; pp++){
                 pred_logit(nn,0) += Xa0(nn,pp) * beta_old(pp,0);
             }
             if ( pred_logit(nn,0) < minval_logit ){
                 pred_logit(nn,0) = minval_logit;
             }
-            ypred(nn,0) = 1 / ( 1 + exp( - pred_logit(nn,0) ) );
+            ypred(nn,0) = 1 / ( 1 + std::exp( - pred_logit(nn,0) ) );
         }
         // calculate entries for A matrix and outcome z
         for (int nn=0;nn<N;nn++){
-            AM(nn,0) = ypred(nn,0) * ( 1 - ypred(nn,0) );
+            // y*(1-y)
+            AM(nn,0) = ypred(nn,0) - ypred(nn,0)*ypred(nn,0) + eps1;
             wgta(nn,0) = std::sqrt( AM(nn,0) * wgt[nn] );
             z(nn,0) = pred_logit(nn,0) + ( ya(nn,0) - ypred(nn,0) )/AM(nn,0);
             z(nn,0) = wgta(nn,0) * z(nn,0);
@@ -149,6 +151,7 @@ Rcpp::List bifiesurvey_rcpp_logistreg( Rcpp::NumericMatrix datalist, Rcpp::Numer
     Rcpp::NumericMatrix tempcoefrepM(VV2,WW);
     Rcpp::NumericVector regrcoef0(VV2);
     Rcpp::NumericVector beta0(VV);
+    Rcpp::NumericVector tempcoef(VV); 
     Rcpp::Rcout << "|";
 
     // loop over imputed datasets
@@ -200,9 +203,13 @@ Rcpp::List bifiesurvey_rcpp_logistreg( Rcpp::NumericMatrix datalist, Rcpp::Numer
             } // end cases tt
 
             // logistic regression original dataset
+            Rcpp::NumericVector beta00=beta0;
+            if ((GG==1) & (ii>0) ){
+                beta00 = tempcoef;                
+            }
             Rcpp::List res1 = bifiesurvey_rcpp_logistreg_compute( yt, Xt, wgtt,
-                                    beta0, eps, maxiter );
-            Rcpp::NumericVector tempcoef = res1["beta"];
+                                    beta00, eps, maxiter );
+            tempcoef = res1["beta"];
             Rcpp::NumericVector tempparm = res1["parm"];
             for (int vv=0;vv<VV+1;vv++){
                 regrcoefM(vv+gg*VV,ii) = tempparm[vv];

@@ -1,5 +1,5 @@
 ## File Name: svrepdesign2BIFIEdata.R
-## File Version: 0.257
+## File Version: 0.261
 
 
 svrepdesign2BIFIEdata <- function(svrepdesign, varnames=NULL, cdata=FALSE)

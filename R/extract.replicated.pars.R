@@ -1,5 +1,5 @@
 ## File Name: extract.replicated.pars.R
-## File Version: 0.162
+## File Version: 0.163
 
 
 #--- extract replicated parameters for BIFIE method
@@ -77,7 +77,7 @@ extract.replicated.pars <- function( BIFIE.method, type=NULL )
         parsM <- res1$output$parsM
         parsrepM <- res1$output$parsrepM
     }
-    
+
     #-- output
     res <- list( parsM=parsM, parsrepM=parsrepM, parnames=res1$parnames)
     return(res)

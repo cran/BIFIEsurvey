@@ -1,5 +1,5 @@
 %% File Name: data.pisaNLD.Rd
-%% File Version: 0.221
+%% File Version: 0.222
 
 \name{data.pisaNLD}
 \alias{data.pisaNLD}
@@ -33,7 +33,7 @@ Downloaded from \doi{10.18637/jss.v020.i05} (Fox, 2007).
 
 
 \references{
-Fox, J.-P. (2007). Multilevel IRT Modeling in practice with the package mlirt. 
+Fox, J.-P. (2007). Multilevel IRT Modeling in practice with the package mlirt.
 \emph{Journal of Statistical Software, 20}(5), 1-16. \doi{10.18637/jss.v020.i05}
 }
 

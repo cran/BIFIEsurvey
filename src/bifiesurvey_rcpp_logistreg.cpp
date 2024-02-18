@@ -1,5 +1,5 @@
 //// File Name: bifiesurvey_rcpp_logistreg.cpp
-//// File Version: 0.28
+//// File Version: 0.29
 
 
 #include <RcppArmadillo.h>
@@ -151,7 +151,7 @@ Rcpp::List bifiesurvey_rcpp_logistreg( Rcpp::NumericMatrix datalist, Rcpp::Numer
     Rcpp::NumericMatrix tempcoefrepM(VV2,WW);
     Rcpp::NumericVector regrcoef0(VV2);
     Rcpp::NumericVector beta0(VV);
-    Rcpp::NumericVector tempcoef(VV); 
+    Rcpp::NumericVector tempcoef(VV);
     Rcpp::Rcout << "|";
 
     // loop over imputed datasets
@@ -205,7 +205,7 @@ Rcpp::List bifiesurvey_rcpp_logistreg( Rcpp::NumericMatrix datalist, Rcpp::Numer
             // logistic regression original dataset
             Rcpp::NumericVector beta00=beta0;
             if ((GG==1) & (ii>0) ){
-                beta00 = tempcoef;                
+                beta00 = tempcoef;
             }
             Rcpp::List res1 = bifiesurvey_rcpp_logistreg_compute( yt, Xt, wgtt,
                                     beta00, eps, maxiter );

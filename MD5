@@ -1,4 +1,4 @@
-4dc331169f4d6900097952cc7ed30a7e *DESCRIPTION
+4426d326098357c22683445c384791fe *DESCRIPTION
 fe4e192b1ca93423478b9d6155f24556 *NAMESPACE
 d40acc32df0a1f28192fedd2dd054d98 *R/BIFIE.BIFIEcdata2BIFIEdata.R
 ca841c58739628d75394fa5e79423ce8 *R/BIFIE.BIFIEdata2datalist.R
@@ -60,7 +60,7 @@ eb67d233ce2c07f3b0af9c52bc7ec1e6 *R/BIFIE_table_multiple_groupings.R
 a17e736c1f2d7575c1a044f0b5a2a69f *R/BIFIEdata.select.R
 50acb0cab41df99459e5102c81d4de9a *R/BIFIEdata2svrepdesign.R
 201f6057376189a41df30736246475c5 *R/BIFIEsurvey_print_term_formula.R
-16aef231dee5c44b3227aa0e9573b7d7 *R/RcppExports.R
+6c25b2cb0e61bf76635a772f35e762f6 *R/RcppExports.R
 f4c59496e968eca90f1037680b149602 *R/bifie_data_select_pv_vars.R
 04639dd07d728e88235f760d4bdaa084 *R/bifie_ecdf_postproc_output.R
 e708719c36de6d9a8b27db0b69bbda0c *R/bifie_extend_list_length2.R
@@ -91,7 +91,7 @@ e35982ab9f127a24dc5aff36f23b6910 *R/summary.BIFIE.lavaan.survey.R
 5ec316dfa4300b587641966432e298cf *R/write.BIFIE.data.R
 d717b29eaf861c7c19196cd5615764f1 *R/zzz.R
 877d312f8794ddf5b8cc71cbd7540afd *README.md
-3158c399532be08b40011bf4cbb92ece *build/partial.rdb
+4f0ffcc59eb401a3a10c7d647c622bc7 *build/partial.rdb
 e83af43e14867d5a6893a9f521d6993c *data/data.bifie01.rda
 c411d268649bf9f9dc5ef275105303dc *data/data.pisaNLD.rda
 51dfef2e4f5bddaf369b389b01652678 *data/data.test1.rda
@@ -103,7 +103,7 @@ edee79e11145789ba269ba2fb15c2d11 *data/data.timss4.rda
 7aea9a870219b116b2e7d063b38fd2cd *data/data.timssrep.rda
 75c019ab99e5c9d8e282bcfcd38f4b91 *data/datalist
 ab2e012fdcc4210fa143b57086b4cfd0 *inst/CITATION
-c1e4d7cc4a0f90e416e55cd9ab93f3ba *inst/NEWS
+94eca170c43dcb536738944dcf5fdf62 *inst/NEWS
 013c449747cd47ac0d4b05ba4fb45d39 *man/BIFIE.BIFIEdata2BIFIEcdata.Rd
 9db44f4689aca44622fb72b041a86f9f *man/BIFIE.by.Rd
 1ed96462b18626e094d7d34e3297c7dc *man/BIFIE.correl.Rd
@@ -138,12 +138,12 @@ f96a0874f72b5f464e618344e40d5c2f *man/data.bifie.Rd
 67631f5df45a60024c81cff7c16f831a *man/se.Rd
 3900e4e4b505787e0f3cb83ad8ba2138 *src/Makevars
 36dc26a5d3e080089104b503a783361f *src/Makevars.win
-a6ebe3025cf64986af803837d7cf1957 *src/RcppExports.cpp
+2507df3c0d0f77175677ef2113bf11a5 *src/RcppExports.cpp
 293ee082a3e0a5d7a26003fa6ce1144c *src/bifiesurvey_rcpp_helper.cpp
 8d690d4369662bc2ad027b3e01d91657 *src/bifiesurvey_rcpp_helper.h
 beb601ff977ad66995bd2eaf15ed1570 *src/bifiesurvey_rcpp_jack_data_prep.cpp
 a358ae01d9e5db3b6bc2d493360910d2 *src/bifiesurvey_rcpp_linreg.cpp
-7adecc8977fec244f53c2b3ecdbc8d6a *src/bifiesurvey_rcpp_logistreg.cpp
+ef7a893b388352e3fc40b06bf9ce35d5 *src/bifiesurvey_rcpp_logistreg.cpp
 fbb610c15f0243d6ec52791a1b2fbf5d *src/bifiesurvey_rcpp_main.cpp
 4f242dba76442cb6993263487b9c42ab *src/bifiesurvey_rcpp_pathmodel.cpp
 b9cee3513b34cbf0db58bcbb083673e7 *src/bifiesurvey_rcpp_wald_test.cpp
